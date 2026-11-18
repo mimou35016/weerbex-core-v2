@@ -3,6 +3,7 @@
 import { ShieldCheck } from "lucide-react"
 import { useTranslations } from "next-intl"
 
+import { useCurrentUser } from "@/components/dashboard/current-user-provider"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
   Sidebar,
@@ -18,11 +19,8 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { appsRegistry, coreNavItems } from "@/config/dashboard-nav"
-import { mockUsers } from "@/config/dashboard-mock-data"
 import { Link, usePathname } from "@/i18n/navigation"
 import { getInitials } from "@/lib/initials"
-
-const currentUser = mockUsers[0]
 
 export function AppSidebar({
   side = "left",
@@ -32,6 +30,8 @@ export function AppSidebar({
   dir?: "ltr" | "rtl"
 }) {
   const t = useTranslations("Dashboard")
+  const tr = useTranslations("Dashboard.roles")
+  const currentUser = useCurrentUser()
   const pathname = usePathname()
 
   const isActive = (href: string) =>
@@ -115,17 +115,19 @@ export function AppSidebar({
             <SidebarMenuButton
               size="lg"
               render={<Link href="/dashboard/settings" />}
-              tooltip={currentUser.name}
+              tooltip={currentUser?.name ?? ""}
             >
               <Avatar size="sm">
-                <AvatarFallback>{getInitials(currentUser.name)}</AvatarFallback>
+                <AvatarFallback>
+                  {getInitials(currentUser?.name ?? "")}
+                </AvatarFallback>
               </Avatar>
               <span className="grid flex-1 text-start leading-tight">
                 <span className="truncate text-sm font-medium">
-                  {currentUser.name}
+                  {currentUser?.name ?? ""}
                 </span>
                 <span className="truncate text-xs text-muted-foreground">
-                  {t("userNav.role")}
+                  {currentUser ? tr(currentUser.role) : t("userNav.role")}
                 </span>
               </span>
             </SidebarMenuButton>

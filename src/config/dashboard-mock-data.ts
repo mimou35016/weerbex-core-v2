@@ -1,16 +1,5 @@
 import type { DashboardRole } from "./dashboard-nav"
 
-export type UserStatus = "active" | "suspended" | "pending"
-
-export type MockUser = {
-  id: string
-  name: string
-  email: string
-  role: DashboardRole
-  status: UserStatus
-  joined: string
-}
-
 export type AuditStatus = "success" | "failed" | "warning"
 
 export type AuditLog = {
@@ -41,73 +30,6 @@ export type ApiToken = {
   created: string
   lastUsed: string | null
 }
-
-export const mockUsers: MockUser[] = [
-  {
-    id: "usr_01",
-    name: "Amina El-Sayed",
-    email: "amina@weerbex.io",
-    role: "super_admin",
-    status: "active",
-    joined: "2025-11-02T09:24:00.000Z",
-  },
-  {
-    id: "usr_02",
-    name: "Lucas Martin",
-    email: "lucas@weerbex.io",
-    role: "admin",
-    status: "active",
-    joined: "2026-01-18T14:10:00.000Z",
-  },
-  {
-    id: "usr_03",
-    name: "Sofia Rossi",
-    email: "sofia@weerbex.io",
-    role: "manager",
-    status: "active",
-    joined: "2026-02-27T08:45:00.000Z",
-  },
-  {
-    id: "usr_04",
-    name: "Youssef Haddad",
-    email: "youssef@weerbex.io",
-    role: "user",
-    status: "pending",
-    joined: "2026-10-30T17:32:00.000Z",
-  },
-  {
-    id: "usr_05",
-    name: "Clara Dubois",
-    email: "clara@weerbex.io",
-    role: "user",
-    status: "suspended",
-    joined: "2026-03-12T11:05:00.000Z",
-  },
-  {
-    id: "usr_06",
-    name: "Omar Benali",
-    email: "omar@weerbex.io",
-    role: "manager",
-    status: "active",
-    joined: "2026-05-09T10:18:00.000Z",
-  },
-  {
-    id: "usr_07",
-    name: "Emily Carter",
-    email: "emily@weerbex.io",
-    role: "user",
-    status: "active",
-    joined: "2026-07-21T16:40:00.000Z",
-  },
-  {
-    id: "usr_08",
-    name: "Karim Nasser",
-    email: "karim@weerbex.io",
-    role: "admin",
-    status: "active",
-    joined: "2026-08-14T07:55:00.000Z",
-  },
-]
 
 export const mockActivity: ActivityItem[] = [
   {

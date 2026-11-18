@@ -30,6 +30,7 @@ import {
   validatePassword,
   validateRequired,
 } from "@/lib/auth-validation"
+import { registerAction } from "@/lib/user-actions"
 
 type RegisterErrors = {
   fullName?: string
@@ -83,9 +84,18 @@ export default function RegisterPage() {
     }
 
     setIsSubmitting(true)
-    // Mock request: replace with a real registration call when the API is ready.
-    await new Promise<void>((resolve) => setTimeout(resolve, 700))
+    const result = await registerAction({
+      name: fullName,
+      email,
+      password,
+    })
     setIsSubmitting(false)
+
+    if (!result.success) {
+      setErrors((current) => ({ ...current, email: result.error }))
+      return
+    }
+
     setIsSubmitted(true)
   }
 

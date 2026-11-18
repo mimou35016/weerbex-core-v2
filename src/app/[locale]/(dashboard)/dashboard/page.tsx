@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import {
   Activity,
   ArrowUpRight,
@@ -22,9 +23,10 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { appsRegistry } from "@/config/dashboard-nav"
-import { mockActivity, mockUsers } from "@/config/dashboard-mock-data"
+import { mockActivity } from "@/config/dashboard-mock-data"
 import { Link } from "@/i18n/navigation"
 import { cn } from "@/lib/utils"
+import { countUsersAction } from "@/lib/user-actions"
 
 const statusDot: Record<string, string> = {
   success: "bg-emerald-500",
@@ -36,6 +38,21 @@ export default function DashboardOverviewPage() {
   const t = useTranslations("Dashboard")
   const ta = useTranslations("Dashboard.auditStatus")
   const format = useFormatter()
+  const [totalUsers, setTotalUsers] = useState(0)
+
+  useEffect(() => {
+    let active = true
+
+    countUsersAction().then((result) => {
+      if (active && result.success) {
+        setTotalUsers(result.data)
+      }
+    })
+
+    return () => {
+      active = false
+    }
+  }, [])
 
   const activeApps = appsRegistry.filter((app) => app.status === "active")
   const launchableApps = appsRegistry.filter(
@@ -53,7 +70,7 @@ export default function DashboardOverviewPage() {
         <StatCard
           icon={UsersRound}
           label={t("overview.kpi.totalUsers")}
-          value={mockUsers.length}
+          value={totalUsers}
           hint={t("overview.kpi.usersTrend")}
           tone="primary"
         />

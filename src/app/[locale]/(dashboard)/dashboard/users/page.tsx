@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Ban, Ellipsis, PenLine, Plus, Trash2, UserCheck } from "lucide-react"
 import { useFormatter, useTranslations } from "next-intl"
 import { toast } from "sonner"
@@ -42,12 +42,14 @@ import {
   roleOrder,
   type DashboardRole,
 } from "@/config/dashboard-nav"
-import {
-  mockUsers,
-  type MockUser,
-  type UserStatus,
-} from "@/config/dashboard-mock-data"
 import { getInitials } from "@/lib/initials"
+import {
+  createUserAction,
+  deleteUserAction,
+  listUsersAction,
+  updateUserAction,
+} from "@/lib/user-actions"
+import { type DashboardUser, type UserStatus } from "@/lib/users"
 
 type UserForm = {
   name: string
@@ -71,13 +73,31 @@ export default function UsersPage() {
   const tt = useTranslations("Dashboard.toast")
   const format = useFormatter()
 
-  const [users, setUsers] = useState<MockUser[]>(mockUsers)
+  const [users, setUsers] = useState<DashboardUser[]>([])
   const [query, setQuery] = useState("")
   const [roleFilter, setRoleFilter] = useState("all")
   const [statusFilter, setStatusFilter] = useState("all")
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [editing, setEditing] = useState<MockUser | null>(null)
+  const [editing, setEditing] = useState<DashboardUser | null>(null)
   const [form, setForm] = useState<UserForm>(emptyForm)
+
+  useEffect(() => {
+    let active = true
+
+    listUsersAction().then((result) => {
+      if (!active) return
+
+      if (result.success) {
+        setUsers(result.data)
+      } else {
+        toast.error(result.error)
+      }
+    })
+
+    return () => {
+      active = false
+    }
+  }, [])
 
   const roleOptions: FilterOption[] = [
     { value: "all", label: tc("allRoles") },
@@ -109,7 +129,7 @@ export default function UsersPage() {
     setDialogOpen(true)
   }
 
-  function openEditDialog(user: MockUser) {
+  function openEditDialog(user: DashboardUser) {
     setEditing(user)
     setForm({
       name: user.name,
@@ -120,44 +140,68 @@ export default function UsersPage() {
     setDialogOpen(true)
   }
 
-  function saveUser() {
+  async function saveUser() {
     if (!form.name.trim() || !form.email.trim()) return
 
     if (editing) {
+      const result = await updateUserAction(editing.id, form)
+
+      if (!result.success) {
+        toast.error(result.error)
+        return
+      }
+
       setUsers((current) =>
-        current.map((user) =>
-          user.id === editing.id ? { ...user, ...form } : user
-        )
+        current.map((user) => (user.id === editing.id ? result.data : user))
       )
       toast.success(tt("userUpdated"))
     } else {
-      const newUser: MockUser = {
-        id: `usr_${Date.now()}`,
-        ...form,
-        joined: new Date().toISOString(),
+      const result = await createUserAction(form)
+
+      if (!result.success) {
+        toast.error(result.error)
+        return
       }
-      setUsers((current) => [newUser, ...current])
+
+      setUsers((current) => [result.data, ...current])
       toast.success(tt("userAdded"))
     }
 
     setDialogOpen(false)
   }
 
-  function toggleUserStatus(user: MockUser) {
+  async function toggleUserStatus(user: DashboardUser) {
     const nextStatus: UserStatus =
       user.status === "suspended" ? "active" : "suspended"
 
+    const result = await updateUserAction(user.id, {
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      status: nextStatus,
+    })
+
+    if (!result.success) {
+      toast.error(result.error)
+      return
+    }
+
     setUsers((current) =>
-      current.map((entry) =>
-        entry.id === user.id ? { ...entry, status: nextStatus } : entry
-      )
+      current.map((entry) => (entry.id === user.id ? result.data : entry))
     )
     toast.success(
       nextStatus === "active" ? tt("userActivated") : tt("userSuspended")
     )
   }
 
-  function deleteUser(user: MockUser) {
+  async function deleteUser(user: DashboardUser) {
+    const result = await deleteUserAction(user.id)
+
+    if (!result.success) {
+      toast.error(result.error)
+      return
+    }
+
     setUsers((current) => current.filter((entry) => entry.id !== user.id))
     toast.success(tt("userDeleted"))
   }

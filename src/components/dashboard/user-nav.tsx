@@ -4,6 +4,7 @@ import { LogOut, Settings2, UserRound } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { toast } from "sonner"
 
+import { useCurrentUser } from "@/components/dashboard/current-user-provider"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,20 +16,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { mockUsers } from "@/config/dashboard-mock-data"
 import { Link, useRouter } from "@/i18n/navigation"
 import { getInitials } from "@/lib/initials"
-
-const currentUser = mockUsers[0]
+import { logoutAction } from "@/lib/user-actions"
 
 export function UserNav() {
   const t = useTranslations("Dashboard.userNav")
   const tt = useTranslations("Dashboard.toast")
+  const currentUser = useCurrentUser()
   const router = useRouter()
 
-  function handleLogout() {
+  async function handleLogout() {
+    await logoutAction()
     toast.success(tt("loggedOut"))
     router.push("/login")
+    router.refresh()
   }
 
   return (
@@ -44,7 +46,9 @@ export function UserNav() {
         }
       >
         <Avatar size="sm">
-          <AvatarFallback>{getInitials(currentUser.name)}</AvatarFallback>
+          <AvatarFallback>
+            {getInitials(currentUser?.name ?? "")}
+          </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
@@ -52,10 +56,10 @@ export function UserNav() {
           <DropdownMenuLabel>
             <span className="flex flex-col gap-0.5">
               <span className="text-sm font-medium text-foreground">
-                {currentUser.name}
+                {currentUser?.name ?? ""}
               </span>
               <span className="text-xs font-normal text-muted-foreground">
-                {currentUser.email}
+                {currentUser?.email ?? ""}
               </span>
             </span>
           </DropdownMenuLabel>

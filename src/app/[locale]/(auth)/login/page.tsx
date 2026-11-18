@@ -22,8 +22,9 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Link } from "@/i18n/navigation"
+import { Link, useRouter } from "@/i18n/navigation"
 import { validateEmail, validatePassword } from "@/lib/auth-validation"
+import { loginAction } from "@/lib/user-actions"
 
 type LoginErrors = {
   email?: string
@@ -34,6 +35,7 @@ export default function LoginPage() {
   const t = useTranslations("Login")
   const tc = useTranslations("Common")
   const tv = useTranslations("Validation")
+  const router = useRouter()
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -60,10 +62,17 @@ export default function LoginPage() {
     if (nextErrors.email || nextErrors.password) return
 
     setIsSubmitting(true)
-    // Mock request: replace with a real authentication call when the API is ready.
-    await new Promise<void>((resolve) => setTimeout(resolve, 700))
+    const result = await loginAction({ email, password })
     setIsSubmitting(false)
+
+    if (!result.success) {
+      setErrors((current) => ({ ...current, password: result.error }))
+      return
+    }
+
     setIsSubmitted(true)
+    router.push("/dashboard")
+    router.refresh()
   }
 
   return (

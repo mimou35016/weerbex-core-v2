@@ -5,6 +5,7 @@ import { KeyRound, Save, Trash2, Webhook } from "lucide-react"
 import { useFormatter, useTranslations } from "next-intl"
 import { toast } from "sonner"
 
+import { useCurrentUser } from "@/components/dashboard/current-user-provider"
 import { FilterSelect } from "@/components/dashboard/filter-select"
 import { PageHeader } from "@/components/dashboard/page-header"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -28,10 +29,11 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { mockApiTokens, mockUsers, type ApiToken } from "@/config/dashboard-mock-data"
+import { mockApiTokens, type ApiToken } from "@/config/dashboard-mock-data"
+import { useRouter } from "@/i18n/navigation"
+import { validateConfirmPassword, validatePassword } from "@/lib/auth-validation"
 import { getInitials } from "@/lib/initials"
-
-const currentUser = mockUsers[0]
+import { updateProfileAction } from "@/lib/user-actions"
 
 function Field({
   label,
@@ -54,7 +56,10 @@ export default function SettingsPage() {
   const t = useTranslations("Dashboard")
   const tl = useTranslations("Language")
   const tt = useTranslations("Dashboard.toast")
+  const tv = useTranslations("Validation")
   const format = useFormatter()
+  const currentUser = useCurrentUser()
+  const router = useRouter()
 
   const [platformName, setPlatformName] = useState("weerbex")
   const [supportEmail, setSupportEmail] = useState("support@weerbex.io")
@@ -63,8 +68,8 @@ export default function SettingsPage() {
   const [openRegistration, setOpenRegistration] = useState(true)
 
   const [profile, setProfile] = useState({
-    fullName: currentUser.name,
-    email: currentUser.email,
+    fullName: currentUser?.name ?? "",
+    email: currentUser?.email ?? "",
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
@@ -99,6 +104,57 @@ export default function SettingsPage() {
   function revokeToken(token: ApiToken) {
     setTokens((current) => current.filter((entry) => entry.id !== token.id))
     toast.success(tt("tokenRevoked"))
+  }
+
+  async function saveProfile() {
+    if (!profile.fullName.trim() || !profile.email.trim()) return
+
+    if (profile.newPassword) {
+      const passwordError = validatePassword(profile.newPassword, {
+        required: tv("passwordRequired"),
+        tooShort: tv("passwordShort"),
+      })
+
+      if (passwordError) {
+        toast.error(passwordError)
+        return
+      }
+
+      const confirmError = validateConfirmPassword(
+        profile.newPassword,
+        profile.confirmPassword,
+        {
+          required: tv("confirmRequired"),
+          mismatch: tv("confirmMismatch"),
+        }
+      )
+
+      if (confirmError) {
+        toast.error(confirmError)
+        return
+      }
+    }
+
+    const result = await updateProfileAction({
+      name: profile.fullName,
+      email: profile.email,
+      currentPassword: profile.currentPassword || undefined,
+      newPassword: profile.newPassword || undefined,
+    })
+
+    if (!result.success) {
+      toast.error(result.error)
+      return
+    }
+
+    setProfile((current) => ({
+      ...current,
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    }))
+    toast.success(tt("profileSaved"))
+    router.refresh()
   }
 
   return (
@@ -210,7 +266,7 @@ export default function SettingsPage() {
               <div className="flex items-center gap-4">
                 <Avatar size="lg">
                   <AvatarFallback>
-                    {getInitials(profile.fullName || currentUser.name)}
+                    {getInitials(profile.fullName || currentUser?.name || "")}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col gap-1">
@@ -311,7 +367,7 @@ export default function SettingsPage() {
               </Field>
 
               <div>
-                <Button onClick={() => toast.success(tt("profileSaved"))}>
+                <Button onClick={saveProfile}>
                   <Save aria-hidden="true" />
                   {t("settings.profile.save")}
                 </Button>
