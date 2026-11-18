@@ -1,8 +1,7 @@
 {
   "Common": {
     "showPassword": "Afficher le mot de passe",
-    "hidePassword": "Masquer le mot de passe",
-    "demoNote": "Ceci est une démonstration — connectez votre fournisseur d'authentification."
+    "hidePassword": "Masquer le mot de passe"
   },
   "Theme": {
     "label": "Changer de thème",
@@ -49,7 +48,8 @@
     "submitting": "Création du compte...",
     "success": "Compte créé avec succès",
     "hasAccount": "Vous avez déjà un compte ?",
-    "loginLink": "Se connecter"
+    "loginLink": "Se connecter",
+    "successDescription": "Votre compte est prêt. Vous pouvez maintenant vous connecter avec vos identifiants."
   },
   "ForgotPassword": {
     "title": "Mot de passe oublié ?",
@@ -129,32 +129,6 @@
       "failed": "Échec",
       "warning": "Avertissement"
     },
-    "apps": {
-      "analytics": {
-        "name": "Analytique",
-        "description": "Suivez l'utilisation du produit, la croissance et la rétention en temps réel."
-      },
-      "crm": {
-        "name": "CRM et contacts",
-        "description": "Gérez les clients, les pipelines et chaque conversation."
-      },
-      "billing": {
-        "name": "Facturation et factures",
-        "description": "Créez des factures, rapprochez les paiements et suivez les revenus."
-      },
-      "automation": {
-        "name": "Automatisation des workflows",
-        "description": "Automatisez les tâches répétitives avec des workflows événementiels."
-      },
-      "reports": {
-        "name": "Générateur de rapports",
-        "description": "Créez et planifiez des rapports personnalisés pour chaque équipe."
-      },
-      "integrations": {
-        "name": "Hub d'intégrations",
-        "description": "Connectez des services externes et des microservices au cœur."
-      }
-    },
     "common": {
       "search": "Rechercher",
       "save": "Enregistrer les modifications",
@@ -185,23 +159,25 @@
       "kpi": {
         "totalUsers": "Utilisateurs totaux",
         "activeApps": "Applications actives",
-        "systemHealth": "État du système",
         "recentActivity": "Activité récente",
-        "usersTrend": "+12 % ce mois-ci",
-        "appsTrend": "des applications enregistrées",
-        "healthTrend": "Tous les systèmes opérationnels",
-        "activityTrend": "événements au cours des dernières 24 h"
+        "appsTrend": "sur {count} enregistrées",
+        "activityTrend": "{count, plural, one {événement au cours des dernières 24 h} other {événements au cours des dernières 24 h}}",
+        "usersActive": "{count} actifs",
+        "failedEvents": "Événements échoués",
+        "failedEventsHint": "Au cours des dernières 24 heures"
       },
       "launcher": {
         "title": "Lanceur d'applications",
         "description": "Ouvrez n'importe quelle application installée directement depuis ici.",
         "manage": "Gérer les applications",
-        "available": "Disponible"
+        "available": "Disponible",
+        "empty": "Aucune application n'est encore enregistrée. Ajoutez-en une au registre pour la lancer ici."
       },
       "activity": {
         "title": "Activité système récente",
         "description": "Les derniers événements de la plateforme.",
-        "viewAll": "Voir tous les journaux"
+        "viewAll": "Voir tous les journaux",
+        "empty": "Aucune activité enregistrée pour le moment."
       }
     },
     "appsHub": {
@@ -217,7 +193,8 @@
       "webhookPlaceholder": "https://api.example.com/hooks/app",
       "requiredRoleLabel": "Rôle requis",
       "statusLabel": "Statut",
-      "saveConfig": "Enregistrer la configuration"
+      "saveConfig": "Enregistrer la configuration",
+      "none": "Aucune application n'est encore enregistrée."
     },
     "users": {
       "title": "Utilisateurs",
@@ -262,7 +239,6 @@
       "applications": "Applications",
       "system": "Système",
       "superAdminHint": "Le super administrateur dispose d'un accès absolu. Ses permissions ne peuvent pas être restreintes.",
-      "rolesLockedHint": "La gestion des rôles et des permissions est réservée au rôle super administrateur.",
       "save": "Enregistrer les permissions",
       "reset": "Réinitialiser",
       "saved": "Permissions mises à jour pour {role}",
@@ -298,12 +274,20 @@
         "appEnabled": "Application activée",
         "appDisabled": "Application désactivée",
         "settingsUpdated": "Paramètres mis à jour",
-        "apiKeyCreated": "Clé API créée"
+        "apiKeyCreated": "Clé API créée",
+        "profileUpdated": "Profil mis à jour",
+        "userUpdated": "Utilisateur mis à jour",
+        "userDeleted": "Utilisateur supprimé",
+        "apiKeyRevoked": "Clé API révoquée",
+        "webhookUpdated": "Webhook mis à jour",
+        "appConfigured": "Application configurée",
+        "sitemapRegenerated": "Sitemap régénéré"
       },
       "results": "{count} événements",
       "empty": "Aucune entrée de journal ne correspond à vos filtres.",
       "export": "Exporter en CSV",
-      "exported": "Journaux d'audit exportés"
+      "exported": "Journaux d'audit exportés",
+      "loading": "Chargement des événements..."
     },
     "settings": {
       "title": "Paramètres",
@@ -393,7 +377,9 @@
         "webhookDescription": "Envoyez les événements de la plateforme vers un point de terminaison externe.",
         "webhookUrl": "URL du point de terminaison",
         "webhookPlaceholder": "https://api.example.com/hooks/events",
-        "saveWebhook": "Enregistrer le webhook"
+        "saveWebhook": "Enregistrer le webhook",
+        "secretTitle": "Copiez votre jeton maintenant",
+        "secretDescription": "Ce secret n'est affiché qu'une seule fois et ne peut pas être récupéré."
       },
       "navLabel": "Sections des paramètres",
       "nav": {

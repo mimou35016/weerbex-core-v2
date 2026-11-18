@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Link } from "@/i18n/navigation"
 import { validateEmail } from "@/lib/auth-validation"
+import { requestPasswordResetAction } from "@/lib/user-actions"
 
 export default function ForgotPasswordPage() {
   const t = useTranslations("ForgotPassword")
@@ -38,8 +39,7 @@ export default function ForgotPasswordPage() {
     if (nextError) return
 
     setIsSubmitting(true)
-    // Mock request: replace with a real password-reset call when the API is ready.
-    await new Promise<void>((resolve) => setTimeout(resolve, 700))
+    await requestPasswordResetAction(email)
     setIsSubmitting(false)
     setIsSubmitted(true)
   }

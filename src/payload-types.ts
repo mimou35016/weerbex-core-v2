@@ -71,6 +71,8 @@ export interface Config {
     roles: Role;
     media: Media;
     'page-seo': PageSeo;
+    'audit-logs': AuditLog;
+    'api-tokens': ApiToken;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -82,6 +84,8 @@ export interface Config {
     roles: RolesSelect<false> | RolesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'page-seo': PageSeoSelect<false> | PageSeoSelect<true>;
+    'audit-logs': AuditLogsSelect<false> | AuditLogsSelect<true>;
+    'api-tokens': ApiTokensSelect<false> | ApiTokensSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -94,10 +98,22 @@ export interface Config {
   globals: {
     'site-settings': SiteSetting;
     'seo-settings': SeoSetting;
+    'security-settings': SecuritySetting;
+    'localization-settings': LocalizationSetting;
+    'notification-settings': NotificationSetting;
+    'storage-settings': StorageSetting;
+    'api-settings': ApiSetting;
+    'app-settings': AppSetting;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     'seo-settings': SeoSettingsSelect<false> | SeoSettingsSelect<true>;
+    'security-settings': SecuritySettingsSelect<false> | SecuritySettingsSelect<true>;
+    'localization-settings': LocalizationSettingsSelect<false> | LocalizationSettingsSelect<true>;
+    'notification-settings': NotificationSettingsSelect<false> | NotificationSettingsSelect<true>;
+    'storage-settings': StorageSettingsSelect<false> | StorageSettingsSelect<true>;
+    'api-settings': ApiSettingsSelect<false> | ApiSettingsSelect<true>;
+    'app-settings': AppSettingsSelect<false> | AppSettingsSelect<true>;
   };
   locale: 'en' | 'fr' | 'ar';
   widgets: {
@@ -194,12 +210,6 @@ export interface Role {
           | 'localization'
           | 'notifications'
           | 'storage'
-          | 'analytics'
-          | 'crm'
-          | 'billing'
-          | 'automation'
-          | 'reports'
-          | 'integrations'
           | 'media';
         actions?: ('find' | 'read' | 'create' | 'update' | 'delete' | 'export' | 'publish' | 'configure')[] | null;
         id?: string | null;
@@ -262,6 +272,60 @@ export interface PageSeo {
   createdAt: string;
 }
 /**
+ * Append-only trail of security and configuration events. Entries are written automatically by the platform.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audit-logs".
+ */
+export interface AuditLog {
+  id: string;
+  /**
+   * Machine-readable event key (e.g. login, userCreated).
+   */
+  action: string;
+  /**
+   * Account that triggered the event, when available.
+   */
+  actor?: (string | null) | User;
+  /**
+   * Denormalized actor name so the entry survives account deletion.
+   */
+  actorName?: string | null;
+  target?: string | null;
+  ip?: string | null;
+  status: 'success' | 'failed' | 'warning';
+  metadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Machine credentials used by external services to call the platform API.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "api-tokens".
+ */
+export interface ApiToken {
+  id: string;
+  name: string;
+  /**
+   * Short, non-secret identifier shown in the dashboard.
+   */
+  prefix: string;
+  tokenHash: string;
+  lastUsedAt?: string | null;
+  createdBy?: (string | null) | User;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -300,6 +364,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'page-seo';
         value: string | PageSeo;
+      } | null)
+    | ({
+        relationTo: 'audit-logs';
+        value: string | AuditLog;
+      } | null)
+    | ({
+        relationTo: 'api-tokens';
+        value: string | ApiToken;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -425,6 +497,34 @@ export interface PageSeoSelect<T extends boolean = true> {
   includeInSitemap?: T;
   changeFrequency?: T;
   priority?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audit-logs_select".
+ */
+export interface AuditLogsSelect<T extends boolean = true> {
+  action?: T;
+  actor?: T;
+  actorName?: T;
+  target?: T;
+  ip?: T;
+  status?: T;
+  metadata?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "api-tokens_select".
+ */
+export interface ApiTokensSelect<T extends boolean = true> {
+  name?: T;
+  prefix?: T;
+  tokenHash?: T;
+  lastUsedAt?: T;
+  createdBy?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -587,6 +687,156 @@ export interface SeoSetting {
   createdAt?: string | null;
 }
 /**
+ * Session lifetime, password policy, API rate limits, captcha and IP rules.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "security-settings".
+ */
+export interface SecuritySetting {
+  id: string;
+  /**
+   * Minutes of inactivity before a session expires.
+   */
+  sessionTimeout?: number | null;
+  /**
+   * Ask users to change their password every 90 days.
+   */
+  forcePasswordExpiration?: boolean | null;
+  minLength?: number | null;
+  requireNumbers?: boolean | null;
+  requireSymbols?: boolean | null;
+  rateLimitEnabled?: boolean | null;
+  /**
+   * Maximum requests per minute before a 429 is returned.
+   */
+  maxRequests?: number | null;
+  captchaProvider?: ('none' | 'recaptcha' | 'turnstile') | null;
+  captchaSiteKey?: string | null;
+  /**
+   * Stored server-side and never exposed to the client.
+   */
+  captchaSecretKey?: string | null;
+  /**
+   * One IP address or CIDR range per line.
+   */
+  ipAllowList?: string | null;
+  /**
+   * One IP address or CIDR range per line.
+   */
+  ipBlockList?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Enabled languages, default and fallback locale, time zone and date formats.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "localization-settings".
+ */
+export interface LocalizationSetting {
+  id: string;
+  activeEnglish?: boolean | null;
+  activeFrench?: boolean | null;
+  activeArabic?: boolean | null;
+  defaultLanguage?: ('en' | 'fr' | 'ar') | null;
+  fallbackLanguage?: ('en' | 'fr' | 'ar') | null;
+  timezone?: ('utc' | 'casablanca' | 'paris' | 'london' | 'new-york' | 'riyadh') | null;
+  dateFormat?: ('dmy' | 'ymd') | null;
+  firstDayOfWeek?: ('sunday' | 'monday' | 'saturday') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * SMTP credentials for transactional email and the events that trigger alerts.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notification-settings".
+ */
+export interface NotificationSetting {
+  id: string;
+  smtpHost?: string | null;
+  smtpPort?: string | null;
+  smtpUsername?: string | null;
+  /**
+   * Stored server-side and never exposed to the client.
+   */
+  smtpPassword?: string | null;
+  encryption?: ('tls' | 'ssl' | 'none') | null;
+  senderEmail?: string | null;
+  senderName?: string | null;
+  notifyRegistrations?: boolean | null;
+  notifySecurityAlerts?: boolean | null;
+  notifyFailedLogins?: boolean | null;
+  notifySystemErrors?: boolean | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Where uploaded files are stored and which files are accepted.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "storage-settings".
+ */
+export interface StorageSetting {
+  id: string;
+  provider?: ('local' | 's3' | 'r2' | 'uploadthing') | null;
+  bucket?: string | null;
+  region?: string | null;
+  accessKey?: string | null;
+  /**
+   * Stored server-side and never exposed to the client.
+   */
+  secretKey?: string | null;
+  /**
+   * Maximum upload size in megabytes.
+   */
+  maxSize?: number | null;
+  /**
+   * Comma separated list of accepted MIME types.
+   */
+  mimeTypes?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Outgoing webhook endpoint used for platform events.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "api-settings".
+ */
+export interface ApiSetting {
+  id: string;
+  /**
+   * HTTPS endpoint that receives platform events. Leave empty to disable webhooks.
+   */
+  webhookUrl?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Enablement, role hint and webhook endpoint for every registered app.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "app-settings".
+ */
+export interface AppSetting {
+  id: string;
+  apps?:
+    | {
+        appId: string;
+        enabled?: boolean | null;
+        /**
+         * Role slug hint shown in the Apps Hub.
+         */
+        requiredRole?: string | null;
+        webhookUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
@@ -639,6 +889,108 @@ export interface SeoSettingsSelect<T extends boolean = true> {
   customHeadScripts?: T;
   analyticsScript?: T;
   pixelScript?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "security-settings_select".
+ */
+export interface SecuritySettingsSelect<T extends boolean = true> {
+  sessionTimeout?: T;
+  forcePasswordExpiration?: T;
+  minLength?: T;
+  requireNumbers?: T;
+  requireSymbols?: T;
+  rateLimitEnabled?: T;
+  maxRequests?: T;
+  captchaProvider?: T;
+  captchaSiteKey?: T;
+  captchaSecretKey?: T;
+  ipAllowList?: T;
+  ipBlockList?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "localization-settings_select".
+ */
+export interface LocalizationSettingsSelect<T extends boolean = true> {
+  activeEnglish?: T;
+  activeFrench?: T;
+  activeArabic?: T;
+  defaultLanguage?: T;
+  fallbackLanguage?: T;
+  timezone?: T;
+  dateFormat?: T;
+  firstDayOfWeek?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notification-settings_select".
+ */
+export interface NotificationSettingsSelect<T extends boolean = true> {
+  smtpHost?: T;
+  smtpPort?: T;
+  smtpUsername?: T;
+  smtpPassword?: T;
+  encryption?: T;
+  senderEmail?: T;
+  senderName?: T;
+  notifyRegistrations?: T;
+  notifySecurityAlerts?: T;
+  notifyFailedLogins?: T;
+  notifySystemErrors?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "storage-settings_select".
+ */
+export interface StorageSettingsSelect<T extends boolean = true> {
+  provider?: T;
+  bucket?: T;
+  region?: T;
+  accessKey?: T;
+  secretKey?: T;
+  maxSize?: T;
+  mimeTypes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "api-settings_select".
+ */
+export interface ApiSettingsSelect<T extends boolean = true> {
+  webhookUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "app-settings_select".
+ */
+export interface AppSettingsSelect<T extends boolean = true> {
+  apps?:
+    | T
+    | {
+        appId?: T;
+        enabled?: T;
+        requiredRole?: T;
+        webhookUrl?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

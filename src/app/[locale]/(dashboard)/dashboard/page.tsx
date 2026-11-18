@@ -23,10 +23,10 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { appsRegistry } from "@/config/dashboard-nav"
-import { mockActivity } from "@/config/dashboard-mock-data"
 import { Link } from "@/i18n/navigation"
+import type { AuditEntry } from "@/lib/audit-types"
+import { getOverviewStatsAction } from "@/lib/overview-actions"
 import { cn } from "@/lib/utils"
-import { countUsersAction } from "@/lib/user-actions"
 
 const statusDot: Record<string, string> = {
   success: "bg-emerald-500",
@@ -34,18 +34,37 @@ const statusDot: Record<string, string> = {
   failed: "bg-destructive",
 }
 
+type Stats = {
+  totalUsers: number
+  activeUsers: number
+  recentActivity: AuditEntry[]
+  last24h: number
+  failed24h: number
+  canViewAudit: boolean
+}
+
+const EMPTY_STATS: Stats = {
+  totalUsers: 0,
+  activeUsers: 0,
+  recentActivity: [],
+  last24h: 0,
+  failed24h: 0,
+  canViewAudit: false,
+}
+
 export default function DashboardOverviewPage() {
   const t = useTranslations("Dashboard")
   const ta = useTranslations("Dashboard.auditStatus")
+  const tac = useTranslations("Dashboard.audit.actions")
   const format = useFormatter()
-  const [totalUsers, setTotalUsers] = useState(0)
+  const [stats, setStats] = useState<Stats>(EMPTY_STATS)
 
   useEffect(() => {
     let active = true
 
-    countUsersAction().then((result) => {
+    getOverviewStatsAction().then((result) => {
       if (active && result.success) {
-        setTotalUsers(result.data)
+        setStats(result.data)
       }
     })
 
@@ -70,28 +89,30 @@ export default function DashboardOverviewPage() {
         <StatCard
           icon={UsersRound}
           label={t("overview.kpi.totalUsers")}
-          value={totalUsers}
-          hint={t("overview.kpi.usersTrend")}
+          value={stats.totalUsers}
+          hint={t("overview.kpi.usersActive", { count: stats.activeUsers })}
           tone="primary"
         />
         <StatCard
           icon={LayoutGrid}
           label={t("overview.kpi.activeApps")}
           value={activeApps.length}
-          hint={t("overview.kpi.appsTrend")}
+          hint={t("overview.kpi.appsTrend", {
+            count: appsRegistry.length,
+          })}
           tone="sky"
         />
         <StatCard
           icon={HeartPulse}
-          label={t("overview.kpi.systemHealth")}
-          value="99.98%"
-          hint={t("overview.kpi.healthTrend")}
+          label={t("overview.kpi.failedEvents")}
+          value={stats.failed24h}
+          hint={t("overview.kpi.failedEventsHint")}
           tone="emerald"
         />
         <StatCard
           icon={Activity}
           label={t("overview.kpi.recentActivity")}
-          value={mockActivity.length}
+          value={stats.last24h}
           hint={t("overview.kpi.activityTrend")}
           tone="amber"
         />
@@ -116,41 +137,47 @@ export default function DashboardOverviewPage() {
             </CardAction>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {launchableApps.map((app) => {
-                const Icon = app.icon
-                return (
-                  <Link
-                    key={app.id}
-                    href={app.href}
-                    className="group flex items-start gap-3 rounded-xl border p-4 transition-colors hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-                  >
-                    <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                      <Icon className="size-4" aria-hidden="true" />
-                    </span>
-                    <span className="flex min-w-0 flex-col gap-1">
-                      <span className="flex items-center gap-2 text-sm font-medium">
-                        <span className="truncate">{t(app.nameKey)}</span>
-                        {app.status === "beta" && (
-                          <StatusBadge
-                            kind="app"
-                            status={app.status}
-                            label={t("appStatus.beta")}
-                          />
-                        )}
+            {launchableApps.length === 0 ? (
+              <p className="py-6 text-center text-sm text-muted-foreground">
+                {t("overview.launcher.empty")}
+              </p>
+            ) : (
+              <div className="grid gap-3 sm:grid-cols-2">
+                {launchableApps.map((app) => {
+                  const Icon = app.icon
+                  return (
+                    <Link
+                      key={app.id}
+                      href={app.href}
+                      className="group flex items-start gap-3 rounded-xl border p-4 transition-colors hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                    >
+                      <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <Icon className="size-4" aria-hidden="true" />
                       </span>
-                      <span className="line-clamp-2 text-xs text-muted-foreground">
-                        {t(app.descriptionKey)}
+                      <span className="flex min-w-0 flex-col gap-1">
+                        <span className="flex items-center gap-2 text-sm font-medium">
+                          <span className="truncate">{t(app.nameKey)}</span>
+                          {app.status === "beta" && (
+                            <StatusBadge
+                              kind="app"
+                              status={app.status}
+                              label={t("appStatus.beta")}
+                            />
+                          )}
+                        </span>
+                        <span className="line-clamp-2 text-xs text-muted-foreground">
+                          {t(app.descriptionKey)}
+                        </span>
                       </span>
-                    </span>
-                    <ArrowUpRight
-                      className="ms-auto size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground"
-                      aria-hidden="true"
-                    />
-                  </Link>
-                )
-              })}
-            </div>
+                      <ArrowUpRight
+                        className="ms-auto size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground"
+                        aria-hidden="true"
+                      />
+                    </Link>
+                  )
+                })}
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -172,40 +199,58 @@ export default function DashboardOverviewPage() {
             </CardAction>
           </CardHeader>
           <CardContent>
-            <ul className="flex flex-col divide-y">
-              {mockActivity.map((item) => (
-                <li key={item.id} className="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
-                  <span
-                    className={cn(
-                      "mt-1.5 size-2 shrink-0 rounded-full",
-                      statusDot[item.status] ?? "bg-muted-foreground"
-                    )}
-                    aria-hidden="true"
-                  />
-                  <div className="flex min-w-0 flex-col gap-0.5">
-                    <p className="text-sm leading-snug">
-                      <span className="font-medium">{item.actor}</span>{" "}
-                      <span className="text-muted-foreground">
-                        {t(item.actionKey)}
-                      </span>{" "}
-                      <span className="font-medium">{item.target}</span>
-                    </p>
-                    <span className="text-xs text-muted-foreground">
-                      {format.dateTime(new Date(item.timestamp), {
-                        dateStyle: "medium",
-                        timeStyle: "short",
-                      })}
-                    </span>
-                  </div>
-                  <StatusBadge
-                    kind="audit"
-                    status={item.status}
-                    label={ta(item.status)}
-                    className="ms-auto shrink-0"
-                  />
-                </li>
-              ))}
-            </ul>
+            {stats.recentActivity.length === 0 ? (
+              <p className="py-6 text-center text-sm text-muted-foreground">
+                {t("overview.activity.empty")}
+              </p>
+            ) : (
+              <ul className="flex flex-col divide-y">
+                {stats.recentActivity.map((item) => (
+                  <li
+                    key={item.id}
+                    className="flex items-start gap-3 py-3 first:pt-0 last:pb-0"
+                  >
+                    <span
+                      className={cn(
+                        "mt-1.5 size-2 shrink-0 rounded-full",
+                        statusDot[item.status] ?? "bg-muted-foreground"
+                      )}
+                      aria-hidden="true"
+                    />
+                    <div className="flex min-w-0 flex-col gap-0.5">
+                      <p className="text-sm leading-snug">
+                        {item.actor && (
+                          <>
+                            <span className="font-medium">{item.actor}</span>{" "}
+                          </>
+                        )}
+                        <span className="text-muted-foreground">
+                          {tac.has(item.action) ? tac(item.action) : item.action}
+                        </span>
+                        {item.target && (
+                          <>
+                            {" "}
+                            <span className="font-medium">{item.target}</span>
+                          </>
+                        )}
+                      </p>
+                      <span className="text-xs text-muted-foreground">
+                        {format.dateTime(new Date(item.timestamp), {
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                        })}
+                      </span>
+                    </div>
+                    <StatusBadge
+                      kind="audit"
+                      status={item.status}
+                      label={ta(item.status)}
+                      className="ms-auto shrink-0"
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
           </CardContent>
         </Card>
       </div>

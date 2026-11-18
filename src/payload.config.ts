@@ -5,12 +5,20 @@ import { buildConfig } from "payload"
 import sharp from "sharp"
 import { fileURLToPath } from "url"
 
+import { ApiTokens } from "./collections/ApiTokens"
+import { AuditLogs } from "./collections/AuditLogs"
 import { Media } from "./collections/Media"
 import { PageSeo } from "./collections/PageSeo"
 import { Roles } from "./collections/Roles"
 import { Users } from "./collections/Users"
+import { ApiSettings } from "./globals/ApiSettings"
+import { AppSettings } from "./globals/AppSettings"
+import { LocalizationSettings } from "./globals/LocalizationSettings"
+import { NotificationSettings } from "./globals/NotificationSettings"
+import { SecuritySettings } from "./globals/SecuritySettings"
 import { SeoSettings } from "./globals/SeoSettings"
 import { SiteSettings } from "./globals/SiteSettings"
+import { StorageSettings } from "./globals/StorageSettings"
 import { seedRoles } from "./lib/seed-roles"
 import { seedSettings } from "./lib/seed-settings"
 
@@ -24,8 +32,17 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Roles, Media, PageSeo],
-  globals: [SiteSettings, SeoSettings],
+  collections: [Users, Roles, Media, PageSeo, AuditLogs, ApiTokens],
+  globals: [
+    SiteSettings,
+    SeoSettings,
+    SecuritySettings,
+    LocalizationSettings,
+    NotificationSettings,
+    StorageSettings,
+    ApiSettings,
+    AppSettings,
+  ],
   localization: {
     locales: [
       { label: "English", code: "en" },

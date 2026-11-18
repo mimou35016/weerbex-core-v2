@@ -93,9 +93,6 @@ export default function LoginPage() {
             <CircleCheck className="mt-0.5 size-5 shrink-0" aria-hidden="true" />
             <div>
               <p className="font-medium">{t("success")}</p>
-              <p className="mt-1 text-emerald-700/80 dark:text-emerald-300/80">
-                {tc("demoNote")}
-              </p>
             </div>
           </div>
         ) : (

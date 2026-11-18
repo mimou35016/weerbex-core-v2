@@ -124,7 +124,7 @@ export default function RegisterPage() {
             <div>
               <p className="font-medium">{t("success")}</p>
               <p className="mt-1 text-emerald-700/80 dark:text-emerald-300/80">
-                {tc("demoNote")}
+                {t("successDescription")}
               </p>
             </div>
           </div>

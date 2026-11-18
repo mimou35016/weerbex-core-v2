@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslations } from "next-intl"
 import { toast } from "sonner"
 
@@ -13,38 +13,70 @@ import {
   SettingsSwitchRow,
 } from "@/components/dashboard/settings/settings-ui"
 import { Input } from "@/components/ui/input"
-
-const initialNotifications = {
-  smtpHost: "",
-  smtpPort: "587",
-  smtpUsername: "",
-  smtpPassword: "",
-  encryption: "tls",
-  senderEmail: "",
-  senderName: "",
-  notifyRegistrations: true,
-  notifySecurityAlerts: true,
-  notifyFailedLogins: true,
-  notifySystemErrors: false,
-}
+import {
+  getNotificationSettingsAction,
+  saveNotificationSettingsAction,
+} from "@/lib/system-settings-actions"
+import {
+  DEFAULT_NOTIFICATION_SETTINGS,
+  type NotificationSettingsData,
+} from "@/lib/system-settings-types"
 
 export default function NotificationsSettingsPage() {
   const t = useTranslations("Dashboard")
-  const [form, setForm] = useState(initialNotifications)
+  const [form, setForm] = useState<NotificationSettingsData>(
+    DEFAULT_NOTIFICATION_SETTINGS
+  )
+  const [saved, setSaved] = useState<NotificationSettingsData>(
+    DEFAULT_NOTIFICATION_SETTINGS
+  )
+  const [saving, setSaving] = useState(false)
 
-  function update<K extends keyof typeof initialNotifications>(
+  useEffect(() => {
+    let active = true
+
+    getNotificationSettingsAction().then((result) => {
+      if (!active) return
+
+      if (result.success) {
+        setForm(result.data)
+        setSaved(result.data)
+      } else {
+        toast.error(result.error)
+      }
+    })
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  function update<K extends keyof NotificationSettingsData>(
     key: K,
-    value: (typeof initialNotifications)[K]
+    value: NotificationSettingsData[K]
   ) {
     setForm((current) => ({ ...current, [key]: value }))
   }
 
-  function save() {
+  async function save() {
+    if (saving) return
+
+    setSaving(true)
+    const result = await saveNotificationSettingsAction(form)
+    setSaving(false)
+
+    if (!result.success) {
+      toast.error(result.error)
+      return
+    }
+
+    setForm(result.data)
+    setSaved(result.data)
     toast.success(t("settings.common.saved"))
   }
 
   function reset() {
-    setForm(initialNotifications)
+    setForm(saved)
     toast.success(t("settings.common.resetDone"))
   }
 
@@ -150,7 +182,12 @@ export default function NotificationsSettingsPage() {
             >
               <FilterSelect
                 value={form.encryption}
-                onChange={(value) => update("encryption", value)}
+                onChange={(value) =>
+                  update(
+                    "encryption",
+                    value as NotificationSettingsData["encryption"]
+                  )
+                }
                 options={encryptionOptions}
                 ariaLabel={t(
                   "settings.notifications.smtp.encryption"
@@ -253,6 +290,7 @@ export default function NotificationsSettingsPage() {
           resetLabel={t("settings.common.reset")}
           onSave={save}
           onReset={reset}
+          saving={saving}
         />
       </div>
     </>

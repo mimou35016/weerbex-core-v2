@@ -4,6 +4,7 @@ import crypto from "node:crypto"
 import { cookies } from "next/headers"
 
 import type { User } from "@/payload-types"
+import { recordAuditEvent } from "./audit"
 import { getCurrentUser } from "./auth"
 import { getPayloadClient } from "./payload"
 import {
@@ -15,6 +16,7 @@ import {
   countSuperAdminUsers,
   resolveRoleDoc,
 } from "./roles"
+import { getSiteSettings } from "./site-settings"
 import {
   toDashboardUser,
   type ActionResult,
@@ -112,6 +114,29 @@ async function loadDashboardUser(
   }
 }
 
+/**
+ * Requests a password-reset email through Payload. The response is always the
+ * same regardless of whether the address exists, so the endpoint cannot be
+ * used to enumerate accounts. Payload sends the email with the configured
+ * adapter; failures are logged and swallowed for the same reason.
+ */
+export async function requestPasswordResetAction(
+  email: string
+): Promise<ActionResult<null>> {
+  try {
+    const payload = await getPayloadClient()
+
+    await payload.forgotPassword({
+      collection: "users",
+      data: { email: email.trim().toLowerCase() },
+    })
+  } catch (error) {
+    console.error("[auth] forgot-password request failed", error)
+  }
+
+  return { success: true, data: null }
+}
+
 export async function loginAction(input: {
   email: string
   password: string
@@ -127,12 +152,33 @@ export async function loginAction(input: {
     })
 
     if (!result.token || !result.user) {
+      await recordAuditEvent(
+        {
+          action: "login",
+          actorName: input.email,
+          target: "Web console",
+          status: "failed",
+        },
+        payload
+      )
+
       return { success: false, error: "Unable to sign in." }
     }
 
     const user = result.user as User
 
     if ((user.status ?? "active") !== "active") {
+      await recordAuditEvent(
+        {
+          action: "login",
+          actorId: user.id,
+          actorName: user.name?.trim() || user.email,
+          target: "Web console",
+          status: "failed",
+        },
+        payload
+      )
+
       return {
         success: false,
         error: "Your account is not active. Please contact an administrator.",
@@ -147,8 +193,25 @@ export async function loginAction(input: {
       return { success: false, error: "Unable to load your account." }
     }
 
+    await recordAuditEvent(
+      {
+        action: "login",
+        actorId: fresh.id,
+        actorName: fresh.name,
+        target: "Web console",
+      },
+      payload
+    )
+
     return { success: true, data: fresh }
   } catch (error) {
+    await recordAuditEvent({
+      action: "login",
+      actorName: input.email,
+      target: "Web console",
+      status: "failed",
+    })
+
     return { success: false, error: getErrorMessage(error) }
   }
 }
@@ -159,6 +222,15 @@ export async function registerAction(input: {
   password: string
 }): Promise<ActionResult<DashboardUser>> {
   try {
+    const site = await getSiteSettings("en")
+
+    if (!site.openRegistration) {
+      return {
+        success: false,
+        error: "Registration is currently disabled.",
+      }
+    }
+
     const payload = await getPayloadClient()
     const user = await payload.create({
       collection: "users",
@@ -170,6 +242,16 @@ export async function registerAction(input: {
       },
       overrideAccess: true,
     })
+
+    await recordAuditEvent(
+      {
+        action: "userCreated",
+        actorId: user.id,
+        actorName: input.name,
+        target: input.email,
+      },
+      payload
+    )
 
     const login = await payload.login({
       collection: "users",
@@ -196,10 +278,23 @@ export async function registerAction(input: {
 
 export async function logoutAction(): Promise<ActionResult<null>> {
   try {
+    const current = await getCurrentUser()
     const payload = await getPayloadClient()
     const cookieStore = await cookies()
 
     cookieStore.delete(`${payload.config.cookiePrefix || "payload"}-token`)
+
+    if (current) {
+      await recordAuditEvent(
+        {
+          action: "logout",
+          actorId: current.id,
+          actorName: current.name,
+          target: "Web console",
+        },
+        payload
+      )
+    }
 
     return { success: true, data: null }
   } catch (error) {
@@ -276,6 +371,16 @@ export async function createUserAction(
     })
 
     const fresh = await loadDashboardUser(user.id)
+
+    await recordAuditEvent(
+      {
+        action: "userCreated",
+        actorId: current.id,
+        actorName: current.name,
+        target: input.email,
+      },
+      payload
+    )
 
     return {
       success: true,
@@ -359,6 +464,16 @@ export async function updateUserAction(
 
     const fresh = await loadDashboardUser(user.id)
 
+    await recordAuditEvent(
+      {
+        action: "userUpdated",
+        actorId: current.id,
+        actorName: current.name,
+        target: input.email,
+      },
+      payload
+    )
+
     return {
       success: true,
       data: fresh ?? toDashboardUser(user as User),
@@ -409,6 +524,16 @@ export async function deleteUserAction(
       id,
       overrideAccess: true,
     })
+
+    await recordAuditEvent(
+      {
+        action: "userDeleted",
+        actorId: current.id,
+        actorName: current.name,
+        target: existing.email,
+      },
+      payload
+    )
 
     return { success: true, data: null }
   } catch (error) {
@@ -479,6 +604,16 @@ export async function updateProfileAction(
     })
 
     const fresh = await loadDashboardUser(user.id)
+
+    await recordAuditEvent(
+      {
+        action: "profileUpdated",
+        actorId: current.id,
+        actorName: fresh?.name ?? input.name,
+        target: input.email,
+      },
+      payload
+    )
 
     return {
       success: true,

@@ -67,10 +67,6 @@ const settingsResources = permissionResources
   .filter((resource) => resource.group === "settings")
   .map((resource) => resource.id)
 
-const appResources = permissionResources
-  .filter((resource) => resource.group === "apps")
-  .map((resource) => resource.id)
-
 /**
  * Initial role documents. These are only used to bootstrap an empty database;
  * after that every role, grant and priority is managed through Payload.
@@ -88,7 +84,7 @@ const DEFAULT_ROLES: SeedRole[] = [
   {
     slug: "admin",
     name: "Admin",
-    description: "Manages users, audit logs, settings and most applications.",
+    description: "Manages users, audit logs, settings and platform modules.",
     isSuperAdmin: false,
     isDefault: false,
     priority: 80,
@@ -100,10 +96,6 @@ const DEFAULT_ROLES: SeedRole[] = [
         ),
         grant(settingsResources, manage),
         grant(["seo"], [...manage, "create", "delete", "publish"]),
-        grant(
-          appResources.filter((id) => id !== "integrations"),
-          crudExport
-        ),
         grant(["media"], crud)
       )
     ),
@@ -111,16 +103,12 @@ const DEFAULT_ROLES: SeedRole[] = [
   {
     slug: "manager",
     name: "Manager",
-    description: "Works with CRM and reporting applications.",
+    description: "Reads settings and works with the apps hub.",
     isSuperAdmin: false,
     isDefault: false,
     priority: 50,
     permissions: buildPermissions(
-      merge(
-        grant(["settings"], view),
-        grant(["appsHub"], view),
-        grant(["crm", "reports"], crudExport)
-      )
+      merge(grant(["settings"], view), grant(["appsHub"], view))
     ),
   },
   {
@@ -131,10 +119,7 @@ const DEFAULT_ROLES: SeedRole[] = [
     isDefault: true,
     priority: 10,
     permissions: buildPermissions(
-      merge(
-        grant(["settings", "appsHub"], view),
-        grant(["reports"], view)
-      )
+      merge(grant(["settings", "appsHub"], view))
     ),
   },
 ]

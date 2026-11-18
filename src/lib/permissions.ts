@@ -12,7 +12,7 @@
  * actions are introduced so existing roles receive one-time defaults without
  * overriding grants the super admin edited afterwards.
  */
-export const PERMISSIONS_VERSION = 3
+export const PERMISSIONS_VERSION = 4
 
 export type PermissionAction =
   | "find"
@@ -48,12 +48,6 @@ export const permissionResourceIds = [
   "localization",
   "notifications",
   "storage",
-  "analytics",
-  "crm",
-  "billing",
-  "automation",
-  "reports",
-  "integrations",
   "media",
 ] as const
 
@@ -141,42 +135,6 @@ export const permissionResources: PermissionResource[] = [
     labelKey: "roles.resources.storage",
     group: "settings",
     actions: [...editable],
-  },
-  {
-    id: "analytics",
-    labelKey: "apps.analytics.name",
-    group: "apps",
-    actions: [...crudExport],
-  },
-  {
-    id: "crm",
-    labelKey: "apps.crm.name",
-    group: "apps",
-    actions: [...crudExport],
-  },
-  {
-    id: "billing",
-    labelKey: "apps.billing.name",
-    group: "apps",
-    actions: [...crudExport],
-  },
-  {
-    id: "automation",
-    labelKey: "apps.automation.name",
-    group: "apps",
-    actions: [...crudExport],
-  },
-  {
-    id: "reports",
-    labelKey: "apps.reports.name",
-    group: "apps",
-    actions: [...crudExport],
-  },
-  {
-    id: "integrations",
-    labelKey: "apps.integrations.name",
-    group: "apps",
-    actions: [...crudExport],
   },
   {
     id: "media",

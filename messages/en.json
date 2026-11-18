@@ -1,8 +1,7 @@
 {
   "Common": {
     "showPassword": "Show password",
-    "hidePassword": "Hide password",
-    "demoNote": "This is a demo submission — connect your auth provider next."
+    "hidePassword": "Hide password"
   },
   "Theme": {
     "label": "Change theme",
@@ -49,7 +48,8 @@
     "submitting": "Creating account...",
     "success": "Account created successfully",
     "hasAccount": "Already have an account?",
-    "loginLink": "Sign in"
+    "loginLink": "Sign in",
+    "successDescription": "Your account is ready. You can now sign in with your credentials."
   },
   "ForgotPassword": {
     "title": "Forgot your password?",
@@ -129,32 +129,6 @@
       "failed": "Failed",
       "warning": "Warning"
     },
-    "apps": {
-      "analytics": {
-        "name": "Analytics",
-        "description": "Track product usage, growth and retention in real time."
-      },
-      "crm": {
-        "name": "CRM & Contacts",
-        "description": "Manage customers, pipelines and every conversation."
-      },
-      "billing": {
-        "name": "Billing & Invoices",
-        "description": "Create invoices, reconcile payments and track revenue."
-      },
-      "automation": {
-        "name": "Workflow Automation",
-        "description": "Automate repetitive tasks with event-driven workflows."
-      },
-      "reports": {
-        "name": "Reports Builder",
-        "description": "Build and schedule custom reports for any team."
-      },
-      "integrations": {
-        "name": "Integrations Hub",
-        "description": "Connect external services and microservices to the core."
-      }
-    },
     "common": {
       "search": "Search",
       "save": "Save changes",
@@ -185,23 +159,25 @@
       "kpi": {
         "totalUsers": "Total users",
         "activeApps": "Active apps",
-        "systemHealth": "System health",
         "recentActivity": "Recent activity",
-        "usersTrend": "+12% this month",
-        "appsTrend": "of registered apps",
-        "healthTrend": "All systems operational",
-        "activityTrend": "events in the last 24h"
+        "appsTrend": "of {count} registered",
+        "activityTrend": "{count, plural, one {event in the last 24h} other {events in the last 24h}}",
+        "usersActive": "{count} active",
+        "failedEvents": "Failed events",
+        "failedEventsHint": "In the last 24 hours"
       },
       "launcher": {
         "title": "App launcher",
         "description": "Open any installed app directly from here.",
         "manage": "Manage apps",
-        "available": "Available"
+        "available": "Available",
+        "empty": "No apps are registered yet. Add one to the registry to launch it here."
       },
       "activity": {
         "title": "Recent system activity",
         "description": "The latest events across the platform.",
-        "viewAll": "View all logs"
+        "viewAll": "View all logs",
+        "empty": "No activity recorded yet."
       }
     },
     "appsHub": {
@@ -217,7 +193,8 @@
       "webhookPlaceholder": "https://api.example.com/hooks/app",
       "requiredRoleLabel": "Required role",
       "statusLabel": "Status",
-      "saveConfig": "Save configuration"
+      "saveConfig": "Save configuration",
+      "none": "No apps are registered yet."
     },
     "users": {
       "title": "Users",
@@ -262,7 +239,6 @@
       "applications": "Applications",
       "system": "System",
       "superAdminHint": "Super Admin has absolute access. Its permissions cannot be restricted.",
-      "rolesLockedHint": "Role and permission management is reserved for the Super Admin role.",
       "save": "Save permissions",
       "reset": "Reset",
       "saved": "Permissions updated for {role}",
@@ -298,12 +274,20 @@
         "appEnabled": "Enabled app",
         "appDisabled": "Disabled app",
         "settingsUpdated": "Updated settings",
-        "apiKeyCreated": "Created API key"
+        "apiKeyCreated": "Created API key",
+        "profileUpdated": "Updated profile",
+        "userUpdated": "Updated user",
+        "userDeleted": "Deleted user",
+        "apiKeyRevoked": "Revoked API key",
+        "webhookUpdated": "Updated webhook",
+        "appConfigured": "Configured app",
+        "sitemapRegenerated": "Regenerated sitemap"
       },
       "results": "{count} events",
       "empty": "No log entries match your filters.",
       "export": "Export CSV",
-      "exported": "Audit logs exported"
+      "exported": "Audit logs exported",
+      "loading": "Loading events..."
     },
     "settings": {
       "title": "Settings",
@@ -393,7 +377,9 @@
         "webhookDescription": "Send platform events to an external endpoint.",
         "webhookUrl": "Endpoint URL",
         "webhookPlaceholder": "https://api.example.com/hooks/events",
-        "saveWebhook": "Save webhook"
+        "saveWebhook": "Save webhook",
+        "secretTitle": "Copy your token now",
+        "secretDescription": "This secret is shown only once and cannot be recovered."
       },
       "navLabel": "Settings sections",
       "nav": {

@@ -31,10 +31,18 @@ import {
 } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
-import { mockApiTokens, type ApiToken } from "@/config/dashboard-mock-data"
+import {
+  generateApiTokenAction,
+  getWebhookAction,
+  listApiTokensAction,
+  revokeApiTokenAction,
+  saveWebhookAction,
+} from "@/lib/api-token-actions"
+import type { ApiTokenView } from "@/lib/api-token-types"
 import { useRouter } from "@/i18n/navigation"
 import { validateConfirmPassword, validatePassword } from "@/lib/auth-validation"
 import { getInitials } from "@/lib/initials"
+import { hasAnyPermission, hasPermission } from "@/lib/permissions"
 import {
   getSiteSettingsAction,
   updateSiteSettingsAction,
@@ -105,9 +113,18 @@ export default function SettingsPage() {
     confirmPassword: "",
   })
 
-  const [tokens, setTokens] = useState<ApiToken[]>(mockApiTokens)
+  const [tokens, setTokens] = useState<ApiTokenView[]>([])
   const [tokenName, setTokenName] = useState("")
+  const [newSecret, setNewSecret] = useState("")
+  const [savingToken, setSavingToken] = useState(false)
   const [webhookUrl, setWebhookUrl] = useState("")
+  const [savingWebhook, setSavingWebhook] = useState(false)
+
+  const canReadApi = hasAnyPermission(currentUser, "settings", [
+    "find",
+    "read",
+  ])
+  const canManageApi = hasPermission(currentUser, "settings", "update")
 
   const languageOptions = [
     { value: "en", label: tl("en") },
@@ -156,6 +173,25 @@ export default function SettingsPage() {
       active = false
     }
   }, [locale])
+
+  useEffect(() => {
+    if (!canReadApi) return
+
+    let active = true
+
+    Promise.all([listApiTokensAction(), getWebhookAction()]).then(
+      ([tokenResult, webhookResult]) => {
+        if (!active) return
+
+        if (tokenResult.success) setTokens(tokenResult.data)
+        if (webhookResult.success) setWebhookUrl(webhookResult.data.webhookUrl)
+      }
+    )
+
+    return () => {
+      active = false
+    }
+  }, [canReadApi])
 
   function updateSite<K extends keyof SiteForm>(key: K, value: SiteForm[K]) {
     setSite((current) => ({ ...current, [key]: value }))
@@ -232,25 +268,50 @@ export default function SettingsPage() {
     router.refresh()
   }
 
-  function generateToken() {
-    if (!tokenName.trim()) return
+  async function generateToken() {
+    if (!tokenName.trim() || savingToken) return
 
-    const token: ApiToken = {
-      id: `tok_${Date.now()}`,
-      name: tokenName.trim(),
-      prefix: `wbx_live_${Math.random().toString(16).slice(2, 6)}`,
-      created: new Date().toISOString(),
-      lastUsed: null,
+    setSavingToken(true)
+    const result = await generateApiTokenAction(tokenName)
+    setSavingToken(false)
+
+    if (!result.success) {
+      toast.error(result.error)
+      return
     }
 
-    setTokens((current) => [token, ...current])
+    setTokens((current) => [result.data.token, ...current])
+    setNewSecret(result.data.secret)
     setTokenName("")
     toast.success(tt("tokenGenerated"))
   }
 
-  function revokeToken(token: ApiToken) {
+  async function revokeToken(token: ApiTokenView) {
+    const result = await revokeApiTokenAction(token.id)
+
+    if (!result.success) {
+      toast.error(result.error)
+      return
+    }
+
     setTokens((current) => current.filter((entry) => entry.id !== token.id))
     toast.success(tt("tokenRevoked"))
+  }
+
+  async function saveWebhook() {
+    if (savingWebhook) return
+
+    setSavingWebhook(true)
+    const result = await saveWebhookAction(webhookUrl)
+    setSavingWebhook(false)
+
+    if (!result.success) {
+      toast.error(result.error)
+      return
+    }
+
+    setWebhookUrl(result.data.webhookUrl)
+    toast.success(tt("webhookSaved"))
   }
 
   async function saveProfile() {
@@ -775,13 +836,42 @@ export default function SettingsPage() {
                   </Field>
                   <Button
                     onClick={generateToken}
-                    disabled={!tokenName.trim()}
+                    disabled={!tokenName.trim() || savingToken || !canManageApi}
                     className="shrink-0"
                   >
                     <KeyRound aria-hidden="true" />
                     {t("settings.apiKeys.generate")}
                   </Button>
                 </div>
+
+                {newSecret && (
+                  <div className="flex flex-col gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-sm">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex flex-col gap-0.5">
+                        <span className="font-medium">
+                          {t("settings.apiKeys.secretTitle")}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {t("settings.apiKeys.secretDescription")}
+                        </span>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setNewSecret("")}
+                        aria-label={t("common.close")}
+                      >
+                        <X aria-hidden="true" />
+                      </Button>
+                    </div>
+                    <code
+                      className="block overflow-x-auto rounded bg-background/60 p-2 font-mono text-xs"
+                      dir="ltr"
+                    >
+                      {newSecret}
+                    </code>
+                  </div>
+                )}
 
                 <div className="overflow-x-auto rounded-lg border">
                   <Table>
@@ -844,6 +934,7 @@ export default function SettingsPage() {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => revokeToken(token)}
+                                disabled={!canManageApi}
                               >
                                 <Trash2 aria-hidden="true" />
                                 {t("settings.apiKeys.revoke")}
@@ -879,7 +970,7 @@ export default function SettingsPage() {
                   />
                 </Field>
                 <div>
-                  <Button onClick={() => toast.success(tt("webhookSaved"))}>
+                  <Button onClick={saveWebhook} disabled={savingWebhook || !canManageApi}>
                     <Webhook aria-hidden="true" />
                     {t("settings.apiKeys.saveWebhook")}
                   </Button>

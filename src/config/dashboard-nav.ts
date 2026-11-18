@@ -1,15 +1,10 @@
 import {
-  ChartColumn,
-  ChartNoAxesCombined,
   LayoutDashboard,
   LayoutGrid,
-  PlugZap,
-  ReceiptText,
   ScrollText,
   Settings2,
   ShieldCheck,
   UsersRound,
-  Workflow,
   type LucideIcon,
 } from "lucide-react"
 
@@ -27,9 +22,9 @@ export type CoreNavItem = {
 
 export type RegisteredApp = {
   id: string
-  /** Key relative to the `Dashboard` namespace, e.g. `apps.analytics.name`. */
+  /** Key relative to the `Dashboard` namespace, e.g. `apps.<id>.name`. */
   nameKey: string
-  /** Key relative to the `Dashboard` namespace, e.g. `apps.analytics.description`. */
+  /** Key relative to the `Dashboard` namespace, e.g. `apps.<id>.description`. */
   descriptionKey: string
   href: string
   icon: LucideIcon
@@ -78,72 +73,20 @@ export const coreNavItems: CoreNavItem[] = [
 ]
 
 /**
- * Modular apps registry. Future mini-apps can be added here and they will
- * automatically show up in the sidebar, the overview launcher and the Apps Hub.
+ * Modular apps registry. This is the single registration point for every
+ * mini-app/plugin. It ships empty on purpose: add an entry here (plus its
+ * permission resource and translation keys) and the app automatically appears
+ * in the sidebar, the overview launcher, the Apps Hub and its own
+ * `/dashboard/apps/[appId]` route without touching the core navigation.
  */
-export const appsRegistry: RegisteredApp[] = [
-  {
-    id: "analytics",
-    nameKey: "apps.analytics.name",
-    descriptionKey: "apps.analytics.description",
-    href: "/dashboard/apps/analytics",
-    icon: ChartNoAxesCombined,
-    status: "active",
-    requiredRole: "admin",
-  },
-  {
-    id: "crm",
-    nameKey: "apps.crm.name",
-    descriptionKey: "apps.crm.description",
-    href: "/dashboard/apps/crm",
-    icon: UsersRound,
-    status: "active",
-    requiredRole: "manager",
-  },
-  {
-    id: "billing",
-    nameKey: "apps.billing.name",
-    descriptionKey: "apps.billing.description",
-    href: "/dashboard/apps/billing",
-    icon: ReceiptText,
-    status: "active",
-    requiredRole: "admin",
-  },
-  {
-    id: "automation",
-    nameKey: "apps.automation.name",
-    descriptionKey: "apps.automation.description",
-    href: "/dashboard/apps/automation",
-    icon: Workflow,
-    status: "beta",
-    requiredRole: "admin",
-  },
-  {
-    id: "reports",
-    nameKey: "apps.reports.name",
-    descriptionKey: "apps.reports.description",
-    href: "/dashboard/apps/reports",
-    icon: ChartColumn,
-    status: "active",
-    requiredRole: "user",
-  },
-  {
-    id: "integrations",
-    nameKey: "apps.integrations.name",
-    descriptionKey: "apps.integrations.description",
-    href: "/dashboard/apps/integrations",
-    icon: PlugZap,
-    status: "coming_soon",
-    requiredRole: "super_admin",
-  },
-]
+export const appsRegistry: RegisteredApp[] = []
 
 export function getAppById(id: string): RegisteredApp | undefined {
   return appsRegistry.find((app) => app.id === id)
 }
 
 /**
- * Very small role comparison helper for the mock RBAC layer. A higher index
+ * Very small role comparison helper used by the app registry. A lower index
  * means a more privileged role.
  */
 export function hasRequiredRole(

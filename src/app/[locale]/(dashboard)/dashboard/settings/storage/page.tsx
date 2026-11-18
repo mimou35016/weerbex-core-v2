@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslations } from "next-intl"
 import { toast } from "sonner"
 
@@ -13,34 +13,70 @@ import {
 } from "@/components/dashboard/settings/settings-ui"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-
-const initialStorage = {
-  provider: "local",
-  bucket: "",
-  region: "",
-  accessKey: "",
-  secretKey: "",
-  maxSize: 10,
-  mimeTypes: "image/png, image/jpeg, application/pdf",
-}
+import {
+  getStorageSettingsAction,
+  saveStorageSettingsAction,
+} from "@/lib/system-settings-actions"
+import {
+  DEFAULT_STORAGE_SETTINGS,
+  type StorageSettingsData,
+} from "@/lib/system-settings-types"
 
 export default function StorageSettingsPage() {
   const t = useTranslations("Dashboard")
-  const [form, setForm] = useState(initialStorage)
+  const [form, setForm] = useState<StorageSettingsData>(
+    DEFAULT_STORAGE_SETTINGS
+  )
+  const [saved, setSaved] = useState<StorageSettingsData>(
+    DEFAULT_STORAGE_SETTINGS
+  )
+  const [saving, setSaving] = useState(false)
 
-  function update<K extends keyof typeof initialStorage>(
+  useEffect(() => {
+    let active = true
+
+    getStorageSettingsAction().then((result) => {
+      if (!active) return
+
+      if (result.success) {
+        setForm(result.data)
+        setSaved(result.data)
+      } else {
+        toast.error(result.error)
+      }
+    })
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  function update<K extends keyof StorageSettingsData>(
     key: K,
-    value: (typeof initialStorage)[K]
+    value: StorageSettingsData[K]
   ) {
     setForm((current) => ({ ...current, [key]: value }))
   }
 
-  function save() {
+  async function save() {
+    if (saving) return
+
+    setSaving(true)
+    const result = await saveStorageSettingsAction(form)
+    setSaving(false)
+
+    if (!result.success) {
+      toast.error(result.error)
+      return
+    }
+
+    setForm(result.data)
+    setSaved(result.data)
     toast.success(t("settings.common.saved"))
   }
 
   function reset() {
-    setForm(initialStorage)
+    setForm(saved)
     toast.success(t("settings.common.resetDone"))
   }
 
@@ -81,7 +117,12 @@ export default function StorageSettingsPage() {
           >
             <FilterSelect
               value={form.provider}
-              onChange={(value) => update("provider", value)}
+              onChange={(value) =>
+                update(
+                  "provider",
+                  value as StorageSettingsData["provider"]
+                )
+              }
               options={providerOptions}
               ariaLabel={t("settings.storage.provider.label")}
               className="w-full sm:w-full"
@@ -219,6 +260,7 @@ export default function StorageSettingsPage() {
           resetLabel={t("settings.common.reset")}
           onSave={save}
           onReset={reset}
+          saving={saving}
         />
       </div>
     </>

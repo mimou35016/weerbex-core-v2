@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslations } from "next-intl"
 import { toast } from "sonner"
 
@@ -12,35 +12,70 @@ import {
   SettingsField,
   SettingsSwitchRow,
 } from "@/components/dashboard/settings/settings-ui"
-
-const initialLocalization = {
-  activeEnglish: true,
-  activeFrench: true,
-  activeArabic: true,
-  defaultLanguage: "en",
-  fallbackLanguage: "en",
-  timezone: "utc",
-  dateFormat: "dmy",
-  firstDayOfWeek: "monday",
-}
+import {
+  getLocalizationSettingsAction,
+  saveLocalizationSettingsAction,
+} from "@/lib/system-settings-actions"
+import {
+  DEFAULT_LOCALIZATION_SETTINGS,
+  type LocalizationSettingsData,
+} from "@/lib/system-settings-types"
 
 export default function LocalizationSettingsPage() {
   const t = useTranslations("Dashboard")
-  const [form, setForm] = useState(initialLocalization)
+  const [form, setForm] = useState<LocalizationSettingsData>(
+    DEFAULT_LOCALIZATION_SETTINGS
+  )
+  const [saved, setSaved] = useState<LocalizationSettingsData>(
+    DEFAULT_LOCALIZATION_SETTINGS
+  )
+  const [saving, setSaving] = useState(false)
 
-  function update<K extends keyof typeof initialLocalization>(
+  useEffect(() => {
+    let active = true
+
+    getLocalizationSettingsAction().then((result) => {
+      if (!active) return
+
+      if (result.success) {
+        setForm(result.data)
+        setSaved(result.data)
+      } else {
+        toast.error(result.error)
+      }
+    })
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  function update<K extends keyof LocalizationSettingsData>(
     key: K,
-    value: (typeof initialLocalization)[K]
+    value: LocalizationSettingsData[K]
   ) {
     setForm((current) => ({ ...current, [key]: value }))
   }
 
-  function save() {
+  async function save() {
+    if (saving) return
+
+    setSaving(true)
+    const result = await saveLocalizationSettingsAction(form)
+    setSaving(false)
+
+    if (!result.success) {
+      toast.error(result.error)
+      return
+    }
+
+    setForm(result.data)
+    setSaved(result.data)
     toast.success(t("settings.common.saved"))
   }
 
   function reset() {
-    setForm(initialLocalization)
+    setForm(saved)
     toast.success(t("settings.common.resetDone"))
   }
 
@@ -150,7 +185,12 @@ export default function LocalizationSettingsPage() {
             >
               <FilterSelect
                 value={form.defaultLanguage}
-                onChange={(value) => update("defaultLanguage", value)}
+                onChange={(value) =>
+                  update(
+                    "defaultLanguage",
+                    value as LocalizationSettingsData["defaultLanguage"]
+                  )
+                }
                 options={languageOptions}
                 ariaLabel={t(
                   "settings.localization.languages.defaultLanguage"
@@ -169,7 +209,12 @@ export default function LocalizationSettingsPage() {
             >
               <FilterSelect
                 value={form.fallbackLanguage}
-                onChange={(value) => update("fallbackLanguage", value)}
+                onChange={(value) =>
+                  update(
+                    "fallbackLanguage",
+                    value as LocalizationSettingsData["fallbackLanguage"]
+                  )
+                }
                 options={languageOptions}
                 ariaLabel={t(
                   "settings.localization.languages.fallbackLanguage"
@@ -191,7 +236,12 @@ export default function LocalizationSettingsPage() {
             >
               <FilterSelect
                 value={form.timezone}
-                onChange={(value) => update("timezone", value)}
+                onChange={(value) =>
+                  update(
+                    "timezone",
+                    value as LocalizationSettingsData["timezone"]
+                  )
+                }
                 options={timezoneOptions}
                 ariaLabel={t("settings.localization.formats.timezone")}
                 className="w-full sm:w-full"
@@ -203,7 +253,12 @@ export default function LocalizationSettingsPage() {
             >
               <FilterSelect
                 value={form.dateFormat}
-                onChange={(value) => update("dateFormat", value)}
+                onChange={(value) =>
+                  update(
+                    "dateFormat",
+                    value as LocalizationSettingsData["dateFormat"]
+                  )
+                }
                 options={dateFormatOptions}
                 ariaLabel={t("settings.localization.formats.dateFormat")}
                 className="w-full sm:w-full"
@@ -215,7 +270,12 @@ export default function LocalizationSettingsPage() {
             >
               <FilterSelect
                 value={form.firstDayOfWeek}
-                onChange={(value) => update("firstDayOfWeek", value)}
+                onChange={(value) =>
+                  update(
+                    "firstDayOfWeek",
+                    value as LocalizationSettingsData["firstDayOfWeek"]
+                  )
+                }
                 options={firstDayOptions}
                 ariaLabel={t(
                   "settings.localization.formats.firstDayOfWeek"
@@ -231,6 +291,7 @@ export default function LocalizationSettingsPage() {
           resetLabel={t("settings.common.reset")}
           onSave={save}
           onReset={reset}
+          saving={saving}
         />
       </div>
     </>

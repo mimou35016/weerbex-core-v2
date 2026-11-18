@@ -1,8 +1,7 @@
 {
   "Common": {
     "showPassword": "إظهار كلمة المرور",
-    "hidePassword": "إخفاء كلمة المرور",
-    "demoNote": "هذا عرض تجريبي — قم بربط مزود المصادقة الخاص بك لاحقًا."
+    "hidePassword": "إخفاء كلمة المرور"
   },
   "Theme": {
     "label": "تغيير السمة",
@@ -49,7 +48,8 @@
     "submitting": "جارٍ إنشاء الحساب...",
     "success": "تم إنشاء الحساب بنجاح",
     "hasAccount": "لديك حساب بالفعل؟",
-    "loginLink": "تسجيل الدخول"
+    "loginLink": "تسجيل الدخول",
+    "successDescription": "حسابك جاهز الآن. يمكنك تسجيل الدخول باستخدام بياناتك."
   },
   "ForgotPassword": {
     "title": "نسيت كلمة المرور؟",
@@ -129,32 +129,6 @@
       "failed": "فشل",
       "warning": "تحذير"
     },
-    "apps": {
-      "analytics": {
-        "name": "التحليلات",
-        "description": "تابع استخدام المنتج والنمو والاحتفاظ بالعملاء في الوقت الفعلي."
-      },
-      "crm": {
-        "name": "إدارة العملاء وجهات الاتصال",
-        "description": "أدر العملاء ومسارات البيع وكل المحادثات."
-      },
-      "billing": {
-        "name": "الفواتير والمدفوعات",
-        "description": "أنشئ الفواتير وطابق المدفوعات وتابع الإيرادات."
-      },
-      "automation": {
-        "name": "أتمتة سير العمل",
-        "description": "أتمت المهام المتكررة باستخدام سير عمل مدفوع بالأحداث."
-      },
-      "reports": {
-        "name": "منشئ التقارير",
-        "description": "أنشئ تقارير مخصصة وجدولها لأي فريق."
-      },
-      "integrations": {
-        "name": "مركز التكاملات",
-        "description": "اربط الخدمات الخارجية والخدمات المصغّرة بالنواة."
-      }
-    },
     "common": {
       "search": "بحث",
       "save": "حفظ التغييرات",
@@ -185,23 +159,25 @@
       "kpi": {
         "totalUsers": "إجمالي المستخدمين",
         "activeApps": "التطبيقات النشطة",
-        "systemHealth": "حالة النظام",
         "recentActivity": "النشاط الأخير",
-        "usersTrend": "+12% هذا الشهر",
-        "appsTrend": "من التطبيقات المسجّلة",
-        "healthTrend": "جميع الأنظمة تعمل بشكل سليم",
-        "activityTrend": "أحداث خلال آخر 24 ساعة"
+        "appsTrend": "من أصل {count} مسجلة",
+        "activityTrend": "{count, plural, one {حدث خلال آخر 24 ساعة} other {أحداث خلال آخر 24 ساعة}}",
+        "usersActive": "{count} نشط",
+        "failedEvents": "الأحداث الفاشلة",
+        "failedEventsHint": "خلال آخر 24 ساعة"
       },
       "launcher": {
         "title": "مشغّل التطبيقات",
         "description": "افتح أي تطبيق مثبّت مباشرة من هنا.",
         "manage": "إدارة التطبيقات",
-        "available": "متاح"
+        "available": "متاح",
+        "empty": "لم يتم تسجيل أي تطبيق بعد. أضف تطبيقًا إلى السجل لتشغيله من هنا."
       },
       "activity": {
         "title": "نشاط النظام الأخير",
         "description": "أحدث الأحداث عبر المنصة.",
-        "viewAll": "عرض كل السجلات"
+        "viewAll": "عرض كل السجلات",
+        "empty": "لم يتم تسجيل أي نشاط بعد."
       }
     },
     "appsHub": {
@@ -217,7 +193,8 @@
       "webhookPlaceholder": "https://api.example.com/hooks/app",
       "requiredRoleLabel": "الدور المطلوب",
       "statusLabel": "الحالة",
-      "saveConfig": "حفظ التهيئة"
+      "saveConfig": "حفظ التهيئة",
+      "none": "لم يتم تسجيل أي تطبيق بعد."
     },
     "users": {
       "title": "المستخدمون",
@@ -262,7 +239,6 @@
       "applications": "التطبيقات",
       "system": "النظام",
       "superAdminHint": "يمتلك المدير الأعلى وصولًا مطلقًا. لا يمكن تقييد صلاحياته.",
-      "rolesLockedHint": "إدارة الأدوار والصلاحيات مخصصة لدور المدير الأعلى فقط.",
       "save": "حفظ الصلاحيات",
       "reset": "إعادة تعيين",
       "saved": "تم تحديث صلاحيات {role}",
@@ -298,12 +274,20 @@
         "appEnabled": "تفعيل تطبيق",
         "appDisabled": "تعطيل تطبيق",
         "settingsUpdated": "تحديث الإعدادات",
-        "apiKeyCreated": "إنشاء مفتاح API"
+        "apiKeyCreated": "إنشاء مفتاح API",
+        "profileUpdated": "تم تحديث الملف الشخصي",
+        "userUpdated": "تم تحديث المستخدم",
+        "userDeleted": "تم حذف المستخدم",
+        "apiKeyRevoked": "تم إبطال مفتاح API",
+        "webhookUpdated": "تم تحديث الويب هوك",
+        "appConfigured": "تم تكوين التطبيق",
+        "sitemapRegenerated": "تم إعادة إنشاء خريطة الموقع"
       },
       "results": "{count} حدث",
       "empty": "لا توجد إدخالات سجل تطابق عوامل التصفية.",
       "export": "تصدير CSV",
-      "exported": "تم تصدير سجلات التدقيق"
+      "exported": "تم تصدير سجلات التدقيق",
+      "loading": "جارٍ تحميل الأحداث..."
     },
     "settings": {
       "title": "الإعدادات",
@@ -393,7 +377,9 @@
         "webhookDescription": "أرسل أحداث المنصة إلى نقطة نهاية خارجية.",
         "webhookUrl": "رابط نقطة النهاية",
         "webhookPlaceholder": "https://api.example.com/hooks/events",
-        "saveWebhook": "حفظ الويب هوك"
+        "saveWebhook": "حفظ الويب هوك",
+        "secretTitle": "انسخ رمزك الآن",
+        "secretDescription": "يُعرض هذا السر مرة واحدة فقط ولا يمكن استرداده."
       },
       "navLabel": "أقسام الإعدادات",
       "nav": {

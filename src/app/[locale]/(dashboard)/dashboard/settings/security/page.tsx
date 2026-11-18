@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslations } from "next-intl"
 import { toast } from "sonner"
 
@@ -15,39 +15,70 @@ import {
 import { Input } from "@/components/ui/input"
 import { Slider } from "@/components/ui/slider"
 import { Textarea } from "@/components/ui/textarea"
-
-const initialSecurity = {
-  sessionTimeout: 60,
-  forcePasswordExpiration: false,
-  minLength: 12,
-  requireNumbers: true,
-  requireSymbols: true,
-  rateLimitEnabled: true,
-  maxRequests: 120,
-  captchaProvider: "turnstile",
-  captchaSiteKey: "",
-  captchaSecretKey: "",
-  ipAllowList: "",
-  ipBlockList: "",
-}
+import {
+  getSecuritySettingsAction,
+  saveSecuritySettingsAction,
+} from "@/lib/system-settings-actions"
+import {
+  DEFAULT_SECURITY_SETTINGS,
+  type SecuritySettingsData,
+} from "@/lib/system-settings-types"
 
 export default function SecuritySettingsPage() {
   const t = useTranslations("Dashboard")
-  const [form, setForm] = useState(initialSecurity)
+  const [form, setForm] = useState<SecuritySettingsData>(
+    DEFAULT_SECURITY_SETTINGS
+  )
+  const [saved, setSaved] = useState<SecuritySettingsData>(
+    DEFAULT_SECURITY_SETTINGS
+  )
+  const [saving, setSaving] = useState(false)
 
-  function update<K extends keyof typeof initialSecurity>(
+  useEffect(() => {
+    let active = true
+
+    getSecuritySettingsAction().then((result) => {
+      if (!active) return
+
+      if (result.success) {
+        setForm(result.data)
+        setSaved(result.data)
+      } else {
+        toast.error(result.error)
+      }
+    })
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  function update<K extends keyof SecuritySettingsData>(
     key: K,
-    value: (typeof initialSecurity)[K]
+    value: SecuritySettingsData[K]
   ) {
     setForm((current) => ({ ...current, [key]: value }))
   }
 
-  function save() {
+  async function save() {
+    if (saving) return
+
+    setSaving(true)
+    const result = await saveSecuritySettingsAction(form)
+    setSaving(false)
+
+    if (!result.success) {
+      toast.error(result.error)
+      return
+    }
+
+    setForm(result.data)
+    setSaved(result.data)
     toast.success(t("settings.common.saved"))
   }
 
   function reset() {
-    setForm(initialSecurity)
+    setForm(saved)
     toast.success(t("settings.common.resetDone"))
   }
 
@@ -214,7 +245,12 @@ export default function SecuritySettingsPage() {
           >
             <FilterSelect
               value={form.captchaProvider}
-              onChange={(value) => update("captchaProvider", value)}
+              onChange={(value) =>
+                update(
+                  "captchaProvider",
+                  value as SecuritySettingsData["captchaProvider"]
+                )
+              }
               options={captchaOptions}
               ariaLabel={t("settings.security.captcha.provider")}
               className="w-full sm:w-full"
@@ -315,6 +351,7 @@ export default function SecuritySettingsPage() {
           resetLabel={t("settings.common.reset")}
           onSave={save}
           onReset={reset}
+          saving={saving}
         />
       </div>
     </>

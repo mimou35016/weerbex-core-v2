@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Download } from "lucide-react"
 import { useFormatter, useTranslations } from "next-intl"
 import { toast } from "sonner"
@@ -20,17 +20,41 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { mockAuditLogs } from "@/config/dashboard-mock-data"
+import { listAuditLogsAction } from "@/lib/audit-actions"
+import type { AuditEntry } from "@/lib/audit-types"
 import { hasPermission } from "@/lib/permissions"
 
 export default function AuditLogsPage() {
   const t = useTranslations("Dashboard")
   const ts = useTranslations("Dashboard.auditStatus")
+  const tac = useTranslations("Dashboard.audit.actions")
   const format = useFormatter()
   const currentUser = useCurrentUser()
 
   const [query, setQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
+  const [logs, setLogs] = useState<AuditEntry[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let active = true
+
+    listAuditLogsAction().then((result) => {
+      if (!active) return
+
+      if (result.success) {
+        setLogs(result.data)
+      } else {
+        toast.error(result.error)
+      }
+
+      setLoading(false)
+    })
+
+    return () => {
+      active = false
+    }
+  }, [])
 
   const statusOptions: FilterOption[] = [
     { value: "all", label: t("common.allStatuses") },
@@ -39,11 +63,14 @@ export default function AuditLogsPage() {
     { value: "failed", label: ts("failed") },
   ]
 
+  const actionLabel = (action: string) =>
+    tac.has(action) ? tac(action) : action
+
   const normalizedQuery = query.trim().toLowerCase()
-  const filteredLogs = mockAuditLogs.filter((log) => {
+  const filteredLogs = logs.filter((log) => {
     const matchesQuery =
       normalizedQuery.length === 0 ||
-      `${t(log.actionKey)} ${log.user} ${log.target} ${log.ip}`
+      `${actionLabel(log.action)} ${log.actor} ${log.target} ${log.ip}`
         .toLowerCase()
         .includes(normalizedQuery)
     const matchesStatus =
@@ -67,8 +94,8 @@ export default function AuditLogsPage() {
         t("audit.table.timestamp"),
       ],
       ...filteredLogs.map((log) => [
-        t(log.actionKey),
-        log.user,
+        actionLabel(log.action),
+        log.actor,
         log.target,
         log.ip,
         ts(log.status),
@@ -147,16 +174,16 @@ export default function AuditLogsPage() {
               {filteredLogs.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
-                    {t("audit.empty")}
+                    {loading ? t("audit.loading") : t("audit.empty")}
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredLogs.map((log) => (
                   <TableRow key={log.id}>
                     <TableCell className="font-medium">
-                      {t(log.actionKey)}
+                      {actionLabel(log.action)}
                     </TableCell>
-                    <TableCell>{log.user}</TableCell>
+                    <TableCell>{log.actor}</TableCell>
                     <TableCell className="text-muted-foreground">
                       {log.target}
                     </TableCell>

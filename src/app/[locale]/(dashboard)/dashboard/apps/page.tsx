@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ExternalLink, Settings2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { toast } from "sonner"
@@ -31,33 +31,57 @@ import {
 import { Switch } from "@/components/ui/switch"
 import {
   appsRegistry,
-  roleOrder,
-  type DashboardRole,
   type RegisteredApp,
 } from "@/config/dashboard-nav"
 import { Link } from "@/i18n/navigation"
-import { hasPermission } from "@/lib/permissions"
+import { hasAnyPermission, hasPermission } from "@/lib/permissions"
 import { canAccessApp } from "@/lib/rbac"
+import { listRolesAction } from "@/lib/role-actions"
+import type { RoleOption } from "@/lib/roles"
+import {
+  getAppConfigsAction,
+  saveAppConfigAction,
+  toggleAppAction,
+} from "@/lib/system-settings-actions"
+import type { AppConfigData } from "@/lib/system-settings-types"
 
 export default function AppsHubPage() {
   const t = useTranslations("Dashboard")
   const ta = useTranslations("Dashboard.appStatus")
-  const tr = useTranslations("Dashboard.roles")
   const tt = useTranslations("Dashboard.toast")
   const locale = useLocale()
   const currentUser = useCurrentUser()
   const canConfigure = hasPermission(currentUser, "appsHub", "configure")
+  const canRead = hasAnyPermission(currentUser, "appsHub", ["find", "read"])
 
   const [query, setQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
-  const [enabled, setEnabled] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(
-      appsRegistry.map((app) => [app.id, app.status !== "coming_soon"])
-    )
-  )
+  const [configs, setConfigs] = useState<AppConfigData[]>([])
+  const [roles, setRoles] = useState<RoleOption[]>([])
   const [configuring, setConfiguring] = useState<RegisteredApp | null>(null)
   const [webhook, setWebhook] = useState("")
-  const [configRole, setConfigRole] = useState<DashboardRole>("admin")
+  const [configRole, setConfigRole] = useState("")
+  const [savingConfig, setSavingConfig] = useState(false)
+
+  useEffect(() => {
+    if (!canRead) return
+
+    let active = true
+
+    getAppConfigsAction().then((result) => {
+      if (active && result.success) setConfigs(result.data)
+    })
+
+    if (canConfigure) {
+      listRolesAction().then((result) => {
+        if (active && result.success) setRoles(result.data)
+      })
+    }
+
+    return () => {
+      active = false
+    }
+  }, [canRead, canConfigure])
 
   const statusOptions: FilterOption[] = [
     { value: "all", label: t("common.allStatuses") },
@@ -66,9 +90,9 @@ export default function AppsHubPage() {
     { value: "coming_soon", label: ta("coming_soon") },
   ]
 
-  const roleOptions: FilterOption[] = roleOrder.map((role) => ({
-    value: role,
-    label: tr(role),
+  const roleOptions: FilterOption[] = roles.map((role) => ({
+    value: role.slug,
+    label: role.name,
   }))
 
   const normalizedQuery = query.trim().toLowerCase()
@@ -84,8 +108,27 @@ export default function AppsHubPage() {
     return matchesQuery && matchesStatus
   })
 
-  function toggleApp(app: RegisteredApp, next: boolean) {
-    setEnabled((current) => ({ ...current, [app.id]: next }))
+  function configFor(appId: string): AppConfigData | undefined {
+    return configs.find((entry) => entry.appId === appId)
+  }
+
+  function isEnabled(app: RegisteredApp): boolean {
+    return configFor(app.id)?.enabled ?? app.status !== "coming_soon"
+  }
+
+  function requiredRoleFor(app: RegisteredApp): string {
+    return configFor(app.id)?.requiredRole || app.requiredRole
+  }
+
+  async function toggleApp(app: RegisteredApp, next: boolean) {
+    const result = await toggleAppAction(app.id, next)
+
+    if (!result.success) {
+      toast.error(result.error)
+      return
+    }
+
+    setConfigs(result.data)
     toast.success(
       next
         ? tt("appEnabled", { app: t(app.nameKey) })
@@ -95,12 +138,28 @@ export default function AppsHubPage() {
 
   function openConfigure(app: RegisteredApp) {
     setConfiguring(app)
-    setWebhook("")
-    setConfigRole(app.requiredRole)
+    setWebhook(configFor(app.id)?.webhookUrl ?? "")
+    setConfigRole(requiredRoleFor(app))
   }
 
-  function saveConfiguration() {
-    if (!configuring) return
+  async function saveConfiguration() {
+    if (!configuring || savingConfig) return
+
+    setSavingConfig(true)
+    const result = await saveAppConfigAction({
+      appId: configuring.id,
+      enabled: isEnabled(configuring),
+      requiredRole: configRole,
+      webhookUrl: webhook.trim(),
+    })
+    setSavingConfig(false)
+
+    if (!result.success) {
+      toast.error(result.error)
+      return
+    }
+
+    setConfigs(result.data)
     toast.success(tt("appConfigured", { app: t(configuring.nameKey) }))
     setConfiguring(null)
   }
@@ -128,7 +187,9 @@ export default function AppsHubPage() {
 
       {filteredApps.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed p-10 text-center">
-          <p className="text-sm text-muted-foreground">{t("appsHub.empty")}</p>
+          <p className="text-sm text-muted-foreground">
+            {appsRegistry.length === 0 ? t("appsHub.none") : t("appsHub.empty")}
+          </p>
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -169,7 +230,7 @@ export default function AppsHubPage() {
                     </Label>
                     <Switch
                       id={`enable-${app.id}`}
-                      checked={Boolean(enabled[app.id])}
+                      checked={isEnabled(app)}
                       onCheckedChange={(checked) => toggleApp(app, checked)}
                       disabled={isComingSoon || !canConfigure}
                       aria-label={t(app.nameKey)}
@@ -251,13 +312,22 @@ export default function AppsHubPage() {
 
             <div className="flex flex-col gap-1.5">
               <Label>{t("appsHub.requiredRoleLabel")}</Label>
-              <FilterSelect
-                value={configRole}
-                onChange={(value) => setConfigRole(value as DashboardRole)}
-                options={roleOptions}
-                ariaLabel={t("appsHub.requiredRoleLabel")}
-                className="w-full sm:w-full"
-              />
+              {roleOptions.length > 0 ? (
+                <FilterSelect
+                  value={configRole}
+                  onChange={setConfigRole}
+                  options={roleOptions}
+                  ariaLabel={t("appsHub.requiredRoleLabel")}
+                  className="w-full sm:w-full"
+                />
+              ) : (
+                <Input
+                  value={configRole}
+                  onChange={(event) => setConfigRole(event.target.value)}
+                  placeholder={t("common.requiredRole")}
+                  dir="ltr"
+                />
+              )}
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -275,7 +345,9 @@ export default function AppsHubPage() {
           </div>
 
           <SheetFooter>
-            <Button onClick={saveConfiguration}>{t("appsHub.saveConfig")}</Button>
+            <Button onClick={saveConfiguration} disabled={savingConfig}>
+              {t("appsHub.saveConfig")}
+            </Button>
             <Button variant="outline" onClick={() => setConfiguring(null)}>
               {t("common.cancel")}
             </Button>
