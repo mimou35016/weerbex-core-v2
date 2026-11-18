@@ -4,6 +4,11 @@ import type { User } from "@/payload-types"
 import { getPayloadClient } from "./payload"
 import { toDashboardUser, type DashboardUser } from "./users"
 
+/**
+ * Resolves the signed-in user together with a freshly populated role document.
+ * The role is always re-read from the database so permission or role changes
+ * take effect on the next request instead of relying on stale JWT claims.
+ */
 export async function getCurrentUser(): Promise<DashboardUser | null> {
   try {
     const payload = await getPayloadClient()
@@ -11,7 +16,14 @@ export async function getCurrentUser(): Promise<DashboardUser | null> {
 
     if (!user) return null
 
-    return toDashboardUser(user as User)
+    const fresh = (await payload.findByID({
+      collection: "users",
+      id: user.id,
+      depth: 1,
+      overrideAccess: true,
+    })) as User
+
+    return toDashboardUser(fresh)
   } catch {
     return null
   }

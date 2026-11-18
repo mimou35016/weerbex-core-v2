@@ -5,6 +5,7 @@ import { ExternalLink, Settings2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { toast } from "sonner"
 
+import { useCurrentUser } from "@/components/dashboard/current-user-provider"
 import { FilterSelect, type FilterOption } from "@/components/dashboard/filter-select"
 import { PageHeader } from "@/components/dashboard/page-header"
 import { SearchInput } from "@/components/dashboard/search-input"
@@ -35,6 +36,8 @@ import {
   type RegisteredApp,
 } from "@/config/dashboard-nav"
 import { Link } from "@/i18n/navigation"
+import { hasPermission } from "@/lib/permissions"
+import { canAccessApp } from "@/lib/rbac"
 
 export default function AppsHubPage() {
   const t = useTranslations("Dashboard")
@@ -42,6 +45,8 @@ export default function AppsHubPage() {
   const tr = useTranslations("Dashboard.roles")
   const tt = useTranslations("Dashboard.toast")
   const locale = useLocale()
+  const currentUser = useCurrentUser()
+  const canConfigure = hasPermission(currentUser, "appsHub", "configure")
 
   const [query, setQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
@@ -166,26 +171,28 @@ export default function AppsHubPage() {
                       id={`enable-${app.id}`}
                       checked={Boolean(enabled[app.id])}
                       onCheckedChange={(checked) => toggleApp(app, checked)}
-                      disabled={isComingSoon}
+                      disabled={isComingSoon || !canConfigure}
                       aria-label={t(app.nameKey)}
                     />
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1"
-                      onClick={() => openConfigure(app)}
-                    >
-                      <Settings2 aria-hidden="true" />
-                      {t("common.configure")}
-                    </Button>
+                    {canConfigure && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1"
+                        onClick={() => openConfigure(app)}
+                      >
+                        <Settings2 aria-hidden="true" />
+                        {t("common.configure")}
+                      </Button>
+                    )}
                     {isComingSoon ? (
                       <Button size="sm" className="flex-1" disabled>
                         {ta("coming_soon")}
                       </Button>
-                    ) : (
+                    ) : canAccessApp(currentUser, app.id) ? (
                       <Button
                         size="sm"
                         className="flex-1"
@@ -194,6 +201,10 @@ export default function AppsHubPage() {
                       >
                         <ExternalLink aria-hidden="true" />
                         {t("common.launch")}
+                      </Button>
+                    ) : (
+                      <Button size="sm" className="flex-1" disabled>
+                        {t("common.noAccess")}
                       </Button>
                     )}
                   </div>

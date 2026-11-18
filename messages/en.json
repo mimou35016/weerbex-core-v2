@@ -105,7 +105,13 @@
         "roles": "Roles & Permissions",
         "audit": "Audit Logs",
         "settings": "Settings",
-        "appsHub": "Apps Hub"
+        "appsHub": "Apps Hub",
+        "seo": "SEO",
+        "security": "Security",
+        "localization": "Localization",
+        "notifications": "Notifications",
+        "storage": "Storage",
+        "media": "Media library"
       }
     },
     "status": {
@@ -156,6 +162,7 @@
       "close": "Close",
       "launch": "Launch",
       "configure": "Configure",
+      "noAccess": "No access",
       "enable": "Enable",
       "disable": "Disable",
       "actions": "Actions",
@@ -241,20 +248,34 @@
     },
     "rolesPage": {
       "title": "Roles & Permissions",
-      "description": "Define what each role can read, write and delete.",
+      "description": "Define exactly which actions each role can perform on every module and application.",
       "selectRole": "Select role",
       "roleHint": "Choose a role to edit its permission matrix.",
       "matrixTitle": "Permissions matrix",
-      "matrixDescription": "Toggle access per module and app for the selected role.",
+      "matrixDescription": "Toggle every action per resource for the selected role. Unsupported actions are marked with a dash.",
       "resource": "Resource",
       "read": "Read",
       "write": "Write",
       "delete": "Delete",
       "coreModules": "Core modules",
+      "settingsModules": "Settings modules",
       "applications": "Applications",
+      "system": "System",
+      "superAdminHint": "Super Admin has absolute access. Its permissions cannot be restricted.",
+      "rolesLockedHint": "Role and permission management is reserved for the Super Admin role.",
       "save": "Save permissions",
       "reset": "Reset",
-      "saved": "Permissions updated for {role}"
+      "saved": "Permissions updated for {role}",
+      "actions": {
+        "find": "List",
+        "read": "Read",
+        "create": "Create",
+        "update": "Update",
+        "delete": "Delete",
+        "export": "Export",
+        "publish": "Publish",
+        "configure": "Configure"
+      }
     },
     "audit": {
       "title": "Audit logs",
@@ -280,7 +301,9 @@
         "apiKeyCreated": "Created API key"
       },
       "results": "{count} events",
-      "empty": "No log entries match your filters."
+      "empty": "No log entries match your filters.",
+      "export": "Export CSV",
+      "exported": "Audit logs exported"
     },
     "settings": {
       "title": "Settings",

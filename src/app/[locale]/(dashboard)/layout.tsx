@@ -17,7 +17,7 @@ export default async function DashboardLayout({
   const { locale } = await params
   const user = await getCurrentUser()
 
-  if (!user) {
+  if (!user || user.status !== "active") {
     redirect(`/${locale}/login`)
   }
 

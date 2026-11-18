@@ -5,6 +5,7 @@ import { Ban, Ellipsis, PenLine, Plus, Trash2, UserCheck } from "lucide-react"
 import { useFormatter, useTranslations } from "next-intl"
 import { toast } from "sonner"
 
+import { useCurrentUser } from "@/components/dashboard/current-user-provider"
 import { FilterSelect, type FilterOption } from "@/components/dashboard/filter-select"
 import { PageHeader } from "@/components/dashboard/page-header"
 import { SearchInput } from "@/components/dashboard/search-input"
@@ -38,11 +39,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import {
-  roleOrder,
-  type DashboardRole,
-} from "@/config/dashboard-nav"
 import { getInitials } from "@/lib/initials"
+import { hasPermission } from "@/lib/permissions"
+import { listRoleOptionsAction } from "@/lib/role-actions"
+import type { RoleOption } from "@/lib/roles"
 import {
   createUserAction,
   deleteUserAction,
@@ -54,15 +54,23 @@ import { type DashboardUser, type UserStatus } from "@/lib/users"
 type UserForm = {
   name: string
   email: string
-  role: DashboardRole
+  roleId: string
   status: UserStatus
 }
 
 const emptyForm: UserForm = {
   name: "",
   email: "",
-  role: "user",
+  roleId: "",
   status: "active",
+}
+
+function getDefaultRoleId(roles: RoleOption[]) {
+  return (
+    roles.find((role) => role.isDefault)?.id ??
+    roles[roles.length - 1]?.id ??
+    ""
+  )
 }
 
 export default function UsersPage() {
@@ -72,8 +80,10 @@ export default function UsersPage() {
   const tc = useTranslations("Dashboard.common")
   const tt = useTranslations("Dashboard.toast")
   const format = useFormatter()
+  const currentUser = useCurrentUser()
 
   const [users, setUsers] = useState<DashboardUser[]>([])
+  const [roles, setRoles] = useState<RoleOption[]>([])
   const [query, setQuery] = useState("")
   const [roleFilter, setRoleFilter] = useState("all")
   const [statusFilter, setStatusFilter] = useState("all")
@@ -84,24 +94,45 @@ export default function UsersPage() {
   useEffect(() => {
     let active = true
 
-    listUsersAction().then((result) => {
-      if (!active) return
+    Promise.all([listUsersAction(), listRoleOptionsAction()]).then(
+      ([usersResult, rolesResult]) => {
+        if (!active) return
 
-      if (result.success) {
-        setUsers(result.data)
-      } else {
-        toast.error(result.error)
+        if (usersResult.success) {
+          setUsers(usersResult.data)
+        } else {
+          toast.error(usersResult.error)
+        }
+
+        if (rolesResult.success) {
+          setRoles(rolesResult.data)
+          setForm((current) =>
+            current.roleId
+              ? current
+              : {
+                  ...current,
+                  roleId: getDefaultRoleId(rolesResult.data),
+                }
+          )
+        } else {
+          toast.error(rolesResult.error)
+        }
       }
-    })
+    )
 
     return () => {
       active = false
     }
   }, [])
 
+  function roleLabel(role: { slug: string; name: string }) {
+    const slug = role.slug as never
+    return tr.has(slug) ? tr(slug) : role.name
+  }
+
   const roleOptions: FilterOption[] = [
     { value: "all", label: tc("allRoles") },
-    ...roleOrder.map((role) => ({ value: role, label: tr(role) })),
+    ...roles.map((role) => ({ value: role.slug, label: roleLabel(role) })),
   ]
 
   const statusOptions: FilterOption[] = [
@@ -125,7 +156,7 @@ export default function UsersPage() {
 
   function openAddDialog() {
     setEditing(null)
-    setForm(emptyForm)
+    setForm({ ...emptyForm, roleId: getDefaultRoleId(roles) })
     setDialogOpen(true)
   }
 
@@ -134,7 +165,7 @@ export default function UsersPage() {
     setForm({
       name: user.name,
       email: user.email,
-      role: user.role,
+      roleId: user.roleId ?? getDefaultRoleId(roles),
       status: user.status,
     })
     setDialogOpen(true)
@@ -144,7 +175,12 @@ export default function UsersPage() {
     if (!form.name.trim() || !form.email.trim()) return
 
     if (editing) {
-      const result = await updateUserAction(editing.id, form)
+      const result = await updateUserAction(editing.id, {
+        name: form.name,
+        email: form.email,
+        roleId: form.roleId || undefined,
+        status: form.status,
+      })
 
       if (!result.success) {
         toast.error(result.error)
@@ -156,7 +192,12 @@ export default function UsersPage() {
       )
       toast.success(tt("userUpdated"))
     } else {
-      const result = await createUserAction(form)
+      const result = await createUserAction({
+        name: form.name,
+        email: form.email,
+        roleId: form.roleId || undefined,
+        status: form.status,
+      })
 
       if (!result.success) {
         toast.error(result.error)
@@ -177,7 +218,7 @@ export default function UsersPage() {
     const result = await updateUserAction(user.id, {
       name: user.name,
       email: user.email,
-      role: user.role,
+      roleId: user.roleId ?? undefined,
       status: nextStatus,
     })
 
@@ -206,7 +247,18 @@ export default function UsersPage() {
     toast.success(tt("userDeleted"))
   }
 
+  const canCreate = hasPermission(currentUser, "users", "create")
+  const canUpdate = hasPermission(currentUser, "users", "update")
+  const canDelete = hasPermission(currentUser, "users", "delete")
   const canSave = form.name.trim().length > 0 && form.email.trim().length > 0
+  const selectedRole = roles.find((role) => role.id === form.roleId)
+  const readOnlyRole =
+    selectedRole ??
+    (editing
+      ? { slug: editing.role, name: editing.roleName }
+      : currentUser
+        ? { slug: currentUser.role, name: currentUser.roleName }
+        : null)
 
   return (
     <>
@@ -214,10 +266,12 @@ export default function UsersPage() {
         title={t("users.title")}
         description={t("users.description")}
       >
-        <Button onClick={openAddDialog}>
-          <Plus aria-hidden="true" />
-          {t("users.add")}
-        </Button>
+        {canCreate && (
+          <Button onClick={openAddDialog}>
+            <Plus aria-hidden="true" />
+            {t("users.add")}
+          </Button>
+        )}
       </PageHeader>
 
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
@@ -281,7 +335,9 @@ export default function UsersPage() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="secondary">{tr(user.role)}</Badge>
+                      <Badge variant="secondary">
+                        {roleLabel({ slug: user.role, name: user.roleName })}
+                      </Badge>
                     </TableCell>
                     <TableCell>
                       <StatusBadge
@@ -296,43 +352,57 @@ export default function UsersPage() {
                       })}
                     </TableCell>
                     <TableCell className="text-end">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger
-                          render={
-                            <Button
-                              variant="ghost"
-                              size="icon-sm"
-                              aria-label={tc("actions")}
-                            />
-                          }
-                        >
-                          <Ellipsis aria-hidden="true" />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => openEditDialog(user)}>
-                            <PenLine aria-hidden="true" />
-                            {tc("edit")}
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => toggleUserStatus(user)}>
-                            {user.status === "suspended" ? (
-                              <UserCheck aria-hidden="true" />
-                            ) : (
-                              <Ban aria-hidden="true" />
-                            )}
-                            {user.status === "suspended"
-                              ? t("users.activate")
-                              : t("users.suspend")}
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            variant="destructive"
-                            onClick={() => deleteUser(user)}
+                      {(canUpdate || canDelete) && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger
+                            render={
+                              <Button
+                                variant="ghost"
+                                size="icon-sm"
+                                aria-label={tc("actions")}
+                              />
+                            }
                           >
-                            <Trash2 aria-hidden="true" />
-                            {tc("delete")}
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                            <Ellipsis aria-hidden="true" />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            {canUpdate && (
+                              <>
+                                <DropdownMenuItem
+                                  onClick={() => openEditDialog(user)}
+                                >
+                                  <PenLine aria-hidden="true" />
+                                  {tc("edit")}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => toggleUserStatus(user)}
+                                >
+                                  {user.status === "suspended" ? (
+                                    <UserCheck aria-hidden="true" />
+                                  ) : (
+                                    <Ban aria-hidden="true" />
+                                  )}
+                                  {user.status === "suspended"
+                                    ? t("users.activate")
+                                    : t("users.suspend")}
+                                </DropdownMenuItem>
+                              </>
+                            )}
+                            {canUpdate && canDelete && (
+                              <DropdownMenuSeparator />
+                            )}
+                            {canDelete && (
+                              <DropdownMenuItem
+                                variant="destructive"
+                                onClick={() => deleteUser(user)}
+                              >
+                                <Trash2 aria-hidden="true" />
+                                {tc("delete")}
+                              </DropdownMenuItem>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))
@@ -386,21 +456,29 @@ export default function UsersPage() {
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="flex flex-col gap-1.5">
                 <Label>{tc("role")}</Label>
-                <FilterSelect
-                  value={form.role}
-                  onChange={(value) =>
-                    setForm((current) => ({
-                      ...current,
-                      role: value as DashboardRole,
-                    }))
-                  }
-                  options={roleOrder.map((role) => ({
-                    value: role,
-                    label: tr(role),
-                  }))}
-                  ariaLabel={tc("role")}
-                  className="w-full sm:w-full"
-                />
+                {currentUser?.isSuperAdmin && roles.length > 0 ? (
+                  <FilterSelect
+                    value={form.roleId}
+                    onChange={(value) =>
+                      setForm((current) => ({
+                        ...current,
+                        roleId: value,
+                      }))
+                    }
+                    options={roles.map((role) => ({
+                      value: role.id,
+                      label: roleLabel(role),
+                    }))}
+                    ariaLabel={tc("role")}
+                    className="w-full sm:w-full"
+                  />
+                ) : (
+                  <div className="flex h-9 items-center rounded-md border border-input px-3 text-sm">
+                    {readOnlyRole
+                      ? roleLabel(readOnlyRole)
+                      : ""}
+                  </div>
+                )}
               </div>
 
               <div className="flex flex-col gap-1.5">

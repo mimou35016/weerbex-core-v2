@@ -21,6 +21,7 @@ import {
 import { appsRegistry, coreNavItems } from "@/config/dashboard-nav"
 import { Link, usePathname } from "@/i18n/navigation"
 import { getInitials } from "@/lib/initials"
+import { canAccessApp, canAccessRoute } from "@/lib/rbac"
 
 export function AppSidebar({
   side = "left",
@@ -38,6 +39,20 @@ export function AppSidebar({
     href === "/dashboard"
       ? pathname === "/dashboard"
       : pathname === href || pathname.startsWith(`${href}/`)
+
+  const visibleApps = currentUser
+    ? appsRegistry.filter((app) => canAccessApp(currentUser, app.id))
+    : []
+  const visibleCoreNavItems = currentUser
+    ? coreNavItems.filter((item) => canAccessRoute(currentUser, item.href))
+    : []
+
+  const roleSlug = currentUser?.role as never
+  const roleLabel = currentUser
+    ? tr.has(roleSlug)
+      ? tr(roleSlug)
+      : currentUser.roleName
+    : t("userNav.role")
 
   return (
     <Sidebar side={side} dir={dir} collapsible="icon">
@@ -66,7 +81,7 @@ export function AppSidebar({
           <SidebarGroupLabel>{t("nav.registeredApps")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {appsRegistry.map((app) => {
+              {visibleApps.map((app) => {
                 const Icon = app.icon
                 return (
                   <SidebarMenuItem key={app.id}>
@@ -89,7 +104,7 @@ export function AppSidebar({
           <SidebarGroupLabel>{t("nav.coreManagement")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {coreNavItems.map((item) => {
+              {visibleCoreNavItems.map((item) => {
                 const Icon = item.icon
                 return (
                   <SidebarMenuItem key={item.id}>
@@ -127,7 +142,7 @@ export function AppSidebar({
                   {currentUser?.name ?? ""}
                 </span>
                 <span className="truncate text-xs text-muted-foreground">
-                  {currentUser ? tr(currentUser.role) : t("userNav.role")}
+                  {roleLabel}
                 </span>
               </span>
             </SidebarMenuButton>

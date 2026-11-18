@@ -3,10 +3,18 @@
 import crypto from "node:crypto"
 import { cookies } from "next/headers"
 
-import type { DashboardRole } from "@/config/dashboard-nav"
 import type { User } from "@/payload-types"
 import { getCurrentUser } from "./auth"
 import { getPayloadClient } from "./payload"
+import {
+  hasAnyPermission,
+  hasPermission,
+  type PermissionAction,
+} from "./permissions"
+import {
+  countSuperAdminUsers,
+  resolveRoleDoc,
+} from "./roles"
 import {
   toDashboardUser,
   type ActionResult,
@@ -17,7 +25,7 @@ import {
 type UserInput = {
   name: string
   email: string
-  role: DashboardRole
+  roleId?: string | null
   status: UserStatus
 }
 
@@ -49,11 +57,59 @@ async function setAuthCookie(token: string, exp?: number) {
 async function requireCurrentUser(): Promise<DashboardUser> {
   const user = await getCurrentUser()
 
-  if (!user) {
+  if (!user || user.status !== "active") {
     throw new Error("Unauthorized")
   }
 
   return user
+}
+
+async function requirePermission(
+  resource: string,
+  action: PermissionAction
+): Promise<DashboardUser> {
+  const user = await requireCurrentUser()
+
+  if (!hasPermission(user, resource, action)) {
+    throw new Error(
+      "Forbidden: you do not have permission to perform this action."
+    )
+  }
+
+  return user
+}
+
+async function requireAnyPermission(
+  resource: string,
+  actions: PermissionAction[]
+): Promise<DashboardUser> {
+  const user = await requireCurrentUser()
+
+  if (!hasAnyPermission(user, resource, actions)) {
+    throw new Error(
+      "Forbidden: you do not have permission to perform this action."
+    )
+  }
+
+  return user
+}
+
+async function loadDashboardUser(
+  id: string | number
+): Promise<DashboardUser | null> {
+  try {
+    const payload = await getPayloadClient()
+    const user = (await payload.findByID({
+      collection: "users",
+      id,
+      depth: 1,
+      overrideAccess: true,
+    })) as User
+
+    return toDashboardUser(user)
+  } catch {
+    return null
+  }
 }
 
 export async function loginAction(input: {
@@ -74,9 +130,24 @@ export async function loginAction(input: {
       return { success: false, error: "Unable to sign in." }
     }
 
+    const user = result.user as User
+
+    if ((user.status ?? "active") !== "active") {
+      return {
+        success: false,
+        error: "Your account is not active. Please contact an administrator.",
+      }
+    }
+
     await setAuthCookie(result.token, result.exp)
 
-    return { success: true, data: toDashboardUser(result.user as User) }
+    const fresh = await loadDashboardUser(user.id)
+
+    if (!fresh) {
+      return { success: false, error: "Unable to load your account." }
+    }
+
+    return { success: true, data: fresh }
   } catch (error) {
     return { success: false, error: getErrorMessage(error) }
   }
@@ -95,7 +166,6 @@ export async function registerAction(input: {
         name: input.name,
         email: input.email,
         password: input.password,
-        role: "user",
         status: "active",
       },
       overrideAccess: true,
@@ -113,9 +183,11 @@ export async function registerAction(input: {
       await setAuthCookie(login.token, login.exp)
     }
 
+    const fresh = await loadDashboardUser(user.id)
+
     return {
       success: true,
-      data: toDashboardUser((login.user ?? user) as User),
+      data: fresh ?? toDashboardUser((login.user ?? user) as User),
     }
   } catch (error) {
     return { success: false, error: getErrorMessage(error) }
@@ -135,13 +207,25 @@ export async function logoutAction(): Promise<ActionResult<null>> {
   }
 }
 
+export async function refreshSessionAction(): Promise<
+  ActionResult<DashboardUser | null>
+> {
+  try {
+    const user = await getCurrentUser()
+
+    return { success: true, data: user }
+  } catch (error) {
+    return { success: false, error: getErrorMessage(error) }
+  }
+}
+
 export async function listUsersAction(): Promise<ActionResult<DashboardUser[]>> {
   try {
-    await requireCurrentUser()
+    await requireAnyPermission("users", ["find", "read"])
     const payload = await getPayloadClient()
     const result = await payload.find({
       collection: "users",
-      depth: 0,
+      depth: 1,
       limit: 100,
       sort: "-createdAt",
       overrideAccess: true,
@@ -160,8 +244,20 @@ export async function createUserAction(
   input: UserInput
 ): Promise<ActionResult<DashboardUser>> {
   try {
-    await requireCurrentUser()
+    const current = await requirePermission("users", "create")
     const payload = await getPayloadClient()
+
+    let roleId: string | null = null
+
+    if (current.isSuperAdmin && input.roleId) {
+      const role = await resolveRoleDoc(payload, input.roleId)
+
+      if (!role) {
+        throw new Error("The selected role no longer exists.")
+      }
+
+      roleId = String(role.id)
+    }
 
     // The dashboard form does not collect a password, but Payload requires one
     // for auth collections. Generate an unusable random one until it is reset.
@@ -173,13 +269,18 @@ export async function createUserAction(
         name: input.name,
         email: input.email,
         password,
-        role: input.role,
         status: input.status,
+        ...(roleId ? { role: roleId } : {}),
       },
       overrideAccess: true,
     })
 
-    return { success: true, data: toDashboardUser(user as User) }
+    const fresh = await loadDashboardUser(user.id)
+
+    return {
+      success: true,
+      data: fresh ?? toDashboardUser(user as User),
+    }
   } catch (error) {
     return { success: false, error: getErrorMessage(error) }
   }
@@ -190,21 +291,78 @@ export async function updateUserAction(
   input: UserInput
 ): Promise<ActionResult<DashboardUser>> {
   try {
-    await requireCurrentUser()
+    const current = await requirePermission("users", "update")
     const payload = await getPayloadClient()
+    const existing = (await payload.findByID({
+      collection: "users",
+      id,
+      depth: 1,
+      overrideAccess: true,
+    })) as User
+
+    const targetRole = await resolveRoleDoc(payload, existing.role)
+    const isSelf = current.id === String(existing.id)
+    const targetPriority = targetRole?.priority ?? 0
+
+    if (targetRole?.isSuperAdmin && !current.isSuperAdmin) {
+      throw new Error(
+        "Forbidden: only a super admin can modify this account."
+      )
+    }
+
+    if (
+      !current.isSuperAdmin &&
+      !isSelf &&
+      targetPriority >= current.rolePriority
+    ) {
+      throw new Error("Forbidden: you cannot modify this account.")
+    }
+
+    let roleId: string | null = null
+
+    if (current.isSuperAdmin && input.roleId) {
+      const role = await resolveRoleDoc(payload, input.roleId)
+
+      if (!role) {
+        throw new Error("The selected role no longer exists.")
+      }
+
+      if (
+        targetRole?.isSuperAdmin &&
+        !role.isSuperAdmin &&
+        (await countSuperAdminUsers(payload)) <= 1
+      ) {
+        throw new Error("At least one super admin account is required.")
+      }
+
+      roleId = String(role.id)
+    }
+
+    // Non-super admins may never change roles, and users can never change
+    // their own status. Higher priority accounts are already rejected above.
+    const status =
+      current.isSuperAdmin || (!isSelf && targetPriority < current.rolePriority)
+        ? input.status
+        : ((existing.status as UserStatus | null | undefined) ?? "active")
+
     const user = await payload.update({
       collection: "users",
       id,
       data: {
         name: input.name,
         email: input.email,
-        role: input.role,
-        status: input.status,
+        status,
+        ...(roleId ? { role: roleId } : {}),
       },
       overrideAccess: true,
     })
 
-    return { success: true, data: toDashboardUser(user as User) }
+    const fresh = await loadDashboardUser(user.id)
+
+    return {
+      success: true,
+      data: fresh ?? toDashboardUser(user as User),
+    }
   } catch (error) {
     return { success: false, error: getErrorMessage(error) }
   }
@@ -214,8 +372,38 @@ export async function deleteUserAction(
   id: string
 ): Promise<ActionResult<null>> {
   try {
-    await requireCurrentUser()
+    const current = await requirePermission("users", "delete")
+
+    if (current.id === id) {
+      throw new Error("You cannot delete your own account.")
+    }
+
     const payload = await getPayloadClient()
+    const existing = (await payload.findByID({
+      collection: "users",
+      id,
+      depth: 1,
+      overrideAccess: true,
+    })) as User
+
+    const targetRole = await resolveRoleDoc(payload, existing.role)
+    const targetPriority = targetRole?.priority ?? 0
+
+    if (targetRole?.isSuperAdmin && !current.isSuperAdmin) {
+      throw new Error("Forbidden: you cannot delete this account.")
+    }
+
+    if (!current.isSuperAdmin && targetPriority >= current.rolePriority) {
+      throw new Error("Forbidden: you cannot delete this account.")
+    }
+
+    if (
+      targetRole?.isSuperAdmin &&
+      (await countSuperAdminUsers(payload)) <= 1
+    ) {
+      throw new Error("At least one super admin account is required.")
+    }
+
     await payload.delete({
       collection: "users",
       id,
@@ -230,7 +418,12 @@ export async function deleteUserAction(
 
 export async function countUsersAction(): Promise<ActionResult<number>> {
   try {
-    await requireCurrentUser()
+    const current = await requireCurrentUser()
+
+    if (!hasAnyPermission(current, "users", ["find", "read"])) {
+      return { success: true, data: 0 }
+    }
+
     const payload = await getPayloadClient()
     const result = await payload.count({
       collection: "users",
@@ -285,7 +478,12 @@ export async function updateProfileAction(
       overrideAccess: true,
     })
 
-    return { success: true, data: toDashboardUser(user as User) }
+    const fresh = await loadDashboardUser(user.id)
+
+    return {
+      success: true,
+      data: fresh ?? toDashboardUser(user as User),
+    }
   } catch (error) {
     return { success: false, error: getErrorMessage(error) }
   }

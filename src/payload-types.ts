@@ -68,6 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     users: User;
+    roles: Role;
     media: Media;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -77,6 +78,7 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
+    roles: RolesSelect<false> | RolesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -124,7 +126,7 @@ export interface UserAuthOperations {
 export interface User {
   id: string;
   name?: string | null;
-  role?: ('super_admin' | 'admin' | 'manager' | 'user') | null;
+  role?: (string | null) | Role;
   status?: ('active' | 'pending' | 'suspended') | null;
   updatedAt: string;
   createdAt: string;
@@ -145,6 +147,58 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "roles".
+ */
+export interface Role {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string | null;
+  /**
+   * Grants absolute control over roles, permissions and role assignment.
+   */
+  isSuperAdmin?: boolean | null;
+  /**
+   * Assigned to newly registered users when no role is provided.
+   */
+  isDefault?: boolean | null;
+  /**
+   * Higher priority roles can manage lower priority accounts.
+   */
+  priority: number;
+  /**
+   * Tracks schema migrations for permission grants. Managed automatically.
+   */
+  permissionsVersion?: number | null;
+  permissions?:
+    | {
+        resource:
+          | 'users'
+          | 'roles'
+          | 'audit'
+          | 'appsHub'
+          | 'settings'
+          | 'seo'
+          | 'security'
+          | 'localization'
+          | 'notifications'
+          | 'storage'
+          | 'analytics'
+          | 'crm'
+          | 'billing'
+          | 'automation'
+          | 'reports'
+          | 'integrations'
+          | 'media';
+        actions?: ('find' | 'read' | 'create' | 'update' | 'delete' | 'export' | 'publish' | 'configure')[] | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -192,6 +246,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: string | User;
+      } | null)
+    | ({
+        relationTo: 'roles';
+        value: string | Role;
       } | null)
     | ({
         relationTo: 'media';
@@ -264,6 +322,28 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "roles_select".
+ */
+export interface RolesSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  description?: T;
+  isSuperAdmin?: T;
+  isDefault?: T;
+  priority?: T;
+  permissionsVersion?: T;
+  permissions?:
+    | T
+    | {
+        resource?: T;
+        actions?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

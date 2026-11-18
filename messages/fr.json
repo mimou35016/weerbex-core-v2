@@ -105,7 +105,13 @@
         "roles": "Rôles et permissions",
         "audit": "Journaux d'audit",
         "settings": "Paramètres",
-        "appsHub": "Hub des applications"
+        "appsHub": "Hub des applications",
+        "seo": "SEO",
+        "security": "Sécurité",
+        "localization": "Localisation",
+        "notifications": "Notifications",
+        "storage": "Stockage",
+        "media": "Médiathèque"
       }
     },
     "status": {
@@ -156,6 +162,7 @@
       "close": "Fermer",
       "launch": "Lancer",
       "configure": "Configurer",
+      "noAccess": "Aucun accès",
       "enable": "Activer",
       "disable": "Désactiver",
       "actions": "Actions",
@@ -241,20 +248,34 @@
     },
     "rolesPage": {
       "title": "Rôles et permissions",
-      "description": "Définissez ce que chaque rôle peut lire, écrire et supprimer.",
+      "description": "Définissez précisément les actions que chaque rôle peut effectuer sur chaque module et application.",
       "selectRole": "Sélectionner un rôle",
       "roleHint": "Choisissez un rôle pour modifier sa matrice de permissions.",
       "matrixTitle": "Matrice des permissions",
-      "matrixDescription": "Activez ou désactivez l'accès par module et application pour le rôle sélectionné.",
+      "matrixDescription": "Activez ou désactivez chaque action par ressource pour le rôle sélectionné. Les actions non prises en charge sont marquées d'un tiret.",
       "resource": "Ressource",
       "read": "Lire",
       "write": "Écrire",
       "delete": "Supprimer",
       "coreModules": "Modules du cœur",
+      "settingsModules": "Modules de paramètres",
       "applications": "Applications",
+      "system": "Système",
+      "superAdminHint": "Le super administrateur dispose d'un accès absolu. Ses permissions ne peuvent pas être restreintes.",
+      "rolesLockedHint": "La gestion des rôles et des permissions est réservée au rôle super administrateur.",
       "save": "Enregistrer les permissions",
       "reset": "Réinitialiser",
-      "saved": "Permissions mises à jour pour {role}"
+      "saved": "Permissions mises à jour pour {role}",
+      "actions": {
+        "find": "Lister",
+        "read": "Lire",
+        "create": "Créer",
+        "update": "Modifier",
+        "delete": "Supprimer",
+        "export": "Exporter",
+        "publish": "Publier",
+        "configure": "Configurer"
+      }
     },
     "audit": {
       "title": "Journaux d'audit",
@@ -280,7 +301,9 @@
         "apiKeyCreated": "Clé API créée"
       },
       "results": "{count} événements",
-      "empty": "Aucune entrée de journal ne correspond à vos filtres."
+      "empty": "Aucune entrée de journal ne correspond à vos filtres.",
+      "export": "Exporter en CSV",
+      "exported": "Journaux d'audit exportés"
     },
     "settings": {
       "title": "Paramètres",

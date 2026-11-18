@@ -6,7 +6,9 @@ import sharp from "sharp"
 import { fileURLToPath } from "url"
 
 import { Media } from "./collections/Media"
+import { Roles } from "./collections/Roles"
 import { Users } from "./collections/Users"
+import { seedRoles } from "./lib/seed-roles"
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -18,7 +20,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media],
+  collections: [Users, Roles, Media],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {
@@ -29,4 +31,7 @@ export default buildConfig({
   }),
   sharp,
   plugins: [],
+  onInit: async (payload) => {
+    await seedRoles(payload)
+  },
 })
