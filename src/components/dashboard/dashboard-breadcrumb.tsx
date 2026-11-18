@@ -12,6 +12,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { appsRegistry } from "@/config/dashboard-nav"
+import { settingsNavItems } from "@/config/settings-nav"
 import { Link, usePathname } from "@/i18n/navigation"
 
 type Crumb = {
@@ -38,7 +39,20 @@ export function DashboardBreadcrumb() {
   } else if (section === "audit-logs") {
     items.push({ label: t("nav.audit") })
   } else if (section === "settings") {
-    items.push({ label: t("nav.settings") })
+    const subSection = segments[2]
+    items.push({
+      label: t("nav.settings"),
+      href: subSection ? "/dashboard/settings" : undefined,
+    })
+
+    if (subSection) {
+      const settingsItem = settingsNavItems.find(
+        (entry) => entry.href === `/dashboard/settings/${subSection}`
+      )
+      if (settingsItem) {
+        items.push({ label: t(`settings.${settingsItem.labelKey}`) })
+      }
+    }
   }
 
   return (

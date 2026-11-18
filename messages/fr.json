@@ -339,6 +339,249 @@
         "webhookUrl": "URL du point de terminaison",
         "webhookPlaceholder": "https://api.example.com/hooks/events",
         "saveWebhook": "Enregistrer le webhook"
+      },
+      "navLabel": "Sections des paramètres",
+      "nav": {
+        "general": "Général",
+        "seo": "SEO",
+        "security": "Sécurité",
+        "localization": "Localisation",
+        "notifications": "Notifications",
+        "storage": "Stockage"
+      },
+      "common": {
+        "save": "Enregistrer les modifications",
+        "reset": "Réinitialiser",
+        "saved": "Paramètres enregistrés",
+        "resetDone": "Modifications annulées",
+        "optional": "Facultatif",
+        "enabled": "Activé",
+        "disabled": "Désactivé",
+        "requestsPerMinute": "requêtes / minute"
+      },
+      "seo": {
+        "title": "SEO",
+        "description": "Contrôlez la façon dont les moteurs de recherche et les réseaux sociaux voient votre plateforme.",
+        "meta": {
+          "title": "Métadonnées par défaut",
+          "description": "Appliquées à chaque page publique sauf si elle définit ses propres valeurs.",
+          "metaTitle": "Titre méta",
+          "metaTitlePlaceholder": "weerbex — le cœur de votre plateforme",
+          "metaDescription": "Description méta",
+          "metaDescriptionPlaceholder": "La plateforme tout-en-un pour gérer votre activité.",
+          "keywords": "Mots-clés",
+          "keywordsPlaceholder": "saas, tableau de bord, plateforme",
+          "keywordsHint": "Séparez les mots-clés par des virgules.",
+          "author": "Auteur",
+          "authorPlaceholder": "weerbex"
+        },
+        "social": {
+          "title": "Aperçu social",
+          "description": "Cartes Open Graph et Twitter utilisées lors du partage de vos pages.",
+          "ogTitle": "Titre Open Graph",
+          "ogTitlePlaceholder": "weerbex — le cœur de votre plateforme",
+          "ogDescription": "Description Open Graph",
+          "ogDescriptionPlaceholder": "La plateforme tout-en-un pour gérer votre activité.",
+          "ogImage": "URL de l'image Open Graph",
+          "ogImagePlaceholder": "https://cdn.example.com/og.png",
+          "twitterHandle": "Identifiant Twitter",
+          "twitterHandlePlaceholder": "@weerbex"
+        },
+        "indexing": {
+          "title": "Indexation et robots",
+          "description": "Déterminez si les moteurs de recherche peuvent indexer le site public.",
+          "allowIndexing": "Autoriser l'indexation",
+          "allowIndexingDescription": "Lorsque cette option est désactivée, chaque page est servie avec la directive noindex.",
+          "robots": "robots.txt",
+          "robotsPlaceholder": "User-agent: *\nAllow: /",
+          "robotsHint": "Publié sur /robots.txt pour chaque domaine actif.",
+          "sitemap": "Sitemap automatique",
+          "sitemapDescription": "Régénérer sitemap.xml à chaque modification du contenu.",
+          "generate": "Régénérer le sitemap",
+          "generated": "Sitemap régénéré"
+        },
+        "verification": {
+          "title": "Vérification des moteurs de recherche",
+          "description": "Collez les codes de vérification fournis par chaque moteur de recherche.",
+          "google": "Google",
+          "googlePlaceholder": "google-site-verification=...",
+          "bing": "Bing",
+          "bingPlaceholder": "msvalidate.01=...",
+          "yandex": "Yandex",
+          "yandexPlaceholder": "yandex-verification=..."
+        },
+        "scripts": {
+          "title": "Scripts d'en-tête",
+          "description": "Injectés dans l'en-tête de chaque page publique.",
+          "analytics": "Script d'analyse",
+          "analyticsPlaceholder": "// Google Analytics",
+          "analyticsHint": "Google Analytics ou tout autre extrait de suivi.",
+          "pixel": "Pixels marketing",
+          "pixelPlaceholder": "// Meta Pixel",
+          "pixelHint": "Meta Pixel, LinkedIn Insight ou extraits similaires."
+        }
+      },
+      "security": {
+        "title": "Sécurité",
+        "description": "Renforcez les sessions, les mots de passe et l'accès à l'API.",
+        "session": {
+          "title": "Sessions et mots de passe",
+          "description": "Définissez la durée des sessions et la politique de mot de passe.",
+          "timeout": "Expiration de session (minutes)",
+          "timeoutHint": "Les utilisateurs sont déconnectés après cette période d'inactivité.",
+          "forceExpiration": "Forcer l'expiration du mot de passe",
+          "forceExpirationDescription": "Demander aux utilisateurs de changer leur mot de passe après 90 jours."
+        },
+        "password": {
+          "title": "Complexité du mot de passe",
+          "description": "Exigences minimales appliquées aux nouveaux mots de passe.",
+          "minLength": "Longueur minimale",
+          "minLengthHint": "Entre 6 et 32 caractères.",
+          "requireNumbers": "Exiger des chiffres",
+          "requireNumbersDescription": "Le mot de passe doit contenir au moins un chiffre.",
+          "requireSymbols": "Exiger des symboles",
+          "requireSymbolsDescription": "Le mot de passe doit contenir au moins un caractère spécial."
+        },
+        "rateLimit": {
+          "title": "Limitation de débit de l'API",
+          "description": "Protégez l'API contre les pics de requêtes abusifs.",
+          "enabled": "Activer la limitation de débit",
+          "enabledDescription": "Les requêtes au-delà de la limite reçoivent une réponse 429.",
+          "maxRequests": "Requêtes maximales par minute",
+          "maxRequestsHint": "Entre 10 et 600 requêtes par minute."
+        },
+        "captcha": {
+          "title": "reCAPTCHA et Turnstile",
+          "description": "Protégez les formulaires publics contre les robots.",
+          "provider": "Fournisseur",
+          "providerNone": "Aucun",
+          "providerRecaptcha": "Google reCAPTCHA",
+          "providerTurnstile": "Cloudflare Turnstile",
+          "siteKey": "Clé du site",
+          "siteKeyPlaceholder": "0x4AAAAAAA...",
+          "secretKey": "Clé secrète",
+          "secretKeyPlaceholder": "0x4AAAAAAA...",
+          "secretKeyHint": "Stockée de manière chiffrée et jamais exposée côté client."
+        },
+        "ip": {
+          "title": "Accès par adresse IP",
+          "description": "Autorisez ou bloquez des adresses IP et des plages CIDR.",
+          "allowList": "Liste d'autorisation",
+          "allowListPlaceholder": "192.168.1.1\n10.0.0.0/24",
+          "allowListHint": "Une entrée par ligne. Laissez vide pour autoriser tout le monde.",
+          "blockList": "Liste de blocage",
+          "blockListPlaceholder": "203.0.113.5",
+          "blockListHint": "Une entrée par ligne. Prioritaire sur la liste d'autorisation."
+        }
+      },
+      "localization": {
+        "title": "Localisation",
+        "description": "Choisissez les langues, formats de date et fuseaux horaires de la plateforme.",
+        "languages": {
+          "title": "Langues",
+          "description": "Activez les langues proposées dans le sélecteur de langue.",
+          "activeLanguages": "Langues actives",
+          "activeLanguagesHint": "Les langues désactivées sont masquées aux visiteurs.",
+          "english": "Anglais",
+          "french": "Français",
+          "arabic": "Arabe",
+          "defaultLanguage": "Langue par défaut",
+          "defaultLanguageHint": "Utilisée lorsqu'aucune préférence n'est détectée.",
+          "fallbackLanguage": "Langue de secours",
+          "fallbackLanguageHint": "Utilisée lorsqu'une traduction est manquante."
+        },
+        "formats": {
+          "title": "Formats régionaux",
+          "description": "Fuseau horaire, format de date et premier jour de la semaine.",
+          "timezone": "Fuseau horaire",
+          "timezoneHint": "Appliqué aux dates affichées dans le tableau de bord.",
+          "timezoneUtc": "UTC",
+          "timezoneCasablanca": "Casablanca (GMT+1)",
+          "timezoneParis": "Paris (GMT+1)",
+          "timezoneLondon": "Londres (GMT)",
+          "timezoneNewYork": "New York (GMT-5)",
+          "timezoneRiyadh": "Riyad (GMT+3)",
+          "dateFormat": "Format de date",
+          "dateFormatDmy": "JJ/MM/AAAA",
+          "dateFormatYmd": "AAAA-MM-JJ",
+          "firstDayOfWeek": "Premier jour de la semaine",
+          "firstDaySunday": "Dimanche",
+          "firstDayMonday": "Lundi",
+          "firstDaySaturday": "Samedi"
+        }
+      },
+      "notifications": {
+        "title": "Notifications",
+        "description": "Configurez l'envoi d'e-mails et les alertes destinées aux administrateurs.",
+        "smtp": {
+          "title": "Serveur SMTP",
+          "description": "Identifiants utilisés pour tous les e-mails transactionnels.",
+          "host": "Hôte SMTP",
+          "hostPlaceholder": "smtp.example.com",
+          "port": "Port",
+          "portPlaceholder": "587",
+          "username": "Nom d'utilisateur",
+          "usernamePlaceholder": "apikey",
+          "password": "Mot de passe",
+          "passwordPlaceholder": "••••••••",
+          "passwordHint": "Stocké de manière chiffrée.",
+          "encryption": "Chiffrement",
+          "encryptionTls": "TLS",
+          "encryptionSsl": "SSL",
+          "encryptionNone": "Aucun",
+          "senderEmail": "E-mail de l'expéditeur",
+          "senderEmailPlaceholder": "no-reply@weerbex.io",
+          "senderName": "Nom de l'expéditeur",
+          "senderNamePlaceholder": "weerbex"
+        },
+        "events": {
+          "title": "Alertes par e-mail",
+          "description": "Choisissez les événements qui envoient une notification.",
+          "registrations": "Nouvelles inscriptions",
+          "registrationsDescription": "Recevoir un e-mail lorsqu'un compte est créé.",
+          "securityAlerts": "Alertes de sécurité",
+          "securityAlertsDescription": "Changements de mot de passe, de rôle ou de permissions.",
+          "failedLogins": "Connexions échouées",
+          "failedLoginsDescription": "Recevoir une alerte après plusieurs tentatives échouées.",
+          "systemErrors": "Erreurs système",
+          "systemErrorsDescription": "Erreurs serveur et échecs de tâches planifiées."
+        }
+      },
+      "storage": {
+        "title": "Stockage",
+        "description": "Choisissez où les fichiers téléversés sont conservés.",
+        "provider": {
+          "title": "Fournisseur de stockage",
+          "description": "Le stockage local est idéal en développement, le cloud en production.",
+          "label": "Fournisseur",
+          "local": "Local",
+          "localDescription": "Fichiers enregistrés dans public/uploads sur ce serveur.",
+          "s3": "Amazon S3",
+          "r2": "Cloudflare R2",
+          "uploadthing": "UploadThing"
+        },
+        "cloud": {
+          "title": "Identifiants cloud",
+          "description": "Requis pour les fournisseurs cloud sélectionnés.",
+          "bucket": "Bucket",
+          "bucketPlaceholder": "weerbex-uploads",
+          "region": "Région",
+          "regionPlaceholder": "eu-west-3",
+          "accessKey": "Clé d'accès",
+          "accessKeyPlaceholder": "AKIA...",
+          "secretKey": "Clé secrète",
+          "secretKeyPlaceholder": "••••••••",
+          "secretKeyHint": "Stockée de manière chiffrée et jamais exposée côté client."
+        },
+        "uploads": {
+          "title": "Règles de téléversement",
+          "description": "Limitez la taille et les types de fichiers acceptés.",
+          "maxSize": "Taille maximale (Mo)",
+          "maxSizeHint": "Entre 1 et 100 Mo.",
+          "mimeTypes": "Types MIME autorisés",
+          "mimeTypesPlaceholder": "image/png, image/jpeg, application/pdf",
+          "mimeTypesHint": "Séparez les types par des virgules."
+        }
       }
     },
     "appDetail": {

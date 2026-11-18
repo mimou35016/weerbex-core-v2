@@ -339,6 +339,249 @@
         "webhookUrl": "Endpoint URL",
         "webhookPlaceholder": "https://api.example.com/hooks/events",
         "saveWebhook": "Save webhook"
+      },
+      "navLabel": "Settings sections",
+      "nav": {
+        "general": "General",
+        "seo": "SEO",
+        "security": "Security",
+        "localization": "Localization",
+        "notifications": "Notifications",
+        "storage": "Storage"
+      },
+      "common": {
+        "save": "Save changes",
+        "reset": "Reset",
+        "saved": "Settings saved",
+        "resetDone": "Changes discarded",
+        "optional": "Optional",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "requestsPerMinute": "requests / minute"
+      },
+      "seo": {
+        "title": "SEO",
+        "description": "Control how search engines and social networks see your platform.",
+        "meta": {
+          "title": "Default metadata",
+          "description": "Applied to every public page unless it defines its own values.",
+          "metaTitle": "Meta title",
+          "metaTitlePlaceholder": "weerbex — the core of your platform",
+          "metaDescription": "Meta description",
+          "metaDescriptionPlaceholder": "All-in-one platform to run your business.",
+          "keywords": "Keywords",
+          "keywordsPlaceholder": "saas, dashboard, platform",
+          "keywordsHint": "Separate keywords with commas.",
+          "author": "Author",
+          "authorPlaceholder": "weerbex"
+        },
+        "social": {
+          "title": "Social preview",
+          "description": "Open Graph and Twitter cards used when your pages are shared.",
+          "ogTitle": "Open Graph title",
+          "ogTitlePlaceholder": "weerbex — the core of your platform",
+          "ogDescription": "Open Graph description",
+          "ogDescriptionPlaceholder": "All-in-one platform to run your business.",
+          "ogImage": "Open Graph image URL",
+          "ogImagePlaceholder": "https://cdn.example.com/og.png",
+          "twitterHandle": "Twitter handle",
+          "twitterHandlePlaceholder": "@weerbex"
+        },
+        "indexing": {
+          "title": "Indexing & robots",
+          "description": "Decide whether search engines may index the public site.",
+          "allowIndexing": "Allow search engine indexing",
+          "allowIndexingDescription": "When off, every page is served with a noindex directive.",
+          "robots": "robots.txt",
+          "robotsPlaceholder": "User-agent: *\nAllow: /",
+          "robotsHint": "Published at /robots.txt for every active domain.",
+          "sitemap": "Automatic sitemap",
+          "sitemapDescription": "Regenerate sitemap.xml whenever content changes.",
+          "generate": "Regenerate sitemap",
+          "generated": "Sitemap regenerated"
+        },
+        "verification": {
+          "title": "Search engine verification",
+          "description": "Paste the verification codes provided by each search engine.",
+          "google": "Google",
+          "googlePlaceholder": "google-site-verification=...",
+          "bing": "Bing",
+          "bingPlaceholder": "msvalidate.01=...",
+          "yandex": "Yandex",
+          "yandexPlaceholder": "yandex-verification=..."
+        },
+        "scripts": {
+          "title": "Header scripts",
+          "description": "Injected into the page head of every public page.",
+          "analytics": "Analytics script",
+          "analyticsPlaceholder": "// Google Analytics",
+          "analyticsHint": "Google Analytics or any other tracking snippet.",
+          "pixel": "Marketing pixels",
+          "pixelPlaceholder": "// Meta Pixel",
+          "pixelHint": "Meta Pixel, LinkedIn Insight or similar snippets."
+        }
+      },
+      "security": {
+        "title": "Security",
+        "description": "Harden sessions, passwords and access to the API.",
+        "session": {
+          "title": "Sessions & passwords",
+          "description": "Define session lifetime and the password policy.",
+          "timeout": "Session timeout (minutes)",
+          "timeoutHint": "Users are signed out after this period of inactivity.",
+          "forceExpiration": "Force password expiration",
+          "forceExpirationDescription": "Ask users to change their password after 90 days."
+        },
+        "password": {
+          "title": "Password complexity",
+          "description": "Minimum requirements applied to new passwords.",
+          "minLength": "Minimum length",
+          "minLengthHint": "Between 6 and 32 characters.",
+          "requireNumbers": "Require numbers",
+          "requireNumbersDescription": "The password must contain at least one digit.",
+          "requireSymbols": "Require symbols",
+          "requireSymbolsDescription": "The password must contain at least one special character."
+        },
+        "rateLimit": {
+          "title": "API rate limiting",
+          "description": "Protect the API against abusive request spikes.",
+          "enabled": "Enable rate limiting",
+          "enabledDescription": "Requests above the limit receive a 429 response.",
+          "maxRequests": "Maximum requests per minute",
+          "maxRequestsHint": "Between 10 and 600 requests per minute."
+        },
+        "captcha": {
+          "title": "reCAPTCHA & Turnstile",
+          "description": "Protect public forms against bots.",
+          "provider": "Provider",
+          "providerNone": "None",
+          "providerRecaptcha": "Google reCAPTCHA",
+          "providerTurnstile": "Cloudflare Turnstile",
+          "siteKey": "Site key",
+          "siteKeyPlaceholder": "0x4AAAAAAA...",
+          "secretKey": "Secret key",
+          "secretKeyPlaceholder": "0x4AAAAAAA...",
+          "secretKeyHint": "Stored encrypted and never exposed to the client."
+        },
+        "ip": {
+          "title": "IP access",
+          "description": "Allow or block IP addresses and CIDR ranges.",
+          "allowList": "Allow list",
+          "allowListPlaceholder": "192.168.1.1\n10.0.0.0/24",
+          "allowListHint": "One entry per line. Leave empty to allow everyone.",
+          "blockList": "Block list",
+          "blockListPlaceholder": "203.0.113.5",
+          "blockListHint": "One entry per line. Takes precedence over the allow list."
+        }
+      },
+      "localization": {
+        "title": "Localization",
+        "description": "Choose the platform languages, date formats and time zones.",
+        "languages": {
+          "title": "Languages",
+          "description": "Enable the languages offered in the language switcher.",
+          "activeLanguages": "Active languages",
+          "activeLanguagesHint": "Disabled languages are hidden from visitors.",
+          "english": "English",
+          "french": "French",
+          "arabic": "Arabic",
+          "defaultLanguage": "Default language",
+          "defaultLanguageHint": "Used when no preference can be detected.",
+          "fallbackLanguage": "Fallback language",
+          "fallbackLanguageHint": "Used when a translation is missing."
+        },
+        "formats": {
+          "title": "Regional formats",
+          "description": "Time zone, date format and first day of the week.",
+          "timezone": "Time zone",
+          "timezoneHint": "Applied to dates displayed across the dashboard.",
+          "timezoneUtc": "UTC",
+          "timezoneCasablanca": "Casablanca (GMT+1)",
+          "timezoneParis": "Paris (GMT+1)",
+          "timezoneLondon": "London (GMT)",
+          "timezoneNewYork": "New York (GMT-5)",
+          "timezoneRiyadh": "Riyadh (GMT+3)",
+          "dateFormat": "Date format",
+          "dateFormatDmy": "DD/MM/YYYY",
+          "dateFormatYmd": "YYYY-MM-DD",
+          "firstDayOfWeek": "First day of the week",
+          "firstDaySunday": "Sunday",
+          "firstDayMonday": "Monday",
+          "firstDaySaturday": "Saturday"
+        }
+      },
+      "notifications": {
+        "title": "Notifications",
+        "description": "Configure outgoing email and administrator alerts.",
+        "smtp": {
+          "title": "SMTP server",
+          "description": "Credentials used for all transactional email.",
+          "host": "SMTP host",
+          "hostPlaceholder": "smtp.example.com",
+          "port": "Port",
+          "portPlaceholder": "587",
+          "username": "Username",
+          "usernamePlaceholder": "apikey",
+          "password": "Password",
+          "passwordPlaceholder": "••••••••",
+          "passwordHint": "Stored encrypted.",
+          "encryption": "Encryption",
+          "encryptionTls": "TLS",
+          "encryptionSsl": "SSL",
+          "encryptionNone": "None",
+          "senderEmail": "Sender email",
+          "senderEmailPlaceholder": "no-reply@weerbex.io",
+          "senderName": "Sender name",
+          "senderNamePlaceholder": "weerbex"
+        },
+        "events": {
+          "title": "Email alerts",
+          "description": "Choose which events send a notification.",
+          "registrations": "New registrations",
+          "registrationsDescription": "Receive an email when an account is created.",
+          "securityAlerts": "Security alerts",
+          "securityAlertsDescription": "Password, role or permission changes.",
+          "failedLogins": "Failed logins",
+          "failedLoginsDescription": "Receive an alert after several failed attempts.",
+          "systemErrors": "System errors",
+          "systemErrorsDescription": "Server errors and failed scheduled jobs."
+        }
+      },
+      "storage": {
+        "title": "Storage",
+        "description": "Choose where uploaded files are kept.",
+        "provider": {
+          "title": "Storage provider",
+          "description": "Local storage suits development, cloud storage suits production.",
+          "label": "Provider",
+          "local": "Local",
+          "localDescription": "Files are saved to public/uploads on this server.",
+          "s3": "Amazon S3",
+          "r2": "Cloudflare R2",
+          "uploadthing": "UploadThing"
+        },
+        "cloud": {
+          "title": "Cloud credentials",
+          "description": "Required for the selected cloud providers.",
+          "bucket": "Bucket",
+          "bucketPlaceholder": "weerbex-uploads",
+          "region": "Region",
+          "regionPlaceholder": "eu-west-3",
+          "accessKey": "Access key",
+          "accessKeyPlaceholder": "AKIA...",
+          "secretKey": "Secret key",
+          "secretKeyPlaceholder": "••••••••",
+          "secretKeyHint": "Stored encrypted and never exposed to the client."
+        },
+        "uploads": {
+          "title": "Upload rules",
+          "description": "Limit the size and types of accepted files.",
+          "maxSize": "Maximum size (MB)",
+          "maxSizeHint": "Between 1 and 100 MB.",
+          "mimeTypes": "Allowed MIME types",
+          "mimeTypesPlaceholder": "image/png, image/jpeg, application/pdf",
+          "mimeTypesHint": "Separate types with commas."
+        }
       }
     },
     "appDetail": {

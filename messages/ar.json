@@ -339,6 +339,249 @@
         "webhookUrl": "رابط نقطة النهاية",
         "webhookPlaceholder": "https://api.example.com/hooks/events",
         "saveWebhook": "حفظ الويب هوك"
+      },
+      "navLabel": "أقسام الإعدادات",
+      "nav": {
+        "general": "عام",
+        "seo": "تحسين محركات البحث",
+        "security": "الأمان",
+        "localization": "التوطين",
+        "notifications": "الإشعارات",
+        "storage": "التخزين"
+      },
+      "common": {
+        "save": "حفظ التغييرات",
+        "reset": "إعادة تعيين",
+        "saved": "تم حفظ الإعدادات",
+        "resetDone": "تم التراجع عن التغييرات",
+        "optional": "اختياري",
+        "enabled": "مفعّل",
+        "disabled": "معطّل",
+        "requestsPerMinute": "طلب / دقيقة"
+      },
+      "seo": {
+        "title": "تحسين محركات البحث",
+        "description": "تحكم في طريقة ظهور منصتك لمحركات البحث وشبكات التواصل الاجتماعي.",
+        "meta": {
+          "title": "البيانات الوصفية الافتراضية",
+          "description": "تُطبَّق على كل صفحة عامة ما لم تحدد قيمها الخاصة.",
+          "metaTitle": "عنوان ميتا",
+          "metaTitlePlaceholder": "weerbex — قلب منصتك",
+          "metaDescription": "وصف ميتا",
+          "metaDescriptionPlaceholder": "منصة شاملة لإدارة أعمالك.",
+          "keywords": "الكلمات المفتاحية",
+          "keywordsPlaceholder": "saas, لوحة تحكم, منصة",
+          "keywordsHint": "افصل بين الكلمات المفتاحية بفواصل.",
+          "author": "المؤلف",
+          "authorPlaceholder": "weerbex"
+        },
+        "social": {
+          "title": "معاينة التواصل الاجتماعي",
+          "description": "بطاقات Open Graph وتويتر المستخدمة عند مشاركة صفحاتك.",
+          "ogTitle": "عنوان Open Graph",
+          "ogTitlePlaceholder": "weerbex — قلب منصتك",
+          "ogDescription": "وصف Open Graph",
+          "ogDescriptionPlaceholder": "منصة شاملة لإدارة أعمالك.",
+          "ogImage": "رابط صورة Open Graph",
+          "ogImagePlaceholder": "https://cdn.example.com/og.png",
+          "twitterHandle": "معرّف تويتر",
+          "twitterHandlePlaceholder": "@weerbex"
+        },
+        "indexing": {
+          "title": "الفهرسة وملف robots",
+          "description": "حدد ما إذا كان بإمكان محركات البحث فهرسة الموقع العام.",
+          "allowIndexing": "السماح بالفهرسة في محركات البحث",
+          "allowIndexingDescription": "عند الإيقاف، تُقدَّم كل صفحة بتوجيه noindex.",
+          "robots": "robots.txt",
+          "robotsPlaceholder": "User-agent: *\nAllow: /",
+          "robotsHint": "يُنشر على /robots.txt لكل نطاق نشط.",
+          "sitemap": "خريطة الموقع التلقائية",
+          "sitemapDescription": "أعد إنشاء sitemap.xml عند تغيّر المحتوى.",
+          "generate": "إعادة إنشاء خريطة الموقع",
+          "generated": "تم إعادة إنشاء خريطة الموقع"
+        },
+        "verification": {
+          "title": "التحقق من محركات البحث",
+          "description": "ألصق رموز التحقق التي توفرها كل محرك بحث.",
+          "google": "Google",
+          "googlePlaceholder": "google-site-verification=...",
+          "bing": "Bing",
+          "bingPlaceholder": "msvalidate.01=...",
+          "yandex": "Yandex",
+          "yandexPlaceholder": "yandex-verification=..."
+        },
+        "scripts": {
+          "title": "سكربتات الرأس",
+          "description": "تُحقن في رأس كل صفحة عامة.",
+          "analytics": "سكربت التحليلات",
+          "analyticsPlaceholder": "// Google Analytics",
+          "analyticsHint": "Google Analytics أو أي رمز تتبع آخر.",
+          "pixel": "بكسلات التسويق",
+          "pixelPlaceholder": "// Meta Pixel",
+          "pixelHint": "Meta Pixel أو LinkedIn Insight أو رموز مشابهة."
+        }
+      },
+      "security": {
+        "title": "الأمان",
+        "description": "عزّز الجلسات وكلمات المرور والوصول إلى واجهة البرمجة.",
+        "session": {
+          "title": "الجلسات وكلمات المرور",
+          "description": "حدد مدة الجلسة وسياسة كلمات المرور.",
+          "timeout": "انتهاء الجلسة (بالدقائق)",
+          "timeoutHint": "يتم تسجيل خروج المستخدمين بعد هذه المدة من عدم النشاط.",
+          "forceExpiration": "فرض انتهاء صلاحية كلمة المرور",
+          "forceExpirationDescription": "اطلب من المستخدمين تغيير كلمة المرور كل 90 يومًا."
+        },
+        "password": {
+          "title": "تعقيد كلمة المرور",
+          "description": "الحد الأدنى من المتطلبات لكلمات المرور الجديدة.",
+          "minLength": "الحد الأدنى للطول",
+          "minLengthHint": "بين 6 و32 حرفًا.",
+          "requireNumbers": "طلب أرقام",
+          "requireNumbersDescription": "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل.",
+          "requireSymbols": "طلب رموز",
+          "requireSymbolsDescription": "يجب أن تحتوي كلمة المرور على حرف خاص واحد على الأقل."
+        },
+        "rateLimit": {
+          "title": "تحديد معدل واجهة البرمجة",
+          "description": "احمِ الواجهة من الارتفاعات المفاجئة في الطلبات.",
+          "enabled": "تفعيل تحديد المعدل",
+          "enabledDescription": "تتلقى الطلبات التي تتجاوز الحد استجابة 429.",
+          "maxRequests": "الحد الأقصى للطلبات في الدقيقة",
+          "maxRequestsHint": "بين 10 و600 طلب في الدقيقة."
+        },
+        "captcha": {
+          "title": "reCAPTCHA وTurnstile",
+          "description": "احمِ النماذج العامة من الروبوتات.",
+          "provider": "المزود",
+          "providerNone": "بدون",
+          "providerRecaptcha": "Google reCAPTCHA",
+          "providerTurnstile": "Cloudflare Turnstile",
+          "siteKey": "مفتاح الموقع",
+          "siteKeyPlaceholder": "0x4AAAAAAA...",
+          "secretKey": "المفتاح السري",
+          "secretKeyPlaceholder": "0x4AAAAAAA...",
+          "secretKeyHint": "يُخزَّن مشفرًا ولا يُعرض أبدًا في المتصفح."
+        },
+        "ip": {
+          "title": "الوصول حسب عنوان IP",
+          "description": "اسمح أو احظر عناوين IP ونطاقات CIDR.",
+          "allowList": "قائمة السماح",
+          "allowListPlaceholder": "192.168.1.1\n10.0.0.0/24",
+          "allowListHint": "إدخال واحد في كل سطر. اتركه فارغًا للسماح للجميع.",
+          "blockList": "قائمة الحظر",
+          "blockListPlaceholder": "203.0.113.5",
+          "blockListHint": "إدخال واحد في كل سطر. لها الأولوية على قائمة السماح."
+        }
+      },
+      "localization": {
+        "title": "التوطين",
+        "description": "اختر لغات المنصة وتنسيقات التاريخ والمناطق الزمنية.",
+        "languages": {
+          "title": "اللغات",
+          "description": "فعّل اللغات المتاحة في مبدّل اللغة.",
+          "activeLanguages": "اللغات النشطة",
+          "activeLanguagesHint": "تُخفى اللغات المعطّلة عن الزوار.",
+          "english": "الإنجليزية",
+          "french": "الفرنسية",
+          "arabic": "العربية",
+          "defaultLanguage": "اللغة الافتراضية",
+          "defaultLanguageHint": "تُستخدم عند عدم اكتشاف تفضيل.",
+          "fallbackLanguage": "لغة الاحتياط",
+          "fallbackLanguageHint": "تُستخدم عند غياب الترجمة."
+        },
+        "formats": {
+          "title": "التنسيقات الإقليمية",
+          "description": "المنطقة الزمنية وتنسيق التاريخ وأول يوم في الأسبوع.",
+          "timezone": "المنطقة الزمنية",
+          "timezoneHint": "تُطبَّق على التواريخ المعروضة في لوحة التحكم.",
+          "timezoneUtc": "UTC",
+          "timezoneCasablanca": "الدار البيضاء (GMT+1)",
+          "timezoneParis": "باريس (GMT+1)",
+          "timezoneLondon": "لندن (GMT)",
+          "timezoneNewYork": "نيويورك (GMT-5)",
+          "timezoneRiyadh": "الرياض (GMT+3)",
+          "dateFormat": "تنسيق التاريخ",
+          "dateFormatDmy": "يوم/شهر/سنة",
+          "dateFormatYmd": "سنة-شهر-يوم",
+          "firstDayOfWeek": "أول يوم في الأسبوع",
+          "firstDaySunday": "الأحد",
+          "firstDayMonday": "الاثنين",
+          "firstDaySaturday": "السبت"
+        }
+      },
+      "notifications": {
+        "title": "الإشعارات",
+        "description": "اضبط إرسال البريد الإلكتروني وتنبيهات المسؤولين.",
+        "smtp": {
+          "title": "خادم SMTP",
+          "description": "بيانات الاعتماد المستخدمة في جميع رسائل البريد.",
+          "host": "مضيف SMTP",
+          "hostPlaceholder": "smtp.example.com",
+          "port": "المنفذ",
+          "portPlaceholder": "587",
+          "username": "اسم المستخدم",
+          "usernamePlaceholder": "apikey",
+          "password": "كلمة المرور",
+          "passwordPlaceholder": "••••••••",
+          "passwordHint": "تُخزَّن مشفرة.",
+          "encryption": "التشفير",
+          "encryptionTls": "TLS",
+          "encryptionSsl": "SSL",
+          "encryptionNone": "بدون",
+          "senderEmail": "بريد المرسل",
+          "senderEmailPlaceholder": "no-reply@weerbex.io",
+          "senderName": "اسم المرسل",
+          "senderNamePlaceholder": "weerbex"
+        },
+        "events": {
+          "title": "تنبيهات البريد الإلكتروني",
+          "description": "اختر الأحداث التي ترسل إشعارًا.",
+          "registrations": "التسجيلات الجديدة",
+          "registrationsDescription": "استلام بريد عند إنشاء حساب.",
+          "securityAlerts": "تنبيهات الأمان",
+          "securityAlertsDescription": "تغييرات كلمة المرور أو الدور أو الأذونات.",
+          "failedLogins": "محاولات الدخول الفاشلة",
+          "failedLoginsDescription": "استلام تنبيه بعد عدة محاولات فاشلة.",
+          "systemErrors": "أخطاء النظام",
+          "systemErrorsDescription": "أخطاء الخادم وفشل المهام المجدولة."
+        }
+      },
+      "storage": {
+        "title": "التخزين",
+        "description": "اختر مكان حفظ الملفات المرفوعة.",
+        "provider": {
+          "title": "مزود التخزين",
+          "description": "التخزين المحلي مناسب للتطوير، والسحابي للإنتاج.",
+          "label": "المزود",
+          "local": "محلي",
+          "localDescription": "تُحفظ الملفات في public/uploads على هذا الخادم.",
+          "s3": "Amazon S3",
+          "r2": "Cloudflare R2",
+          "uploadthing": "UploadThing"
+        },
+        "cloud": {
+          "title": "بيانات اعتماد السحابة",
+          "description": "مطلوبة لمزودي السحابة المحددين.",
+          "bucket": "الحاوية",
+          "bucketPlaceholder": "weerbex-uploads",
+          "region": "المنطقة",
+          "regionPlaceholder": "eu-west-3",
+          "accessKey": "مفتاح الوصول",
+          "accessKeyPlaceholder": "AKIA...",
+          "secretKey": "المفتاح السري",
+          "secretKeyPlaceholder": "••••••••",
+          "secretKeyHint": "يُخزَّن مشفرًا ولا يُعرض أبدًا في المتصفح."
+        },
+        "uploads": {
+          "title": "قواعد الرفع",
+          "description": "حدد حجم الملفات وأنواعها المسموح بها.",
+          "maxSize": "الحجم الأقصى (ميغابايت)",
+          "maxSizeHint": "بين 1 و100 ميغابايت.",
+          "mimeTypes": "أنواع MIME المسموح بها",
+          "mimeTypesPlaceholder": "image/png, image/jpeg, application/pdf",
+          "mimeTypesHint": "افصل بين الأنواع بفواصل."
+        }
       }
     },
     "appDetail": {
