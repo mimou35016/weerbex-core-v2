@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     roles: Role;
     media: Media;
+    'page-seo': PageSeo;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,6 +81,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     roles: RolesSelect<false> | RolesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    'page-seo': PageSeoSelect<false> | PageSeoSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -88,10 +90,16 @@ export interface Config {
   db: {
     defaultIDType: string;
   };
-  fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
-  locale: null;
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'fr' | 'ar') | ('en' | 'fr' | 'ar')[];
+  globals: {
+    'site-settings': SiteSetting;
+    'seo-settings': SeoSetting;
+  };
+  globalsSelect: {
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    'seo-settings': SeoSettingsSelect<false> | SeoSettingsSelect<true>;
+  };
+  locale: 'en' | 'fr' | 'ar';
   widgets: {
     collections: CollectionsWidget;
   };
@@ -220,6 +228,40 @@ export interface Media {
   focalY?: number | null;
 }
 /**
+ * Override titles, descriptions and social images for specific routes and locales.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page-seo".
+ */
+export interface PageSeo {
+  id: string;
+  /**
+   * Public route without the locale prefix, for example /login or /dashboard/settings.
+   */
+  path: string;
+  /**
+   * Internal name shown in the dashboard list.
+   */
+  label?: string | null;
+  title?: string | null;
+  description?: string | null;
+  keywords?: string | null;
+  /**
+   * Absolute canonical URL for this route and locale.
+   */
+  canonicalUrl?: string | null;
+  ogImage?: (string | null) | Media;
+  /**
+   * Exclude this route from search engine indexes.
+   */
+  noIndex?: boolean | null;
+  includeInSitemap?: boolean | null;
+  changeFrequency?: ('always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never') | null;
+  priority?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -254,6 +296,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'page-seo';
+        value: string | PageSeo;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -365,6 +411,25 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page-seo_select".
+ */
+export interface PageSeoSelect<T extends boolean = true> {
+  path?: T;
+  label?: T;
+  title?: T;
+  description?: T;
+  keywords?: T;
+  canonicalUrl?: T;
+  ogImage?: T;
+  noIndex?: T;
+  includeInSitemap?: T;
+  changeFrequency?: T;
+  priority?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -402,6 +467,181 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * Branding, contact details and platform switches used across the public site and dashboard.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: string;
+  /**
+   * Shown in metadata, the sidebar and the auth pages.
+   */
+  siteName?: string | null;
+  /**
+   * Short subtitle displayed under the site name.
+   */
+  tagline?: string | null;
+  /**
+   * Fallback meta description when no SEO default is set.
+   */
+  description?: string | null;
+  /**
+   * Footer copy rendered on public pages.
+   */
+  footerText?: string | null;
+  /**
+   * Primary brand logo. SVG or transparent PNG recommended.
+   */
+  logo?: (string | null) | Media;
+  /**
+   * Icon shown in browser tabs and bookmarks.
+   */
+  favicon?: (string | null) | Media;
+  contactEmail?: string | null;
+  contactPhone?: string | null;
+  /**
+   * Profiles linked from the footer and contact blocks.
+   */
+  socialLinks?:
+    | {
+        platform: 'website' | 'x' | 'facebook' | 'instagram' | 'linkedin' | 'youtube' | 'tiktok' | 'github';
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Signals that the platform is under maintenance. Read by the app layout.
+   */
+  maintenanceMode?: boolean | null;
+  /**
+   * Allow visitors to create their own accounts.
+   */
+  openRegistration?: boolean | null;
+  defaultLocale?: ('en' | 'fr' | 'ar') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Default metadata, social cards, verification codes and indexing rules.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "seo-settings".
+ */
+export interface SeoSetting {
+  id: string;
+  /**
+   * Used when a page does not define its own title.
+   */
+  defaultTitle?: string | null;
+  /**
+   * Template applied to page titles. Use %s for the page title and {siteName} for the site name.
+   */
+  titleTemplate?: string | null;
+  defaultDescription?: string | null;
+  /**
+   * Comma separated keywords.
+   */
+  defaultKeywords?: string | null;
+  author?: string | null;
+  ogTitle?: string | null;
+  ogDescription?: string | null;
+  /**
+   * Default Open Graph and Twitter card image.
+   */
+  ogImage?: (string | null) | Media;
+  twitterCard?: ('summary' | 'summary_large_image') | null;
+  twitterHandle?: string | null;
+  /**
+   * Allow search engines to index the site.
+   */
+  robotsIndex?: boolean | null;
+  /**
+   * Allow search engines to follow links.
+   */
+  robotsFollow?: boolean | null;
+  /**
+   * Public origin used for canonical URLs, sitemaps and Open Graph links (e.g. https://example.com).
+   */
+  canonicalBaseUrl?: string | null;
+  googleVerification?: string | null;
+  bingVerification?: string | null;
+  yandexVerification?: string | null;
+  /**
+   * Optional custom robots.txt body. When empty, rules are generated from the indexing switches.
+   */
+  robotsTxt?: string | null;
+  /**
+   * Publish /sitemap.xml and reference it from robots.txt.
+   */
+  sitemapEnabled?: boolean | null;
+  /**
+   * Raw HTML injected into every page. Only edit when you trust the content.
+   */
+  customHeadScripts?: string | null;
+  analyticsScript?: string | null;
+  pixelScript?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  siteName?: T;
+  tagline?: T;
+  description?: T;
+  footerText?: T;
+  logo?: T;
+  favicon?: T;
+  contactEmail?: T;
+  contactPhone?: T;
+  socialLinks?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  maintenanceMode?: T;
+  openRegistration?: T;
+  defaultLocale?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "seo-settings_select".
+ */
+export interface SeoSettingsSelect<T extends boolean = true> {
+  defaultTitle?: T;
+  titleTemplate?: T;
+  defaultDescription?: T;
+  defaultKeywords?: T;
+  author?: T;
+  ogTitle?: T;
+  ogDescription?: T;
+  ogImage?: T;
+  twitterCard?: T;
+  twitterHandle?: T;
+  robotsIndex?: T;
+  robotsFollow?: T;
+  canonicalBaseUrl?: T;
+  googleVerification?: T;
+  bingVerification?: T;
+  yandexVerification?: T;
+  robotsTxt?: T;
+  sitemapEnabled?: T;
+  customHeadScripts?: T;
+  analyticsScript?: T;
+  pixelScript?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

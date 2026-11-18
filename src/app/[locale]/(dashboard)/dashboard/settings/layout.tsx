@@ -1,6 +1,9 @@
 import type { ReactNode } from "react"
 
 import { SettingsNav } from "@/components/dashboard/settings/settings-nav"
+import { createRouteMetadata } from "@/lib/seo"
+
+export const generateMetadata = createRouteMetadata("/dashboard/settings")
 
 export default function SettingsLayout({
   children,

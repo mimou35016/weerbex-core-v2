@@ -6,6 +6,9 @@ import { CurrentUserProvider } from "@/components/dashboard/current-user-provide
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { getCurrentUser } from "@/lib/auth"
+import { createRouteMetadata } from "@/lib/seo"
+
+export const generateMetadata = createRouteMetadata("/dashboard")
 
 export default async function DashboardLayout({
   children,

@@ -12,7 +12,7 @@
  * actions are introduced so existing roles receive one-time defaults without
  * overriding grants the super admin edited afterwards.
  */
-export const PERMISSIONS_VERSION = 2
+export const PERMISSIONS_VERSION = 3
 
 export type PermissionAction =
   | "find"
@@ -116,7 +116,7 @@ export const permissionResources: PermissionResource[] = [
     id: "seo",
     labelKey: "roles.resources.seo",
     group: "settings",
-    actions: ["find", "read", "update", "publish"],
+    actions: ["find", "read", "create", "update", "delete", "publish"],
   },
   {
     id: "security",

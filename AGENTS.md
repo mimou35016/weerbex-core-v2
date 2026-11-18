@@ -55,3 +55,34 @@ The following backend and security integrations are **ALREADY COMPLETED AND WORK
 
 - **Preserve Existing Integrations:** Whenever adding new collections, mini-apps, or features, extend `src/payload.config.ts` incrementally without altering existing `users` auth logic, RBAC guards, or core dashboard files.
 - **Zero UI Redesign:** Keep all existing `shadcn/ui` components, layouts, `src/config/dashboard-nav.ts`, and `messages/*.json` structures intact.
+
+## 🚀 Completed Core Architecture & System State (PROTECTED - DO NOT RE-INITIALIZE)
+
+The following systems are **fully implemented, database-driven (Payload CMS + MongoDB), and operational**. Never overwrite or revert these components:
+
+### 1. Backend & CMS Infrastructure
+
+- **Payload CMS 3 & MongoDB:** Installed and active (`payload`, `@payloadcms/next`, `@payloadcms/db-mongodb`, `@payloadcms/richtext-lexical`).
+- **Configuration:** Initialized in `src/payload.config.ts`, with `withPayload` integrated safely in `next.config.mjs` alongside `next-intl`.
+- **API & Admin Routes:** Active at `/admin` and `src/app/api/[...payload]/route.ts`. All legacy Prisma or mock database code has been completely replaced by Payload Local API.
+
+### 2. Strapi-Like Granular RBAC & Permission Engine
+
+- **Dynamic Database Roles & Permissions:** Roles and permissions are 100% dynamic, stored in MongoDB via Payload, and evaluated in real-time (`depth: 1`, `saveToJWT: false`).
+- **Superadmin Absolute Control:** Only users with the `superadmin` role have unrestricted wildcard access and exclusive permission to create/edit roles and manage permissions for other users.
+- **Granular Module & Action Safeguards:** Permissions span every single resource and sub-section (Users, Roles, Audit Logs, SEO, Security, System Settings, and all mini-apps) covering CRUD + custom actions (`find`, `read`, `create`, `update`, `delete`, `export`, etc.).
+- **Backend & Frontend Shielding:** Enforced via Payload access control hooks, Next.js route protection, and dynamic UI rendering.
+
+### 3. Real Dynamic Site Settings & SEO Engine
+
+- **Payload Globals & Collections:**
+  - `site-settings` (Global): Stores dynamic site name, tagline, contact info, maintenance mode, localized (`en`, `fr`, `ar`) fields, and media uploads (Logo/Favicon).
+  - `seo-settings` (Global & Page-level): Stores global meta defaults, OpenGraph images, Twitter card formats, robots rules, and per-page/route custom SEO fields.
+- **Dynamic Next.js Metadata (`generateMetadata`):** Fully dynamic metadata generation across the entire App Router, pulling live data from Payload Globals/Collections based on current locale and slug.
+- **Dynamic Sitemap & Robots:** Live `sitemap.ts` and `robots.ts` driven entirely by database records.
+
+## 🛡️ Mandatory Rules for All Future Prompts
+
+1. **Preserve Existing Integrations:** Extend `src/payload.config.ts` or add new features incrementally without touching existing Auth, RBAC, Globals, or SEO logic.
+2. **Zero UI Redesign:** Never modify, replace, or break existing `src/components/ui/` elements, layout wrappers, or `src/config/dashboard-nav.ts`.
+3. **Strict Localization:** Every newly added label or field must include complete localization keys across `messages/en.json`, `messages/fr.json`, and `messages/ar.json` with full RTL (`dir="rtl"`) support for Arabic.

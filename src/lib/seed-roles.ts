@@ -99,6 +99,7 @@ const DEFAULT_ROLES: SeedRole[] = [
           crudExport
         ),
         grant(settingsResources, manage),
+        grant(["seo"], [...manage, "create", "delete", "publish"]),
         grant(
           appResources.filter((id) => id !== "integrations"),
           crudExport
@@ -223,6 +224,23 @@ const lateResourceIds: PermissionResourceId[] = [
   "media",
 ]
 
+/**
+ * Actions added to resources that already existed in a previous permission
+ * version. They are granted once to roles that already manage the resource,
+ * then stay editable like any other grant.
+ */
+const lateResourceActions: Partial<
+  Record<
+    PermissionResourceId,
+    { actions: PermissionAction[]; requires: PermissionAction[] }
+  >
+> = {
+  seo: {
+    actions: ["create", "delete"],
+    requires: ["update"],
+  },
+}
+
 function buildLateResourceDefaults(
   existing: Map<PermissionResourceId, PermissionAction[]>,
   isSuperAdmin: boolean
@@ -323,6 +341,27 @@ async function migrateRolePermissions(payload: Payload): Promise<void> {
 
       for (const [resource, actions] of defaults) {
         existing.set(resource, actions)
+      }
+
+      for (const [resourceId, upgrade] of Object.entries(
+        lateResourceActions
+      )) {
+        const id = resourceId as PermissionResourceId
+        const resource = getPermissionResource(id)
+        const current = existing.get(id)
+
+        if (!resource || !current) continue
+        if (!upgrade.requires.every((action) => current.includes(action))) {
+          continue
+        }
+
+        const merged = new Set(current)
+
+        for (const action of upgrade.actions) {
+          if (resource.actions.includes(action)) merged.add(action)
+        }
+
+        existing.set(id, Array.from(merged))
       }
 
       const migrated = permissionResources

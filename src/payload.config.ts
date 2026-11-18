@@ -6,9 +6,13 @@ import sharp from "sharp"
 import { fileURLToPath } from "url"
 
 import { Media } from "./collections/Media"
+import { PageSeo } from "./collections/PageSeo"
 import { Roles } from "./collections/Roles"
 import { Users } from "./collections/Users"
+import { SeoSettings } from "./globals/SeoSettings"
+import { SiteSettings } from "./globals/SiteSettings"
 import { seedRoles } from "./lib/seed-roles"
+import { seedSettings } from "./lib/seed-settings"
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -20,7 +24,17 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Roles, Media],
+  collections: [Users, Roles, Media, PageSeo],
+  globals: [SiteSettings, SeoSettings],
+  localization: {
+    locales: [
+      { label: "English", code: "en" },
+      { label: "Français", code: "fr" },
+      { label: "العربية", code: "ar", rtl: true },
+    ],
+    defaultLocale: "en",
+    fallback: true,
+  },
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {
@@ -33,5 +47,6 @@ export default buildConfig({
   plugins: [],
   onInit: async (payload) => {
     await seedRoles(payload)
+    await seedSettings(payload)
   },
 })

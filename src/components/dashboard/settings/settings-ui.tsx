@@ -98,19 +98,21 @@ export function SettingsActions({
   resetLabel,
   onSave,
   onReset,
+  saving = false,
 }: {
   saveLabel: string
   resetLabel: string
   onSave: () => void
   onReset: () => void
+  saving?: boolean
 }) {
   return (
     <div className="flex flex-wrap items-center justify-end gap-2">
-      <Button variant="outline" onClick={onReset}>
+      <Button variant="outline" onClick={onReset} disabled={saving}>
         <RotateCcw aria-hidden="true" />
         {resetLabel}
       </Button>
-      <Button onClick={onSave}>
+      <Button onClick={onSave} disabled={saving}>
         <Save aria-hidden="true" />
         {saveLabel}
       </Button>
