@@ -1,0 +1,370 @@
+{
+  "Common": {
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "demoNote": "This is a demo submission — connect your auth provider next."
+  },
+  "Theme": {
+    "label": "Change theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "Language": {
+    "label": "Change language",
+    "en": "English",
+    "fr": "Français",
+    "ar": "العربية"
+  },
+  "Auth": {
+    "brand": "weerbex",
+    "footer": "© {year} weerbex. All rights reserved."
+  },
+  "Login": {
+    "title": "Welcome back",
+    "description": "Sign in to your account to pick up where you left off.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "forgotPassword": "Forgot password?",
+    "submit": "Sign in",
+    "submitting": "Signing in...",
+    "success": "Signed in successfully",
+    "noAccount": "Don't have an account?",
+    "registerLink": "Create an account"
+  },
+  "Register": {
+    "title": "Create an account",
+    "description": "Get started with weerbex in just a minute.",
+    "nameLabel": "Full name",
+    "namePlaceholder": "Jane Doe",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "At least 8 characters",
+    "confirmPasswordLabel": "Confirm password",
+    "confirmPasswordPlaceholder": "Re-enter your password",
+    "submit": "Create account",
+    "submitting": "Creating account...",
+    "success": "Account created successfully",
+    "hasAccount": "Already have an account?",
+    "loginLink": "Sign in"
+  },
+  "ForgotPassword": {
+    "title": "Forgot your password?",
+    "description": "Enter your email and we'll send you a link to reset your password.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "submit": "Send reset link",
+    "submitting": "Sending...",
+    "success": "If an account exists, a reset link has been sent to {email}.",
+    "backLink": "Back to login"
+  },
+  "Validation": {
+    "required": "This field is required",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Enter a valid email address",
+    "nameRequired": "Full name is required",
+    "passwordRequired": "Password is required",
+    "passwordShort": "Password must be at least 8 characters",
+    "confirmRequired": "Please confirm your password",
+    "confirmMismatch": "Passwords do not match"
+  },
+  "Dashboard": {
+    "nav": {
+      "brand": "weerbex",
+      "brandTagline": "Core Dashboard",
+      "coreManagement": "Core management",
+      "registeredApps": "Registered apps",
+      "overview": "Overview",
+      "apps": "Apps Hub",
+      "users": "Users",
+      "roles": "Roles & Permissions",
+      "audit": "Audit Logs",
+      "settings": "Settings"
+    },
+    "header": {
+      "toggleSidebar": "Toggle sidebar",
+      "breadcrumbLabel": "Breadcrumb"
+    },
+    "userNav": {
+      "label": "Open user menu",
+      "profile": "Profile",
+      "settings": "Settings",
+      "logout": "Log out",
+      "role": "Super Admin"
+    },
+    "roles": {
+      "super_admin": "Super Admin",
+      "admin": "Admin",
+      "manager": "Manager",
+      "user": "User",
+      "resources": {
+        "users": "Users",
+        "roles": "Roles & Permissions",
+        "audit": "Audit Logs",
+        "settings": "Settings",
+        "appsHub": "Apps Hub"
+      }
+    },
+    "status": {
+      "active": "Active",
+      "suspended": "Suspended",
+      "pending": "Pending"
+    },
+    "appStatus": {
+      "active": "Active",
+      "beta": "Beta",
+      "coming_soon": "Coming soon"
+    },
+    "auditStatus": {
+      "success": "Success",
+      "failed": "Failed",
+      "warning": "Warning"
+    },
+    "apps": {
+      "analytics": {
+        "name": "Analytics",
+        "description": "Track product usage, growth and retention in real time."
+      },
+      "crm": {
+        "name": "CRM & Contacts",
+        "description": "Manage customers, pipelines and every conversation."
+      },
+      "billing": {
+        "name": "Billing & Invoices",
+        "description": "Create invoices, reconcile payments and track revenue."
+      },
+      "automation": {
+        "name": "Workflow Automation",
+        "description": "Automate repetitive tasks with event-driven workflows."
+      },
+      "reports": {
+        "name": "Reports Builder",
+        "description": "Build and schedule custom reports for any team."
+      },
+      "integrations": {
+        "name": "Integrations Hub",
+        "description": "Connect external services and microservices to the core."
+      }
+    },
+    "common": {
+      "search": "Search",
+      "save": "Save changes",
+      "cancel": "Cancel",
+      "close": "Close",
+      "launch": "Launch",
+      "configure": "Configure",
+      "enable": "Enable",
+      "disable": "Disable",
+      "actions": "Actions",
+      "all": "All",
+      "allStatuses": "All statuses",
+      "allRoles": "All roles",
+      "edit": "Edit",
+      "delete": "Delete",
+      "noResults": "No results found",
+      "requiredRole": "Required role",
+      "status": "Status",
+      "role": "Role",
+      "name": "Name",
+      "email": "Email",
+      "saved": "Changes saved"
+    },
+    "overview": {
+      "title": "Overview",
+      "description": "A snapshot of your platform, apps and recent activity.",
+      "kpi": {
+        "totalUsers": "Total users",
+        "activeApps": "Active apps",
+        "systemHealth": "System health",
+        "recentActivity": "Recent activity",
+        "usersTrend": "+12% this month",
+        "appsTrend": "of registered apps",
+        "healthTrend": "All systems operational",
+        "activityTrend": "events in the last 24h"
+      },
+      "launcher": {
+        "title": "App launcher",
+        "description": "Open any installed app directly from here.",
+        "manage": "Manage apps",
+        "available": "Available"
+      },
+      "activity": {
+        "title": "Recent system activity",
+        "description": "The latest events across the platform.",
+        "viewAll": "View all logs"
+      }
+    },
+    "appsHub": {
+      "title": "Apps Hub",
+      "description": "Manage the modular apps connected to your workspace.",
+      "searchPlaceholder": "Search apps...",
+      "statusFilter": "Status",
+      "empty": "No apps match your filters.",
+      "enableLabel": "Enabled",
+      "configureTitle": "Configure app",
+      "configureDescription": "Adjust how this app behaves for your workspace.",
+      "webhook": "Webhook URL",
+      "webhookPlaceholder": "https://api.example.com/hooks/app",
+      "requiredRoleLabel": "Required role",
+      "statusLabel": "Status",
+      "saveConfig": "Save configuration"
+    },
+    "users": {
+      "title": "Users",
+      "description": "Manage accounts, roles and access for your workspace.",
+      "searchPlaceholder": "Search users...",
+      "add": "Add user",
+      "editTitle": "Edit user",
+      "addTitle": "Add user",
+      "addDescription": "Create a new account and assign a role.",
+      "editDescription": "Update this user's details and access.",
+      "table": {
+        "user": "User",
+        "role": "Role",
+        "status": "Status",
+        "joined": "Joined",
+        "actions": "Actions"
+      },
+      "editRole": "Edit role",
+      "suspend": "Suspend",
+      "activate": "Activate",
+      "delete": "Delete",
+      "fullName": "Full name",
+      "fullNamePlaceholder": "Jane Doe",
+      "emailPlaceholder": "you@example.com",
+      "saveUser": "Save user",
+      "results": "{count} users",
+      "empty": "No users match your filters."
+    },
+    "rolesPage": {
+      "title": "Roles & Permissions",
+      "description": "Define what each role can read, write and delete.",
+      "selectRole": "Select role",
+      "roleHint": "Choose a role to edit its permission matrix.",
+      "matrixTitle": "Permissions matrix",
+      "matrixDescription": "Toggle access per module and app for the selected role.",
+      "resource": "Resource",
+      "read": "Read",
+      "write": "Write",
+      "delete": "Delete",
+      "coreModules": "Core modules",
+      "applications": "Applications",
+      "save": "Save permissions",
+      "reset": "Reset",
+      "saved": "Permissions updated for {role}"
+    },
+    "audit": {
+      "title": "Audit logs",
+      "description": "A tamper-evident trail of security and configuration events.",
+      "searchPlaceholder": "Search logs...",
+      "statusFilter": "Status",
+      "table": {
+        "action": "Action",
+        "user": "User",
+        "target": "Target resource",
+        "ip": "IP address",
+        "status": "Status",
+        "timestamp": "Timestamp"
+      },
+      "actions": {
+        "login": "Signed in",
+        "logout": "Signed out",
+        "userCreated": "Created user",
+        "roleChanged": "Changed role",
+        "appEnabled": "Enabled app",
+        "appDisabled": "Disabled app",
+        "settingsUpdated": "Updated settings",
+        "apiKeyCreated": "Created API key"
+      },
+      "results": "{count} events",
+      "empty": "No log entries match your filters."
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Configure the platform, your account and integrations.",
+      "tabs": {
+        "general": "General",
+        "profile": "Profile",
+        "apiKeys": "API Keys & Webhooks"
+      },
+      "general": {
+        "title": "General",
+        "description": "Platform-wide preferences for your workspace.",
+        "platformName": "Platform name",
+        "platformNamePlaceholder": "weerbex",
+        "supportEmail": "Support email",
+        "supportEmailPlaceholder": "support@weerbex.io",
+        "defaultLanguage": "Default language",
+        "maintenanceMode": "Maintenance mode",
+        "maintenanceModeDescription": "Temporarily block access while you deploy.",
+        "registration": "Open registration",
+        "registrationDescription": "Allow new users to create their own accounts.",
+        "save": "Save changes"
+      },
+      "profile": {
+        "title": "Profile",
+        "description": "Update your personal details and password.",
+        "avatar": "Avatar",
+        "changeAvatar": "Change avatar",
+        "avatarHint": "PNG or JPG, up to 2 MB.",
+        "fullName": "Full name",
+        "email": "Email",
+        "currentPassword": "Current password",
+        "newPassword": "New password",
+        "confirmPassword": "Confirm password",
+        "save": "Save profile"
+      },
+      "apiKeys": {
+        "title": "API keys",
+        "description": "Generate tokens so external microservices can call the core.",
+        "tokenName": "Token name",
+        "tokenNamePlaceholder": "e.g. billing-sync",
+        "generate": "Generate token",
+        "tokensTitle": "Active tokens",
+        "table": {
+          "name": "Name",
+          "prefix": "Prefix",
+          "created": "Created",
+          "lastUsed": "Last used",
+          "actions": "Actions"
+        },
+        "never": "Never",
+        "revoke": "Revoke",
+        "empty": "No API tokens yet.",
+        "webhookTitle": "Webhooks",
+        "webhookDescription": "Send platform events to an external endpoint.",
+        "webhookUrl": "Endpoint URL",
+        "webhookPlaceholder": "https://api.example.com/hooks/events",
+        "saveWebhook": "Save webhook"
+      }
+    },
+    "appDetail": {
+      "back": "Back to Apps Hub",
+      "comingSoon": "This app is coming soon.",
+      "comingSoonDescription": "It is registered in the apps registry and will appear here once it is released.",
+      "statusLabel": "Status",
+      "requiredRoleLabel": "Required role",
+      "launchPlaceholder": "This is a modular placeholder. Replace this route with the app's own dashboard."
+    },
+    "toast": {
+      "appEnabled": "{app} enabled",
+      "appDisabled": "{app} disabled",
+      "appConfigured": "{app} configuration saved",
+      "userAdded": "User added",
+      "userUpdated": "User updated",
+      "userDeleted": "User deleted",
+      "userSuspended": "User suspended",
+      "userActivated": "User activated",
+      "settingsSaved": "Settings saved",
+      "profileSaved": "Profile updated",
+      "tokenGenerated": "API token generated",
+      "tokenRevoked": "API token revoked",
+      "webhookSaved": "Webhook saved",
+      "loggedOut": "You have been signed out",
+      "permissionsSaved": "Permissions saved"
+    }
+  }
+}

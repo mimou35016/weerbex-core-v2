@@ -1,0 +1,370 @@
+{
+  "Common": {
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور",
+    "demoNote": "هذا عرض تجريبي — قم بربط مزود المصادقة الخاص بك لاحقًا."
+  },
+  "Theme": {
+    "label": "تغيير السمة",
+    "light": "فاتح",
+    "dark": "داكن",
+    "system": "النظام"
+  },
+  "Language": {
+    "label": "تغيير اللغة",
+    "en": "English",
+    "fr": "Français",
+    "ar": "العربية"
+  },
+  "Auth": {
+    "brand": "weerbex",
+    "footer": "© {year} weerbex. جميع الحقوق محفوظة."
+  },
+  "Login": {
+    "title": "مرحبًا بعودتك",
+    "description": "سجّل الدخول إلى حسابك للمتابعة من حيث توقفت.",
+    "emailLabel": "البريد الإلكتروني",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "كلمة المرور",
+    "passwordPlaceholder": "أدخل كلمة المرور",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "submit": "تسجيل الدخول",
+    "submitting": "جارٍ تسجيل الدخول...",
+    "success": "تم تسجيل الدخول بنجاح",
+    "noAccount": "ليس لديك حساب؟",
+    "registerLink": "إنشاء حساب"
+  },
+  "Register": {
+    "title": "إنشاء حساب",
+    "description": "ابدأ مع weerbex في أقل من دقيقة.",
+    "nameLabel": "الاسم الكامل",
+    "namePlaceholder": "جين دو",
+    "emailLabel": "البريد الإلكتروني",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "كلمة المرور",
+    "passwordPlaceholder": "8 أحرف على الأقل",
+    "confirmPasswordLabel": "تأكيد كلمة المرور",
+    "confirmPasswordPlaceholder": "أعد إدخال كلمة المرور",
+    "submit": "إنشاء الحساب",
+    "submitting": "جارٍ إنشاء الحساب...",
+    "success": "تم إنشاء الحساب بنجاح",
+    "hasAccount": "لديك حساب بالفعل؟",
+    "loginLink": "تسجيل الدخول"
+  },
+  "ForgotPassword": {
+    "title": "نسيت كلمة المرور؟",
+    "description": "أدخل بريدك الإلكتروني وسنرسل لك رابطًا لإعادة تعيين كلمة المرور.",
+    "emailLabel": "البريد الإلكتروني",
+    "emailPlaceholder": "you@example.com",
+    "submit": "إرسال رابط إعادة التعيين",
+    "submitting": "جارٍ الإرسال...",
+    "success": "إذا كان هناك حساب، فقد تم إرسال رابط إلى {email}.",
+    "backLink": "العودة إلى تسجيل الدخول"
+  },
+  "Validation": {
+    "required": "هذا الحقل مطلوب",
+    "emailRequired": "البريد الإلكتروني مطلوب",
+    "emailInvalid": "أدخل عنوان بريد إلكتروني صالحًا",
+    "nameRequired": "الاسم الكامل مطلوب",
+    "passwordRequired": "كلمة المرور مطلوبة",
+    "passwordShort": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+    "confirmRequired": "يرجى تأكيد كلمة المرور",
+    "confirmMismatch": "كلمتا المرور غير متطابقتين"
+  },
+  "Dashboard": {
+    "nav": {
+      "brand": "weerbex",
+      "brandTagline": "لوحة التحكم الأساسية",
+      "coreManagement": "إدارة النواة",
+      "registeredApps": "التطبيقات المسجّلة",
+      "overview": "نظرة عامة",
+      "apps": "مركز التطبيقات",
+      "users": "المستخدمون",
+      "roles": "الأدوار والصلاحيات",
+      "audit": "سجلات التدقيق",
+      "settings": "الإعدادات"
+    },
+    "header": {
+      "toggleSidebar": "إظهار/إخفاء الشريط الجانبي",
+      "breadcrumbLabel": "مسار التنقل"
+    },
+    "userNav": {
+      "label": "فتح قائمة المستخدم",
+      "profile": "الملف الشخصي",
+      "settings": "الإعدادات",
+      "logout": "تسجيل الخروج",
+      "role": "مدير أعلى"
+    },
+    "roles": {
+      "super_admin": "مدير أعلى",
+      "admin": "مدير",
+      "manager": "مشرف",
+      "user": "مستخدم",
+      "resources": {
+        "users": "المستخدمون",
+        "roles": "الأدوار والصلاحيات",
+        "audit": "سجلات التدقيق",
+        "settings": "الإعدادات",
+        "appsHub": "مركز التطبيقات"
+      }
+    },
+    "status": {
+      "active": "نشط",
+      "suspended": "موقوف",
+      "pending": "قيد الانتظار"
+    },
+    "appStatus": {
+      "active": "نشط",
+      "beta": "تجريبي",
+      "coming_soon": "قريبًا"
+    },
+    "auditStatus": {
+      "success": "نجاح",
+      "failed": "فشل",
+      "warning": "تحذير"
+    },
+    "apps": {
+      "analytics": {
+        "name": "التحليلات",
+        "description": "تابع استخدام المنتج والنمو والاحتفاظ بالعملاء في الوقت الفعلي."
+      },
+      "crm": {
+        "name": "إدارة العملاء وجهات الاتصال",
+        "description": "أدر العملاء ومسارات البيع وكل المحادثات."
+      },
+      "billing": {
+        "name": "الفواتير والمدفوعات",
+        "description": "أنشئ الفواتير وطابق المدفوعات وتابع الإيرادات."
+      },
+      "automation": {
+        "name": "أتمتة سير العمل",
+        "description": "أتمت المهام المتكررة باستخدام سير عمل مدفوع بالأحداث."
+      },
+      "reports": {
+        "name": "منشئ التقارير",
+        "description": "أنشئ تقارير مخصصة وجدولها لأي فريق."
+      },
+      "integrations": {
+        "name": "مركز التكاملات",
+        "description": "اربط الخدمات الخارجية والخدمات المصغّرة بالنواة."
+      }
+    },
+    "common": {
+      "search": "بحث",
+      "save": "حفظ التغييرات",
+      "cancel": "إلغاء",
+      "close": "إغلاق",
+      "launch": "تشغيل",
+      "configure": "تهيئة",
+      "enable": "تفعيل",
+      "disable": "تعطيل",
+      "actions": "الإجراءات",
+      "all": "الكل",
+      "allStatuses": "كل الحالات",
+      "allRoles": "كل الأدوار",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "noResults": "لا توجد نتائج",
+      "requiredRole": "الدور المطلوب",
+      "status": "الحالة",
+      "role": "الدور",
+      "name": "الاسم",
+      "email": "البريد الإلكتروني",
+      "saved": "تم حفظ التغييرات"
+    },
+    "overview": {
+      "title": "نظرة عامة",
+      "description": "لمحة عن منصتك وتطبيقاتك والنشاط الأخير.",
+      "kpi": {
+        "totalUsers": "إجمالي المستخدمين",
+        "activeApps": "التطبيقات النشطة",
+        "systemHealth": "حالة النظام",
+        "recentActivity": "النشاط الأخير",
+        "usersTrend": "+12% هذا الشهر",
+        "appsTrend": "من التطبيقات المسجّلة",
+        "healthTrend": "جميع الأنظمة تعمل بشكل سليم",
+        "activityTrend": "أحداث خلال آخر 24 ساعة"
+      },
+      "launcher": {
+        "title": "مشغّل التطبيقات",
+        "description": "افتح أي تطبيق مثبّت مباشرة من هنا.",
+        "manage": "إدارة التطبيقات",
+        "available": "متاح"
+      },
+      "activity": {
+        "title": "نشاط النظام الأخير",
+        "description": "أحدث الأحداث عبر المنصة.",
+        "viewAll": "عرض كل السجلات"
+      }
+    },
+    "appsHub": {
+      "title": "مركز التطبيقات",
+      "description": "أدر التطبيقات المعيارية المتصلة بمساحة عملك.",
+      "searchPlaceholder": "ابحث عن تطبيقات...",
+      "statusFilter": "الحالة",
+      "empty": "لا توجد تطبيقات تطابق عوامل التصفية.",
+      "enableLabel": "مفعّل",
+      "configureTitle": "تهيئة التطبيق",
+      "configureDescription": "اضبط سلوك هذا التطبيق في مساحة عملك.",
+      "webhook": "رابط الويب هوك",
+      "webhookPlaceholder": "https://api.example.com/hooks/app",
+      "requiredRoleLabel": "الدور المطلوب",
+      "statusLabel": "الحالة",
+      "saveConfig": "حفظ التهيئة"
+    },
+    "users": {
+      "title": "المستخدمون",
+      "description": "أدر الحسابات والأدوار والوصول في مساحة عملك.",
+      "searchPlaceholder": "ابحث عن مستخدمين...",
+      "add": "إضافة مستخدم",
+      "editTitle": "تعديل المستخدم",
+      "addTitle": "إضافة مستخدم",
+      "addDescription": "أنشئ حسابًا جديدًا وعيّن دورًا له.",
+      "editDescription": "حدّث بيانات هذا المستخدم وصلاحياته.",
+      "table": {
+        "user": "المستخدم",
+        "role": "الدور",
+        "status": "الحالة",
+        "joined": "تاريخ الانضمام",
+        "actions": "الإجراءات"
+      },
+      "editRole": "تعديل الدور",
+      "suspend": "إيقاف",
+      "activate": "تفعيل",
+      "delete": "حذف",
+      "fullName": "الاسم الكامل",
+      "fullNamePlaceholder": "جين دو",
+      "emailPlaceholder": "you@example.com",
+      "saveUser": "حفظ المستخدم",
+      "results": "{count} مستخدم",
+      "empty": "لا يوجد مستخدمون يطابقون عوامل التصفية."
+    },
+    "rolesPage": {
+      "title": "الأدوار والصلاحيات",
+      "description": "حدّد ما يمكن لكل دور قراءته وكتابته وحذفه.",
+      "selectRole": "اختر دورًا",
+      "roleHint": "اختر دورًا لتعديل مصفوفة صلاحياته.",
+      "matrixTitle": "مصفوفة الصلاحيات",
+      "matrixDescription": "فعّل أو عطّل الوصول لكل وحدة وتطبيق للدور المحدد.",
+      "resource": "المورد",
+      "read": "قراءة",
+      "write": "كتابة",
+      "delete": "حذف",
+      "coreModules": "وحدات النواة",
+      "applications": "التطبيقات",
+      "save": "حفظ الصلاحيات",
+      "reset": "إعادة تعيين",
+      "saved": "تم تحديث صلاحيات {role}"
+    },
+    "audit": {
+      "title": "سجلات التدقيق",
+      "description": "سجل غير قابل للتلاعب لأحداث الأمان والتهيئة.",
+      "searchPlaceholder": "ابحث في السجلات...",
+      "statusFilter": "الحالة",
+      "table": {
+        "action": "الإجراء",
+        "user": "المستخدم",
+        "target": "المورد المستهدف",
+        "ip": "عنوان IP",
+        "status": "الحالة",
+        "timestamp": "الطابع الزمني"
+      },
+      "actions": {
+        "login": "تسجيل دخول",
+        "logout": "تسجيل خروج",
+        "userCreated": "إنشاء مستخدم",
+        "roleChanged": "تغيير دور",
+        "appEnabled": "تفعيل تطبيق",
+        "appDisabled": "تعطيل تطبيق",
+        "settingsUpdated": "تحديث الإعدادات",
+        "apiKeyCreated": "إنشاء مفتاح API"
+      },
+      "results": "{count} حدث",
+      "empty": "لا توجد إدخالات سجل تطابق عوامل التصفية."
+    },
+    "settings": {
+      "title": "الإعدادات",
+      "description": "هيّئ المنصة وحسابك والتكاملات.",
+      "tabs": {
+        "general": "عام",
+        "profile": "الملف الشخصي",
+        "apiKeys": "مفاتيح API والويب هوك"
+      },
+      "general": {
+        "title": "عام",
+        "description": "تفضيلات المنصة على مستوى مساحة عملك.",
+        "platformName": "اسم المنصة",
+        "platformNamePlaceholder": "weerbex",
+        "supportEmail": "بريد الدعم",
+        "supportEmailPlaceholder": "support@weerbex.io",
+        "defaultLanguage": "اللغة الافتراضية",
+        "maintenanceMode": "وضع الصيانة",
+        "maintenanceModeDescription": "احظر الوصول مؤقتًا أثناء النشر.",
+        "registration": "التسجيل مفتوح",
+        "registrationDescription": "اسمح للمستخدمين الجدد بإنشاء حساباتهم.",
+        "save": "حفظ التغييرات"
+      },
+      "profile": {
+        "title": "الملف الشخصي",
+        "description": "حدّث بياناتك الشخصية وكلمة المرور.",
+        "avatar": "الصورة الرمزية",
+        "changeAvatar": "تغيير الصورة",
+        "avatarHint": "PNG أو JPG، بحد أقصى 2 ميغابايت.",
+        "fullName": "الاسم الكامل",
+        "email": "البريد الإلكتروني",
+        "currentPassword": "كلمة المرور الحالية",
+        "newPassword": "كلمة المرور الجديدة",
+        "confirmPassword": "تأكيد كلمة المرور",
+        "save": "حفظ الملف الشخصي"
+      },
+      "apiKeys": {
+        "title": "مفاتيح API",
+        "description": "أنشئ رموزًا وصول حتى تتمكن الخدمات المصغّرة الخارجية من استدعاء النواة.",
+        "tokenName": "اسم الرمز",
+        "tokenNamePlaceholder": "مثال: billing-sync",
+        "generate": "إنشاء رمز",
+        "tokensTitle": "الرموز النشطة",
+        "table": {
+          "name": "الاسم",
+          "prefix": "البادئة",
+          "created": "تاريخ الإنشاء",
+          "lastUsed": "آخر استخدام",
+          "actions": "الإجراءات"
+        },
+        "never": "أبدًا",
+        "revoke": "إبطال",
+        "empty": "لا توجد رموز API بعد.",
+        "webhookTitle": "الويب هوك",
+        "webhookDescription": "أرسل أحداث المنصة إلى نقطة نهاية خارجية.",
+        "webhookUrl": "رابط نقطة النهاية",
+        "webhookPlaceholder": "https://api.example.com/hooks/events",
+        "saveWebhook": "حفظ الويب هوك"
+      }
+    },
+    "appDetail": {
+      "back": "العودة إلى مركز التطبيقات",
+      "comingSoon": "هذا التطبيق قريبًا.",
+      "comingSoonDescription": "إنه مسجّل في سجل التطبيقات وسيظهر هنا بمجرد إصداره.",
+      "statusLabel": "الحالة",
+      "requiredRoleLabel": "الدور المطلوب",
+      "launchPlaceholder": "هذا مكان معياري. استبدل هذا المسار بلوحة تحكم التطبيق."
+    },
+    "toast": {
+      "appEnabled": "تم تفعيل {app}",
+      "appDisabled": "تم تعطيل {app}",
+      "appConfigured": "تم حفظ تهيئة {app}",
+      "userAdded": "تمت إضافة المستخدم",
+      "userUpdated": "تم تحديث المستخدم",
+      "userDeleted": "تم حذف المستخدم",
+      "userSuspended": "تم إيقاف المستخدم",
+      "userActivated": "تم تفعيل المستخدم",
+      "settingsSaved": "تم حفظ الإعدادات",
+      "profileSaved": "تم تحديث الملف الشخصي",
+      "tokenGenerated": "تم إنشاء رمز API",
+      "tokenRevoked": "تم إبطال رمز API",
+      "webhookSaved": "تم حفظ الويب هوك",
+      "loggedOut": "تم تسجيل خروجك",
+      "permissionsSaved": "تم حفظ الصلاحيات"
+    }
+  }
+}

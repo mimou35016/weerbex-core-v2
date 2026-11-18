@@ -1,0 +1,370 @@
+{
+  "Common": {
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe",
+    "demoNote": "Ceci est une démonstration — connectez votre fournisseur d'authentification."
+  },
+  "Theme": {
+    "label": "Changer de thème",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système"
+  },
+  "Language": {
+    "label": "Changer de langue",
+    "en": "English",
+    "fr": "Français",
+    "ar": "العربية"
+  },
+  "Auth": {
+    "brand": "weerbex",
+    "footer": "© {year} weerbex. Tous droits réservés."
+  },
+  "Login": {
+    "title": "Bon retour",
+    "description": "Connectez-vous pour reprendre là où vous vous êtes arrêté.",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "vous@exemple.com",
+    "passwordLabel": "Mot de passe",
+    "passwordPlaceholder": "Saisissez votre mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "submit": "Se connecter",
+    "submitting": "Connexion...",
+    "success": "Connexion réussie",
+    "noAccount": "Vous n'avez pas de compte ?",
+    "registerLink": "Créer un compte"
+  },
+  "Register": {
+    "title": "Créer un compte",
+    "description": "Commencez avec weerbex en une minute.",
+    "nameLabel": "Nom complet",
+    "namePlaceholder": "Jean Dupont",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "vous@exemple.com",
+    "passwordLabel": "Mot de passe",
+    "passwordPlaceholder": "8 caractères minimum",
+    "confirmPasswordLabel": "Confirmer le mot de passe",
+    "confirmPasswordPlaceholder": "Saisissez à nouveau le mot de passe",
+    "submit": "Créer le compte",
+    "submitting": "Création du compte...",
+    "success": "Compte créé avec succès",
+    "hasAccount": "Vous avez déjà un compte ?",
+    "loginLink": "Se connecter"
+  },
+  "ForgotPassword": {
+    "title": "Mot de passe oublié ?",
+    "description": "Saisissez votre e-mail et nous vous enverrons un lien de réinitialisation.",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "vous@exemple.com",
+    "submit": "Envoyer le lien",
+    "submitting": "Envoi...",
+    "success": "Si un compte existe, un lien a été envoyé à {email}.",
+    "backLink": "Retour à la connexion"
+  },
+  "Validation": {
+    "required": "Ce champ est obligatoire",
+    "emailRequired": "L'e-mail est obligatoire",
+    "emailInvalid": "Saisissez une adresse e-mail valide",
+    "nameRequired": "Le nom complet est obligatoire",
+    "passwordRequired": "Le mot de passe est obligatoire",
+    "passwordShort": "Le mot de passe doit contenir au moins 8 caractères",
+    "confirmRequired": "Veuillez confirmer votre mot de passe",
+    "confirmMismatch": "Les mots de passe ne correspondent pas"
+  },
+  "Dashboard": {
+    "nav": {
+      "brand": "weerbex",
+      "brandTagline": "Tableau de bord principal",
+      "coreManagement": "Gestion du cœur",
+      "registeredApps": "Applications enregistrées",
+      "overview": "Vue d'ensemble",
+      "apps": "Hub des applications",
+      "users": "Utilisateurs",
+      "roles": "Rôles et permissions",
+      "audit": "Journaux d'audit",
+      "settings": "Paramètres"
+    },
+    "header": {
+      "toggleSidebar": "Afficher/masquer la barre latérale",
+      "breadcrumbLabel": "Fil d'Ariane"
+    },
+    "userNav": {
+      "label": "Ouvrir le menu utilisateur",
+      "profile": "Profil",
+      "settings": "Paramètres",
+      "logout": "Se déconnecter",
+      "role": "Super administrateur"
+    },
+    "roles": {
+      "super_admin": "Super administrateur",
+      "admin": "Administrateur",
+      "manager": "Gestionnaire",
+      "user": "Utilisateur",
+      "resources": {
+        "users": "Utilisateurs",
+        "roles": "Rôles et permissions",
+        "audit": "Journaux d'audit",
+        "settings": "Paramètres",
+        "appsHub": "Hub des applications"
+      }
+    },
+    "status": {
+      "active": "Actif",
+      "suspended": "Suspendu",
+      "pending": "En attente"
+    },
+    "appStatus": {
+      "active": "Active",
+      "beta": "Bêta",
+      "coming_soon": "Bientôt disponible"
+    },
+    "auditStatus": {
+      "success": "Succès",
+      "failed": "Échec",
+      "warning": "Avertissement"
+    },
+    "apps": {
+      "analytics": {
+        "name": "Analytique",
+        "description": "Suivez l'utilisation du produit, la croissance et la rétention en temps réel."
+      },
+      "crm": {
+        "name": "CRM et contacts",
+        "description": "Gérez les clients, les pipelines et chaque conversation."
+      },
+      "billing": {
+        "name": "Facturation et factures",
+        "description": "Créez des factures, rapprochez les paiements et suivez les revenus."
+      },
+      "automation": {
+        "name": "Automatisation des workflows",
+        "description": "Automatisez les tâches répétitives avec des workflows événementiels."
+      },
+      "reports": {
+        "name": "Générateur de rapports",
+        "description": "Créez et planifiez des rapports personnalisés pour chaque équipe."
+      },
+      "integrations": {
+        "name": "Hub d'intégrations",
+        "description": "Connectez des services externes et des microservices au cœur."
+      }
+    },
+    "common": {
+      "search": "Rechercher",
+      "save": "Enregistrer les modifications",
+      "cancel": "Annuler",
+      "close": "Fermer",
+      "launch": "Lancer",
+      "configure": "Configurer",
+      "enable": "Activer",
+      "disable": "Désactiver",
+      "actions": "Actions",
+      "all": "Tout",
+      "allStatuses": "Tous les statuts",
+      "allRoles": "Tous les rôles",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "noResults": "Aucun résultat",
+      "requiredRole": "Rôle requis",
+      "status": "Statut",
+      "role": "Rôle",
+      "name": "Nom",
+      "email": "E-mail",
+      "saved": "Modifications enregistrées"
+    },
+    "overview": {
+      "title": "Vue d'ensemble",
+      "description": "Un aperçu de votre plateforme, de vos applications et de l'activité récente.",
+      "kpi": {
+        "totalUsers": "Utilisateurs totaux",
+        "activeApps": "Applications actives",
+        "systemHealth": "État du système",
+        "recentActivity": "Activité récente",
+        "usersTrend": "+12 % ce mois-ci",
+        "appsTrend": "des applications enregistrées",
+        "healthTrend": "Tous les systèmes opérationnels",
+        "activityTrend": "événements au cours des dernières 24 h"
+      },
+      "launcher": {
+        "title": "Lanceur d'applications",
+        "description": "Ouvrez n'importe quelle application installée directement depuis ici.",
+        "manage": "Gérer les applications",
+        "available": "Disponible"
+      },
+      "activity": {
+        "title": "Activité système récente",
+        "description": "Les derniers événements de la plateforme.",
+        "viewAll": "Voir tous les journaux"
+      }
+    },
+    "appsHub": {
+      "title": "Hub des applications",
+      "description": "Gérez les applications modulaires connectées à votre espace de travail.",
+      "searchPlaceholder": "Rechercher des applications...",
+      "statusFilter": "Statut",
+      "empty": "Aucune application ne correspond à vos filtres.",
+      "enableLabel": "Activée",
+      "configureTitle": "Configurer l'application",
+      "configureDescription": "Ajustez le comportement de cette application pour votre espace de travail.",
+      "webhook": "URL du webhook",
+      "webhookPlaceholder": "https://api.example.com/hooks/app",
+      "requiredRoleLabel": "Rôle requis",
+      "statusLabel": "Statut",
+      "saveConfig": "Enregistrer la configuration"
+    },
+    "users": {
+      "title": "Utilisateurs",
+      "description": "Gérez les comptes, les rôles et les accès de votre espace de travail.",
+      "searchPlaceholder": "Rechercher des utilisateurs...",
+      "add": "Ajouter un utilisateur",
+      "editTitle": "Modifier l'utilisateur",
+      "addTitle": "Ajouter un utilisateur",
+      "addDescription": "Créez un nouveau compte et attribuez un rôle.",
+      "editDescription": "Mettez à jour les détails et les accès de cet utilisateur.",
+      "table": {
+        "user": "Utilisateur",
+        "role": "Rôle",
+        "status": "Statut",
+        "joined": "Inscrit le",
+        "actions": "Actions"
+      },
+      "editRole": "Modifier le rôle",
+      "suspend": "Suspendre",
+      "activate": "Activer",
+      "delete": "Supprimer",
+      "fullName": "Nom complet",
+      "fullNamePlaceholder": "Jean Dupont",
+      "emailPlaceholder": "vous@exemple.com",
+      "saveUser": "Enregistrer l'utilisateur",
+      "results": "{count} utilisateurs",
+      "empty": "Aucun utilisateur ne correspond à vos filtres."
+    },
+    "rolesPage": {
+      "title": "Rôles et permissions",
+      "description": "Définissez ce que chaque rôle peut lire, écrire et supprimer.",
+      "selectRole": "Sélectionner un rôle",
+      "roleHint": "Choisissez un rôle pour modifier sa matrice de permissions.",
+      "matrixTitle": "Matrice des permissions",
+      "matrixDescription": "Activez ou désactivez l'accès par module et application pour le rôle sélectionné.",
+      "resource": "Ressource",
+      "read": "Lire",
+      "write": "Écrire",
+      "delete": "Supprimer",
+      "coreModules": "Modules du cœur",
+      "applications": "Applications",
+      "save": "Enregistrer les permissions",
+      "reset": "Réinitialiser",
+      "saved": "Permissions mises à jour pour {role}"
+    },
+    "audit": {
+      "title": "Journaux d'audit",
+      "description": "Une trace infalsifiable des événements de sécurité et de configuration.",
+      "searchPlaceholder": "Rechercher dans les journaux...",
+      "statusFilter": "Statut",
+      "table": {
+        "action": "Action",
+        "user": "Utilisateur",
+        "target": "Ressource cible",
+        "ip": "Adresse IP",
+        "status": "Statut",
+        "timestamp": "Horodatage"
+      },
+      "actions": {
+        "login": "Connexion",
+        "logout": "Déconnexion",
+        "userCreated": "Utilisateur créé",
+        "roleChanged": "Rôle modifié",
+        "appEnabled": "Application activée",
+        "appDisabled": "Application désactivée",
+        "settingsUpdated": "Paramètres mis à jour",
+        "apiKeyCreated": "Clé API créée"
+      },
+      "results": "{count} événements",
+      "empty": "Aucune entrée de journal ne correspond à vos filtres."
+    },
+    "settings": {
+      "title": "Paramètres",
+      "description": "Configurez la plateforme, votre compte et les intégrations.",
+      "tabs": {
+        "general": "Général",
+        "profile": "Profil",
+        "apiKeys": "Clés API et webhooks"
+      },
+      "general": {
+        "title": "Général",
+        "description": "Préférences de la plateforme pour votre espace de travail.",
+        "platformName": "Nom de la plateforme",
+        "platformNamePlaceholder": "weerbex",
+        "supportEmail": "E-mail d'assistance",
+        "supportEmailPlaceholder": "support@weerbex.io",
+        "defaultLanguage": "Langue par défaut",
+        "maintenanceMode": "Mode maintenance",
+        "maintenanceModeDescription": "Bloquez temporairement l'accès pendant un déploiement.",
+        "registration": "Inscription ouverte",
+        "registrationDescription": "Autorisez les nouveaux utilisateurs à créer leur propre compte.",
+        "save": "Enregistrer les modifications"
+      },
+      "profile": {
+        "title": "Profil",
+        "description": "Mettez à jour vos informations personnelles et votre mot de passe.",
+        "avatar": "Avatar",
+        "changeAvatar": "Changer d'avatar",
+        "avatarHint": "PNG ou JPG, jusqu'à 2 Mo.",
+        "fullName": "Nom complet",
+        "email": "E-mail",
+        "currentPassword": "Mot de passe actuel",
+        "newPassword": "Nouveau mot de passe",
+        "confirmPassword": "Confirmer le mot de passe",
+        "save": "Enregistrer le profil"
+      },
+      "apiKeys": {
+        "title": "Clés API",
+        "description": "Générez des jetons pour que les microservices externes puissent appeler le cœur.",
+        "tokenName": "Nom du jeton",
+        "tokenNamePlaceholder": "ex. billing-sync",
+        "generate": "Générer un jeton",
+        "tokensTitle": "Jetons actifs",
+        "table": {
+          "name": "Nom",
+          "prefix": "Préfixe",
+          "created": "Créé le",
+          "lastUsed": "Dernière utilisation",
+          "actions": "Actions"
+        },
+        "never": "Jamais",
+        "revoke": "Révoquer",
+        "empty": "Aucun jeton API pour le moment.",
+        "webhookTitle": "Webhooks",
+        "webhookDescription": "Envoyez les événements de la plateforme vers un point de terminaison externe.",
+        "webhookUrl": "URL du point de terminaison",
+        "webhookPlaceholder": "https://api.example.com/hooks/events",
+        "saveWebhook": "Enregistrer le webhook"
+      }
+    },
+    "appDetail": {
+      "back": "Retour au hub des applications",
+      "comingSoon": "Cette application arrive bientôt.",
+      "comingSoonDescription": "Elle est enregistrée dans le registre des applications et apparaîtra ici dès sa sortie.",
+      "statusLabel": "Statut",
+      "requiredRoleLabel": "Rôle requis",
+      "launchPlaceholder": "Ceci est un espace modulaire. Remplacez cette route par le tableau de bord de l'application."
+    },
+    "toast": {
+      "appEnabled": "{app} activée",
+      "appDisabled": "{app} désactivée",
+      "appConfigured": "Configuration de {app} enregistrée",
+      "userAdded": "Utilisateur ajouté",
+      "userUpdated": "Utilisateur mis à jour",
+      "userDeleted": "Utilisateur supprimé",
+      "userSuspended": "Utilisateur suspendu",
+      "userActivated": "Utilisateur activé",
+      "settingsSaved": "Paramètres enregistrés",
+      "profileSaved": "Profil mis à jour",
+      "tokenGenerated": "Jeton API généré",
+      "tokenRevoked": "Jeton API révoqué",
+      "webhookSaved": "Webhook enregistré",
+      "loggedOut": "Vous avez été déconnecté",
+      "permissionsSaved": "Permissions enregistrées"
+    }
+  }
+}
