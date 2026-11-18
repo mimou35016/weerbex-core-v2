@@ -29,6 +29,14 @@ export type AuditAction =
   | "appDisabled"
   | "appConfigured"
   | "sitemapRegenerated"
+  | "qrCodeCreated"
+  | "qrCodeUpdated"
+  | "qrCodeDeleted"
+  | "cardCreated"
+  | "cardUpdated"
+  | "cardDeleted"
+  | "cardPublished"
+  | "cardUnpublished"
 
 export type AuditEntry = {
   id: string

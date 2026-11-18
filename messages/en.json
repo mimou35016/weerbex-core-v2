@@ -111,7 +111,10 @@
         "localization": "Localization",
         "notifications": "Notifications",
         "storage": "Storage",
-        "media": "Media library"
+        "media": "Media library",
+        "qrCardHub": "QR & Digital Card Hub",
+        "qrCodes": "QR codes",
+        "digitalCards": "Digital business cards"
       }
     },
     "status": {
@@ -281,7 +284,15 @@
         "apiKeyRevoked": "Revoked API key",
         "webhookUpdated": "Updated webhook",
         "appConfigured": "Configured app",
-        "sitemapRegenerated": "Regenerated sitemap"
+        "sitemapRegenerated": "Regenerated sitemap",
+        "qrCodeCreated": "Created QR code",
+        "qrCodeUpdated": "Updated QR code",
+        "qrCodeDeleted": "Deleted QR code",
+        "cardCreated": "Created digital card",
+        "cardUpdated": "Updated digital card",
+        "cardDeleted": "Deleted digital card",
+        "cardPublished": "Published digital card",
+        "cardUnpublished": "Unpublished digital card"
       },
       "results": "{count} events",
       "empty": "No log entries match your filters.",
@@ -713,6 +724,271 @@
       "webhookSaved": "Webhook saved",
       "loggedOut": "You have been signed out",
       "permissionsSaved": "Permissions saved"
+    },
+    "apps": {
+      "qrCardHub": {
+        "name": "QR & Digital Cards",
+        "description": "Design branded QR codes and shareable digital business cards."
+      }
+    },
+    "qrCardHub": {
+      "navLabel": "QR & Digital Card Hub",
+      "loading": "Loading...",
+      "overview": {
+        "nav": "Overview",
+        "title": "QR & Digital Card Hub",
+        "description": "Generate branded QR codes and publish digital business cards that stay editable after they are shared.",
+        "qrCodes": "QR codes",
+        "qrCodesHint": "Static and dynamic codes stored in the database.",
+        "digitalCards": "Digital cards",
+        "digitalCardsHint": "Business cards with a public, shareable URL.",
+        "publishedCards": "Published cards",
+        "publishedCardsHint": "Cards currently reachable by anyone with the link.",
+        "openQr": "Open QR studio",
+        "openCards": "Open card builder",
+        "aboutTitle": "What you can build",
+        "aboutDescription": "Everything in this module is stored in MongoDB and protected by the granular role permissions.",
+        "featureStatic": "Static QR codes for URLs, text, Wi-Fi networks, email, phone numbers and vCards.",
+        "featureDynamic": "Dynamic codes that point at a digital card, so editing the card updates every scan.",
+        "featureTemplates": "Four business card templates: modern minimal, corporate, cyber dark and glassmorphism.",
+        "featureExport": "High-resolution PNG and SVG export with custom colors, dot styles and an embedded logo."
+      },
+      "qr": {
+        "nav": "QR studio",
+        "title": "QR code studio",
+        "description": "Design branded QR codes, preview them live and export print-ready files.",
+        "new": "New QR code",
+        "search": "Search QR codes...",
+        "listTitle": "Saved QR codes",
+        "listDescription": "Every stored code with its target and status.",
+        "empty": "No QR codes yet. Create your first one to get started.",
+        "createTitle": "Create QR code",
+        "editTitle": "Edit QR code",
+        "deleteConfirm": "Delete this QR code? This action cannot be undone.",
+        "table": {
+          "title": "Title",
+          "kind": "Kind",
+          "type": "Type",
+          "target": "Target",
+          "status": "Status",
+          "actions": "Actions"
+        },
+        "kinds": {
+          "static": "Static",
+          "dynamic": "Dynamic"
+        },
+        "types": {
+          "url": "Website URL",
+          "text": "Plain text",
+          "wifi": "Wi-Fi network",
+          "vcard": "vCard contact",
+          "email": "Email",
+          "phone": "Phone number"
+        },
+        "styles": {
+          "square": "Square",
+          "dots": "Dots",
+          "rounded": "Rounded",
+          "classy": "Classy",
+          "classy-rounded": "Classy rounded",
+          "extra-rounded": "Extra rounded",
+          "dot": "Dot"
+        },
+        "status": {
+          "active": "Active",
+          "draft": "Draft"
+        },
+        "actions": {
+          "edit": "Edit",
+          "delete": "Delete",
+          "downloadPng": "Download PNG",
+          "downloadSvg": "Download SVG",
+          "save": "Save QR code"
+        },
+        "preview": {
+          "title": "Live preview",
+          "empty": "Add content to see the QR code preview."
+        },
+        "toast": {
+          "created": "QR code created",
+          "updated": "QR code updated",
+          "deleted": "QR code deleted"
+        },
+        "errors": {
+          "titleRequired": "Give the QR code a title.",
+          "cardRequired": "Choose a digital card for this dynamic code.",
+          "contentRequired": "Complete the content fields for this QR type.",
+          "downloadFailed": "Could not download this QR code. Try again."
+        },
+        "form": {
+          "contentSection": "Content",
+          "designSection": "Design",
+          "title": "Title",
+          "titlePlaceholder": "Product launch landing page",
+          "kind": "Kind",
+          "kindHint": "Dynamic codes point at a card and can be repointed later.",
+          "type": "Content type",
+          "card": "Digital card",
+          "cardHint": "The code resolves to this card's public URL.",
+          "noCards": "Create a digital card first to use dynamic codes.",
+          "url": "Website URL",
+          "urlPlaceholder": "https://example.com",
+          "text": "Text",
+          "textPlaceholder": "Text encoded in the QR code",
+          "email": "Email address",
+          "emailSubject": "Subject",
+          "emailBody": "Message",
+          "phone": "Phone number",
+          "wifiSsid": "Network name (SSID)",
+          "wifiPassword": "Password",
+          "wifiEncryption": "Security",
+          "wifiHidden": "Hidden network",
+          "wifiOpen": "Open (no password)",
+          "vcard": {
+            "firstName": "First name",
+            "lastName": "Last name",
+            "organization": "Organization",
+            "jobTitle": "Job title",
+            "phone": "Phone",
+            "email": "Email",
+            "website": "Website",
+            "address": "Address"
+          },
+          "dotStyle": "Dot style",
+          "cornerStyle": "Corner style",
+          "foregroundColor": "Foreground color",
+          "backgroundColor": "Background color",
+          "useGradient": "Gradient foreground",
+          "gradientColor": "Gradient end color",
+          "logo": "Center logo",
+          "logoHint": "A small square PNG or SVG works best.",
+          "removeLogo": "Remove logo",
+          "logoSize": "Logo size",
+          "margin": "Quiet zone",
+          "errorCorrection": "Error correction",
+          "size": "Export size",
+          "published": "Active",
+          "publishedHint": "Inactive codes stay saved as drafts."
+        }
+      },
+      "cards": {
+        "nav": "Digital cards",
+        "title": "Digital business cards",
+        "description": "Build shareable business cards with a public URL, then link them from a dynamic QR code.",
+        "new": "New digital card",
+        "search": "Search cards...",
+        "listTitle": "Saved cards",
+        "listDescription": "Every card with its public slug and status.",
+        "empty": "No digital cards yet. Create your first one to get started.",
+        "createTitle": "Create digital card",
+        "editTitle": "Edit digital card",
+        "deleteConfirm": "Delete this card? Its public URL will stop working.",
+        "table": {
+          "card": "Card",
+          "slug": "Public URL",
+          "template": "Template",
+          "status": "Status",
+          "actions": "Actions"
+        },
+        "templates": {
+          "modern": "Modern minimal",
+          "corporate": "Corporate",
+          "cyber": "Cyber dark",
+          "glass": "Glassmorphism"
+        },
+        "templateHints": {
+          "modern": "Gradient header and clean contact list.",
+          "corporate": "Bold brand header with a structured layout.",
+          "cyber": "Dark neon styling with a mono typeface.",
+          "glass": "Frosted glass panels over a vibrant gradient."
+        },
+        "status": {
+          "published": "Published",
+          "draft": "Draft"
+        },
+        "actions": {
+          "open": "Open public card",
+          "publish": "Publish",
+          "unpublish": "Unpublish",
+          "edit": "Edit",
+          "delete": "Delete",
+          "save": "Save card"
+        },
+        "preview": {
+          "title": "Live preview",
+          "phoneLabel": "Card preview on a phone"
+        },
+        "toast": {
+          "created": "Digital card created",
+          "updated": "Digital card updated",
+          "deleted": "Digital card deleted",
+          "published": "Digital card published",
+          "unpublished": "Digital card unpublished"
+        },
+        "errors": {
+          "nameRequired": "Enter a full name for the card.",
+          "linkUrlRequired": "Every custom link needs a URL, or remove that row."
+        },
+        "form": {
+          "identitySection": "Identity",
+          "designSection": "Design",
+          "socialSection": "Social links",
+          "fullName": "Full name",
+          "title": "Internal title",
+          "titleHint": "Used in the dashboard list only.",
+          "jobTitle": "Job title",
+          "company": "Company",
+          "bio": "Short bio",
+          "email": "Email",
+          "phone": "Phone",
+          "website": "Website",
+          "address": "Address",
+          "slug": "Public slug",
+          "slugHint": "Leave blank to generate it from the name.",
+          "avatar": "Avatar",
+          "avatarHint": "Square images look best in every template.",
+          "removeAvatar": "Remove avatar",
+          "template": "Template",
+          "brandColor": "Brand color",
+          "accentColor": "Accent color",
+          "published": "Published",
+          "publishedHint": "Only published cards are reachable at their URL.",
+          "addSocial": "Add link",
+          "noSocial": "No social links yet.",
+          "platform": "Platform",
+          "socialUrl": "URL",
+          "removeSocial": "Remove link",
+          "linksSection": "Custom links",
+          "addLink": "Add link",
+          "noLinks": "No custom links yet. Add Linktree-style buttons shown on the card.",
+          "linkLabel": "Link label",
+          "linkLabelPlaceholder": "Book a call",
+          "linkUrl": "Link URL",
+          "linksLimit": "You can add up to {count} custom links.",
+          "moveLinkUp": "Move link up",
+          "moveLinkDown": "Move link down",
+          "removeLink": "Remove link"
+        },
+        "social": {
+          "website": "Website",
+          "linkedin": "LinkedIn",
+          "x": "X",
+          "facebook": "Facebook",
+          "instagram": "Instagram",
+          "github": "GitHub",
+          "youtube": "YouTube",
+          "tiktok": "TikTok",
+          "whatsapp": "WhatsApp",
+          "telegram": "Telegram"
+        }
+      }
     }
+  },
+  "Card": {
+    "poweredBy": "Digital card powered by {site}",
+    "saveContact": "Save contact",
+    "copyLink": "Copy link",
+    "copied": "Link copied",
+    "copyError": "Could not copy the link"
   }
 }

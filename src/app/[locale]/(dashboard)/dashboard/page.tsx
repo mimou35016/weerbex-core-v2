@@ -113,7 +113,9 @@ export default function DashboardOverviewPage() {
           icon={Activity}
           label={t("overview.kpi.recentActivity")}
           value={stats.last24h}
-          hint={t("overview.kpi.activityTrend")}
+          hint={t("overview.kpi.activityTrend", {
+            count: stats.last24h,
+          })}
           tone="amber"
         />
       </div>

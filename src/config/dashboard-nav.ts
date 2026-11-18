@@ -8,6 +8,8 @@ import {
   type LucideIcon,
 } from "lucide-react"
 
+import { qrCardHubApp } from "@/apps/qr-card-hub/registration"
+
 export type DashboardRole = "super_admin" | "admin" | "manager" | "user"
 
 export type AppStatus = "active" | "beta" | "coming_soon"
@@ -79,7 +81,7 @@ export const coreNavItems: CoreNavItem[] = [
  * in the sidebar, the overview launcher, the Apps Hub and its own
  * `/dashboard/apps/[appId]` route without touching the core navigation.
  */
-export const appsRegistry: RegisteredApp[] = []
+export const appsRegistry: RegisteredApp[] = [qrCardHubApp]
 
 export function getAppById(id: string): RegisteredApp | undefined {
   return appsRegistry.find((app) => app.id === id)

@@ -11,6 +11,8 @@ import { Media } from "./collections/Media"
 import { PageSeo } from "./collections/PageSeo"
 import { Roles } from "./collections/Roles"
 import { Users } from "./collections/Users"
+import { DigitalCards } from "./apps/qr-card-hub/collections/DigitalCards"
+import { QrCodes } from "./apps/qr-card-hub/collections/QrCodes"
 import { ApiSettings } from "./globals/ApiSettings"
 import { AppSettings } from "./globals/AppSettings"
 import { LocalizationSettings } from "./globals/LocalizationSettings"
@@ -32,7 +34,16 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Roles, Media, PageSeo, AuditLogs, ApiTokens],
+  collections: [
+    Users,
+    Roles,
+    Media,
+    PageSeo,
+    AuditLogs,
+    ApiTokens,
+    DigitalCards,
+    QrCodes,
+  ],
   globals: [
     SiteSettings,
     SeoSettings,

@@ -7,12 +7,14 @@
  * access hooks and the dashboard UI resolve permissions from this catalog.
  */
 
+import { qrCardHubPermissionResources } from "@/apps/qr-card-hub/permissions"
+
 /**
  * Current permission grant schema version. Bumped whenever new resources or
  * actions are introduced so existing roles receive one-time defaults without
  * overriding grants the super admin edited afterwards.
  */
-export const PERMISSIONS_VERSION = 4
+export const PERMISSIONS_VERSION = 5
 
 export type PermissionAction =
   | "find"
@@ -49,6 +51,9 @@ export const permissionResourceIds = [
   "notifications",
   "storage",
   "media",
+  "qrCardHub",
+  "qrCodes",
+  "digitalCards",
 ] as const
 
 export type PermissionResourceId = (typeof permissionResourceIds)[number]
@@ -142,6 +147,7 @@ export const permissionResources: PermissionResource[] = [
     group: "system",
     actions: [...crud],
   },
+  ...qrCardHubPermissionResources,
 ]
 
 export type RolePermission = {

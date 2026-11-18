@@ -111,7 +111,10 @@
         "localization": "التعريب",
         "notifications": "الإشعارات",
         "storage": "التخزين",
-        "media": "مكتبة الوسائط"
+        "media": "مكتبة الوسائط",
+        "qrCardHub": "مركز رموز QR والبطاقات الرقمية",
+        "qrCodes": "رموز QR",
+        "digitalCards": "بطاقات العمل الرقمية"
       }
     },
     "status": {
@@ -281,7 +284,15 @@
         "apiKeyRevoked": "تم إبطال مفتاح API",
         "webhookUpdated": "تم تحديث الويب هوك",
         "appConfigured": "تم تكوين التطبيق",
-        "sitemapRegenerated": "تم إعادة إنشاء خريطة الموقع"
+        "sitemapRegenerated": "تم إعادة إنشاء خريطة الموقع",
+        "qrCodeCreated": "تم إنشاء رمز QR",
+        "qrCodeUpdated": "تم تحديث رمز QR",
+        "qrCodeDeleted": "تم حذف رمز QR",
+        "cardCreated": "تم إنشاء بطاقة رقمية",
+        "cardUpdated": "تم تحديث بطاقة رقمية",
+        "cardDeleted": "تم حذف بطاقة رقمية",
+        "cardPublished": "تم نشر بطاقة رقمية",
+        "cardUnpublished": "تم إلغاء نشر بطاقة رقمية"
       },
       "results": "{count} حدث",
       "empty": "لا توجد إدخالات سجل تطابق عوامل التصفية.",
@@ -713,6 +724,271 @@
       "webhookSaved": "تم حفظ الويب هوك",
       "loggedOut": "تم تسجيل خروجك",
       "permissionsSaved": "تم حفظ الصلاحيات"
+    },
+    "apps": {
+      "qrCardHub": {
+        "name": "رموز QR والبطاقات الرقمية",
+        "description": "صمّم رموز QR بهوية بصرية وبطاقات عمل رقمية قابلة للمشاركة."
+      }
+    },
+    "qrCardHub": {
+      "navLabel": "مركز رموز QR والبطاقات الرقمية",
+      "loading": "جارٍ التحميل...",
+      "overview": {
+        "nav": "نظرة عامة",
+        "title": "مركز رموز QR والبطاقات الرقمية",
+        "description": "أنشئ رموز QR بهوية بصرية وانشر بطاقات عمل رقمية قابلة للتعديل بعد مشاركتها.",
+        "qrCodes": "رموز QR",
+        "qrCodesHint": "رموز ثابتة وديناميكية محفوظة في قاعدة البيانات.",
+        "digitalCards": "البطاقات الرقمية",
+        "digitalCardsHint": "بطاقات عمل برابط عام قابل للمشاركة.",
+        "publishedCards": "البطاقات المنشورة",
+        "publishedCardsHint": "البطاقات المتاحة حاليًا لأي شخص يملك الرابط.",
+        "openQr": "فتح استوديو QR",
+        "openCards": "فتح منشئ البطاقات",
+        "aboutTitle": "ما يمكنك إنشاؤه",
+        "aboutDescription": "كل ما في هذه الوحدة محفوظ في MongoDB ومحمي بأذونات الأدوار الدقيقة.",
+        "featureStatic": "رموز QR ثابتة للروابط والنصوص وشبكات Wi-Fi والبريد والهاتف وبطاقات vCard.",
+        "featureDynamic": "رموز ديناميكية تشير إلى بطاقة رقمية، فتعديل البطاقة يحدّث كل عملية مسح.",
+        "featureTemplates": "أربعة قوالب لبطاقات العمل: عصري بسيط، مؤسسي، سايبر داكن، وزجاجي شفاف.",
+        "featureExport": "تصدير PNG وSVG بدقة عالية مع ألوان وأنماط نقاط وشعار مدمج."
+      },
+      "qr": {
+        "nav": "استوديو QR",
+        "title": "استوديو رموز QR",
+        "description": "صمّم رموز QR بهوية بصرية، عاينها مباشرة، وصدّر ملفات جاهزة للطباعة.",
+        "new": "رمز QR جديد",
+        "search": "ابحث في رموز QR...",
+        "listTitle": "رموز QR المحفوظة",
+        "listDescription": "كل رمز مع هدفه وحالته.",
+        "empty": "لا توجد رموز QR بعد. أنشئ أول رمز للبدء.",
+        "createTitle": "إنشاء رمز QR",
+        "editTitle": "تعديل رمز QR",
+        "deleteConfirm": "حذف رمز QR هذا؟ لا يمكن التراجع عن هذا الإجراء.",
+        "table": {
+          "title": "العنوان",
+          "kind": "النوع",
+          "type": "المحتوى",
+          "target": "الهدف",
+          "status": "الحالة",
+          "actions": "الإجراءات"
+        },
+        "kinds": {
+          "static": "ثابت",
+          "dynamic": "ديناميكي"
+        },
+        "types": {
+          "url": "رابط موقع",
+          "text": "نص عادي",
+          "wifi": "شبكة Wi-Fi",
+          "vcard": "جهة اتصال vCard",
+          "email": "بريد إلكتروني",
+          "phone": "رقم هاتف"
+        },
+        "styles": {
+          "square": "مربع",
+          "dots": "نقاط",
+          "rounded": "دائري",
+          "classy": "أنيق",
+          "classy-rounded": "أنيق دائري",
+          "extra-rounded": "دائري جدًا",
+          "dot": "نقطة"
+        },
+        "status": {
+          "active": "نشط",
+          "draft": "مسودة"
+        },
+        "actions": {
+          "edit": "تعديل",
+          "delete": "حذف",
+          "downloadPng": "تنزيل PNG",
+          "downloadSvg": "تنزيل SVG",
+          "save": "حفظ رمز QR"
+        },
+        "preview": {
+          "title": "معاينة مباشرة",
+          "empty": "أضف محتوى لرؤية معاينة رمز QR."
+        },
+        "toast": {
+          "created": "تم إنشاء رمز QR",
+          "updated": "تم تحديث رمز QR",
+          "deleted": "تم حذف رمز QR"
+        },
+        "errors": {
+          "titleRequired": "أدخل عنوانًا لرمز QR.",
+          "cardRequired": "اختر بطاقة رقمية لهذا الرمز الديناميكي.",
+          "contentRequired": "أكمل حقول المحتوى لهذا النوع من الرموز.",
+          "downloadFailed": "تعذر تنزيل رمز QR هذا. حاول مرة أخرى."
+        },
+        "form": {
+          "contentSection": "المحتوى",
+          "designSection": "التصميم",
+          "title": "العنوان",
+          "titlePlaceholder": "صفحة إطلاق منتج",
+          "kind": "نوع الرمز",
+          "kindHint": "الرموز الديناميكية تشير إلى بطاقة ويمكن إعادة توجيهها لاحقًا.",
+          "type": "نوع المحتوى",
+          "card": "البطاقة الرقمية",
+          "cardHint": "يشير الرمز إلى الرابط العام لهذه البطاقة.",
+          "noCards": "أنشئ بطاقة رقمية أولًا لاستخدام الرموز الديناميكية.",
+          "url": "رابط الموقع",
+          "urlPlaceholder": "https://example.com",
+          "text": "النص",
+          "textPlaceholder": "النص المشفّر داخل رمز QR",
+          "email": "البريد الإلكتروني",
+          "emailSubject": "الموضوع",
+          "emailBody": "الرسالة",
+          "phone": "رقم الهاتف",
+          "wifiSsid": "اسم الشبكة (SSID)",
+          "wifiPassword": "كلمة المرور",
+          "wifiEncryption": "الحماية",
+          "wifiHidden": "شبكة مخفية",
+          "wifiOpen": "مفتوحة (بدون كلمة مرور)",
+          "vcard": {
+            "firstName": "الاسم الأول",
+            "lastName": "اسم العائلة",
+            "organization": "المؤسسة",
+            "jobTitle": "المسمى الوظيفي",
+            "phone": "الهاتف",
+            "email": "البريد الإلكتروني",
+            "website": "الموقع",
+            "address": "العنوان"
+          },
+          "dotStyle": "نمط النقاط",
+          "cornerStyle": "نمط الزوايا",
+          "foregroundColor": "لون المقدمة",
+          "backgroundColor": "لون الخلفية",
+          "useGradient": "تدرّج لوني للمقدمة",
+          "gradientColor": "لون نهاية التدرّج",
+          "logo": "الشعار في المنتصف",
+          "logoHint": "يفضّل ملف PNG أو SVG مربّع صغير.",
+          "removeLogo": "إزالة الشعار",
+          "logoSize": "حجم الشعار",
+          "margin": "الهامش الهادئ",
+          "errorCorrection": "تصحيح الأخطاء",
+          "size": "حجم التصدير",
+          "published": "نشط",
+          "publishedHint": "تبقى الرموز غير النشطة محفوظة كمسودات."
+        }
+      },
+      "cards": {
+        "nav": "البطاقات الرقمية",
+        "title": "بطاقات العمل الرقمية",
+        "description": "أنشئ بطاقات عمل قابلة للمشاركة برابط عام، ثم اربطها برمز QR ديناميكي.",
+        "new": "بطاقة رقمية جديدة",
+        "search": "ابحث في البطاقات...",
+        "listTitle": "البطاقات المحفوظة",
+        "listDescription": "كل بطاقة مع رابطها العام وحالتها.",
+        "empty": "لا توجد بطاقات رقمية بعد. أنشئ أول بطاقة.",
+        "createTitle": "إنشاء بطاقة رقمية",
+        "editTitle": "تعديل البطاقة الرقمية",
+        "deleteConfirm": "حذف هذه البطاقة؟ سيتوقف رابطها العام عن العمل.",
+        "table": {
+          "card": "البطاقة",
+          "slug": "الرابط العام",
+          "template": "القالب",
+          "status": "الحالة",
+          "actions": "الإجراءات"
+        },
+        "templates": {
+          "modern": "عصري بسيط",
+          "corporate": "مؤسسي",
+          "cyber": "سايبر داكن",
+          "glass": "زجاجي شفاف"
+        },
+        "templateHints": {
+          "modern": "ترويسة متدرجة وقائمة جهات اتصال أنيقة.",
+          "corporate": "ترويسة بهوية قوية وتخطيط منظم.",
+          "cyber": "تصميم نيون داكن بخط أحادي المسافة.",
+          "glass": "ألواح زجاجية ضبابية فوق تدرج لوني نابض."
+        },
+        "status": {
+          "published": "منشورة",
+          "draft": "مسودة"
+        },
+        "actions": {
+          "open": "فتح البطاقة العامة",
+          "publish": "نشر",
+          "unpublish": "إلغاء النشر",
+          "edit": "تعديل",
+          "delete": "حذف",
+          "save": "حفظ البطاقة"
+        },
+        "preview": {
+          "title": "معاينة مباشرة",
+          "phoneLabel": "معاينة البطاقة على الهاتف"
+        },
+        "toast": {
+          "created": "تم إنشاء البطاقة الرقمية",
+          "updated": "تم تحديث البطاقة الرقمية",
+          "deleted": "تم حذف البطاقة الرقمية",
+          "published": "تم نشر البطاقة الرقمية",
+          "unpublished": "تم إلغاء نشر البطاقة الرقمية"
+        },
+        "errors": {
+          "nameRequired": "أدخل الاسم الكامل للبطاقة.",
+          "linkUrlRequired": "يحتاج كل رابط مخصص إلى عنوان URL، أو احذف السطر."
+        },
+        "form": {
+          "identitySection": "الهوية",
+          "designSection": "التصميم",
+          "socialSection": "الروابط الاجتماعية",
+          "fullName": "الاسم الكامل",
+          "title": "العنوان الداخلي",
+          "titleHint": "يُستخدم في قائمة لوحة التحكم فقط.",
+          "jobTitle": "المسمى الوظيفي",
+          "company": "الشركة",
+          "bio": "نبذة مختصرة",
+          "email": "البريد الإلكتروني",
+          "phone": "الهاتف",
+          "website": "الموقع",
+          "address": "العنوان",
+          "slug": "المعرّف العام",
+          "slugHint": "اتركه فارغًا ليُنشأ من الاسم.",
+          "avatar": "الصورة الشخصية",
+          "avatarHint": "الصور المربعة تبدو أفضل في كل القوالب.",
+          "removeAvatar": "إزالة الصورة",
+          "template": "القالب",
+          "brandColor": "لون الهوية",
+          "accentColor": "اللون المساعد",
+          "published": "منشورة",
+          "publishedHint": "البطاقات المنشورة فقط متاحة عبر رابطها.",
+          "addSocial": "إضافة رابط",
+          "noSocial": "لا توجد روابط اجتماعية بعد.",
+          "platform": "المنصة",
+          "socialUrl": "الرابط",
+          "removeSocial": "إزالة الرابط",
+          "linksSection": "روابط مخصصة",
+          "addLink": "إضافة رابط",
+          "noLinks": "لا توجد روابط مخصصة بعد. أضف أزرارًا بنمط Linktree تظهر على البطاقة.",
+          "linkLabel": "تسمية الرابط",
+          "linkLabelPlaceholder": "احجز مكالمة",
+          "linkUrl": "رابط العنوان",
+          "linksLimit": "يمكنك إضافة حتى {count} روابط مخصصة.",
+          "moveLinkUp": "نقل الرابط لأعلى",
+          "moveLinkDown": "نقل الرابط لأسفل",
+          "removeLink": "إزالة الرابط"
+        },
+        "social": {
+          "website": "الموقع",
+          "linkedin": "لينكدإن",
+          "x": "إكس",
+          "facebook": "فيسبوك",
+          "instagram": "إنستغرام",
+          "github": "غيت هاب",
+          "youtube": "يوتيوب",
+          "tiktok": "تيك توك",
+          "whatsapp": "واتساب",
+          "telegram": "تيليغرام"
+        }
+      }
     }
+  },
+  "Card": {
+    "poweredBy": "بطاقة رقمية مدعومة بـ {site}",
+    "saveContact": "حفظ جهة الاتصال",
+    "copyLink": "نسخ الرابط",
+    "copied": "تم نسخ الرابط",
+    "copyError": "تعذّر نسخ الرابط"
   }
 }

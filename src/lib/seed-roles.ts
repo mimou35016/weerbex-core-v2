@@ -96,7 +96,9 @@ const DEFAULT_ROLES: SeedRole[] = [
         ),
         grant(settingsResources, manage),
         grant(["seo"], [...manage, "create", "delete", "publish"]),
-        grant(["media"], crud)
+        grant(["media"], crud),
+        grant(["qrCardHub"], ["find", "read", "configure"]),
+        grant(["qrCodes", "digitalCards"], [...crudExport, "publish"])
       )
     ),
   },
@@ -108,7 +110,15 @@ const DEFAULT_ROLES: SeedRole[] = [
     isDefault: false,
     priority: 50,
     permissions: buildPermissions(
-      merge(grant(["settings"], view), grant(["appsHub"], view))
+      merge(
+        grant(["settings"], view),
+        grant(["appsHub"], view),
+        grant(["qrCardHub"], view),
+        grant(
+          ["qrCodes", "digitalCards"],
+          ["find", "read", "create", "update", "export", "publish"]
+        )
+      )
     ),
   },
   {
@@ -119,7 +129,10 @@ const DEFAULT_ROLES: SeedRole[] = [
     isDefault: true,
     priority: 10,
     permissions: buildPermissions(
-      merge(grant(["settings", "appsHub"], view))
+      merge(
+        grant(["settings", "appsHub"], view),
+        grant(["qrCardHub", "qrCodes", "digitalCards"], view)
+      )
     ),
   },
 ]
@@ -207,7 +220,17 @@ const lateResourceIds: PermissionResourceId[] = [
   "notifications",
   "storage",
   "media",
+  "qrCardHub",
+  "qrCodes",
+  "digitalCards",
 ]
+
+/** Resources introduced by a modular mini-app rather than the core platform. */
+const appResourceIds = new Set<PermissionResourceId>([
+  "qrCardHub",
+  "qrCodes",
+  "digitalCards",
+])
 
 /**
  * Actions added to resources that already existed in a previous permission
@@ -228,15 +251,20 @@ const lateResourceActions: Partial<
 
 function buildLateResourceDefaults(
   existing: Map<PermissionResourceId, PermissionAction[]>,
-  isSuperAdmin: boolean
+  isSuperAdmin: boolean,
+  slug?: string
 ): Map<PermissionResourceId, PermissionAction[]> {
   const defaults = new Map<PermissionResourceId, PermissionAction[]>()
   const settingsActions = existing.get("settings") ?? []
   const userActions = existing.get("users") ?? []
+  const appActions = existing.get("appsHub") ?? []
   const managesUsers =
     userActions.includes("create") &&
     userActions.includes("update") &&
     userActions.includes("delete")
+  const seedRole = slug
+    ? DEFAULT_ROLES.find((role) => role.slug === slug)
+    : undefined
 
   for (const id of lateResourceIds) {
     if (existing.has(id)) continue
@@ -254,6 +282,30 @@ function buildLateResourceDefaults(
             ["find", "read", "create", "update", "delete"].includes(action)
           )
         : []
+    } else if (appResourceIds.has(id)) {
+      // Built-in roles inherit exactly the grants declared by the seed so a
+      // migrated installation matches a freshly seeded one. Custom roles
+      // inherit visibility from the Apps Hub and write access only when they
+      // already manage users.
+      const seeded = seedRole?.permissions.find(
+        (permission) => permission.resource === id
+      )
+
+      if (seeded) {
+        actions = seeded.actions.filter((action) =>
+          resource.actions.includes(action)
+        )
+      } else {
+        const canView =
+          appActions.includes("find") || appActions.includes("read")
+        const canConfigure = appActions.includes("configure")
+
+        actions = resource.actions.filter((action) => {
+          if (action === "find" || action === "read") return canView
+          if (action === "configure") return canConfigure
+          return managesUsers
+        })
+      }
     } else {
       actions = resource.actions.filter((action) =>
         settingsActions.includes(action)
@@ -321,7 +373,8 @@ async function migrateRolePermissions(payload: Payload): Promise<void> {
 
       const defaults = buildLateResourceDefaults(
         existing,
-        Boolean(raw.isSuperAdmin)
+        Boolean(raw.isSuperAdmin),
+        typeof raw.slug === "string" ? raw.slug : undefined
       )
 
       for (const [resource, actions] of defaults) {

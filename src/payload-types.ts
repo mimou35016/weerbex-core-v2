@@ -73,6 +73,8 @@ export interface Config {
     'page-seo': PageSeo;
     'audit-logs': AuditLog;
     'api-tokens': ApiToken;
+    'digital-cards': DigitalCard;
+    'qr-codes': QrCode;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -86,6 +88,8 @@ export interface Config {
     'page-seo': PageSeoSelect<false> | PageSeoSelect<true>;
     'audit-logs': AuditLogsSelect<false> | AuditLogsSelect<true>;
     'api-tokens': ApiTokensSelect<false> | ApiTokensSelect<true>;
+    'digital-cards': DigitalCardsSelect<false> | DigitalCardsSelect<true>;
+    'qr-codes': QrCodesSelect<false> | QrCodesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -210,7 +214,10 @@ export interface Role {
           | 'localization'
           | 'notifications'
           | 'storage'
-          | 'media';
+          | 'media'
+          | 'qrCardHub'
+          | 'qrCodes'
+          | 'digitalCards';
         actions?: ('find' | 'read' | 'create' | 'update' | 'delete' | 'export' | 'publish' | 'configure')[] | null;
         id?: string | null;
       }[]
@@ -326,6 +333,129 @@ export interface ApiToken {
   createdAt: string;
 }
 /**
+ * Shareable digital business cards rendered at their public slug.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "digital-cards".
+ */
+export interface DigitalCard {
+  id: string;
+  /**
+   * Internal name shown in the dashboard list.
+   */
+  title: string;
+  /**
+   * Public URL slug. Generated from the name when left blank.
+   */
+  slug?: string | null;
+  fullName: string;
+  jobTitle?: string | null;
+  company?: string | null;
+  bio?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  website?: string | null;
+  address?: string | null;
+  /**
+   * Linktree-style buttons shown on the card, in this order. A blank label falls back to the URL.
+   */
+  links?:
+    | {
+        /**
+         * Optional. Defaults to the URL when left empty.
+         */
+        label?: string | null;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  avatar?: (string | null) | Media;
+  template: 'modern' | 'corporate' | 'cyber' | 'glass';
+  brandColor?: string | null;
+  accentColor?: string | null;
+  socialLinks?:
+    | {
+        platform:
+          | 'website'
+          | 'linkedin'
+          | 'x'
+          | 'facebook'
+          | 'instagram'
+          | 'github'
+          | 'youtube'
+          | 'tiktok'
+          | 'whatsapp'
+          | 'telegram';
+        url: string;
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Only published cards are visible at their public URL.
+   */
+  published?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Branded static and dynamic QR codes with PNG and SVG export.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "qr-codes".
+ */
+export interface QrCode {
+  id: string;
+  /**
+   * Internal name shown in the dashboard list.
+   */
+  title: string;
+  kind: 'static' | 'dynamic';
+  qrType: 'url' | 'text' | 'wifi' | 'vcard' | 'email' | 'phone';
+  url?: string | null;
+  text?: string | null;
+  email?: string | null;
+  emailSubject?: string | null;
+  emailBody?: string | null;
+  phone?: string | null;
+  wifiSsid?: string | null;
+  wifiPassword?: string | null;
+  wifiEncryption?: ('WPA' | 'WEP' | 'nopass') | null;
+  wifiHidden?: boolean | null;
+  vcardFirstName?: string | null;
+  vcardLastName?: string | null;
+  vcardOrganization?: string | null;
+  vcardJobTitle?: string | null;
+  vcardPhone?: string | null;
+  vcardEmail?: string | null;
+  vcardWebsite?: string | null;
+  vcardAddress?: string | null;
+  /**
+   * Target card for dynamic codes. Editing the card updates every scan.
+   */
+  card?: (string | null) | DigitalCard;
+  dotStyle?: ('square' | 'dots' | 'rounded' | 'classy' | 'classy-rounded' | 'extra-rounded') | null;
+  cornerStyle?: ('square' | 'dot' | 'extra-rounded') | null;
+  foregroundColor?: string | null;
+  backgroundColor?: string | null;
+  useGradient?: boolean | null;
+  gradientColor?: string | null;
+  logo?: (string | null) | Media;
+  logoSize?: number | null;
+  margin?: number | null;
+  errorCorrection?: ('L' | 'M' | 'Q' | 'H') | null;
+  /**
+   * Recommended export sizes: 512, 1024, 2048, 4096 px.
+   */
+  size?: number | null;
+  /**
+   * Inactive codes stay saved but are marked as drafts.
+   */
+  published?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -372,6 +502,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'api-tokens';
         value: string | ApiToken;
+      } | null)
+    | ({
+        relationTo: 'digital-cards';
+        value: string | DigitalCard;
+      } | null)
+    | ({
+        relationTo: 'qr-codes';
+        value: string | QrCode;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -525,6 +663,86 @@ export interface ApiTokensSelect<T extends boolean = true> {
   tokenHash?: T;
   lastUsedAt?: T;
   createdBy?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "digital-cards_select".
+ */
+export interface DigitalCardsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  fullName?: T;
+  jobTitle?: T;
+  company?: T;
+  bio?: T;
+  email?: T;
+  phone?: T;
+  website?: T;
+  address?: T;
+  links?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  avatar?: T;
+  template?: T;
+  brandColor?: T;
+  accentColor?: T;
+  socialLinks?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        label?: T;
+        id?: T;
+      };
+  published?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "qr-codes_select".
+ */
+export interface QrCodesSelect<T extends boolean = true> {
+  title?: T;
+  kind?: T;
+  qrType?: T;
+  url?: T;
+  text?: T;
+  email?: T;
+  emailSubject?: T;
+  emailBody?: T;
+  phone?: T;
+  wifiSsid?: T;
+  wifiPassword?: T;
+  wifiEncryption?: T;
+  wifiHidden?: T;
+  vcardFirstName?: T;
+  vcardLastName?: T;
+  vcardOrganization?: T;
+  vcardJobTitle?: T;
+  vcardPhone?: T;
+  vcardEmail?: T;
+  vcardWebsite?: T;
+  vcardAddress?: T;
+  card?: T;
+  dotStyle?: T;
+  cornerStyle?: T;
+  foregroundColor?: T;
+  backgroundColor?: T;
+  useGradient?: T;
+  gradientColor?: T;
+  logo?: T;
+  logoSize?: T;
+  margin?: T;
+  errorCorrection?: T;
+  size?: T;
+  published?: T;
   updatedAt?: T;
   createdAt?: T;
 }

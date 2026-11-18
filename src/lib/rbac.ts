@@ -1,5 +1,6 @@
 import { appsRegistry } from "@/config/dashboard-nav"
 import { routing } from "@/i18n/routing"
+import { qrCardHubRouteRules } from "@/apps/qr-card-hub/registration"
 import {
   hasAnyPermission,
   type PermissionAction,
@@ -71,6 +72,7 @@ export const routeAccessRules: RouteAccessRule[] = [
     prefix: "/dashboard/apps",
     requirement: permission("appsHub", "find", "read"),
   },
+  ...qrCardHubRouteRules,
 ]
 
 /**
@@ -103,9 +105,10 @@ export function getRouteRequirement(
   const appMatch = normalized.match(/^\/dashboard\/apps\/([^/]+)$/)
   if (appMatch) {
     const app = appsRegistry.find((entry) => entry.id === appMatch[1])
-    if (!app) return null
 
-    return permission(app.id, "find", "read")
+    // Static app routes (such as the QR Card Hub) fall through to the
+    // explicit route rules below instead of being treated as dynamic apps.
+    if (app) return permission(app.id, "find", "read")
   }
 
   const rule = routeAccessRules

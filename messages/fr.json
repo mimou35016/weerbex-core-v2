@@ -111,7 +111,10 @@
         "localization": "Localisation",
         "notifications": "Notifications",
         "storage": "Stockage",
-        "media": "Médiathèque"
+        "media": "Médiathèque",
+        "qrCardHub": "Hub QR & Cartes numériques",
+        "qrCodes": "QR codes",
+        "digitalCards": "Cartes de visite numériques"
       }
     },
     "status": {
@@ -281,7 +284,15 @@
         "apiKeyRevoked": "Clé API révoquée",
         "webhookUpdated": "Webhook mis à jour",
         "appConfigured": "Application configurée",
-        "sitemapRegenerated": "Sitemap régénéré"
+        "sitemapRegenerated": "Sitemap régénéré",
+        "qrCodeCreated": "QR code créé",
+        "qrCodeUpdated": "QR code mis à jour",
+        "qrCodeDeleted": "QR code supprimé",
+        "cardCreated": "Carte numérique créée",
+        "cardUpdated": "Carte numérique mise à jour",
+        "cardDeleted": "Carte numérique supprimée",
+        "cardPublished": "Carte numérique publiée",
+        "cardUnpublished": "Carte numérique dépubliée"
       },
       "results": "{count} événements",
       "empty": "Aucune entrée de journal ne correspond à vos filtres.",
@@ -713,6 +724,271 @@
       "webhookSaved": "Webhook enregistré",
       "loggedOut": "Vous avez été déconnecté",
       "permissionsSaved": "Permissions enregistrées"
+    },
+    "apps": {
+      "qrCardHub": {
+        "name": "QR & Cartes numériques",
+        "description": "Concevez des QR codes personnalisés et des cartes de visite numériques partageables."
+      }
+    },
+    "qrCardHub": {
+      "navLabel": "Hub QR & Cartes numériques",
+      "loading": "Chargement...",
+      "overview": {
+        "nav": "Vue d'ensemble",
+        "title": "Hub QR & Cartes numériques",
+        "description": "Générez des QR codes personnalisés et publiez des cartes de visite numériques modifiables après partage.",
+        "qrCodes": "QR codes",
+        "qrCodesHint": "Codes statiques et dynamiques stockés en base.",
+        "digitalCards": "Cartes numériques",
+        "digitalCardsHint": "Cartes de visite avec une URL publique partageable.",
+        "publishedCards": "Cartes publiées",
+        "publishedCardsHint": "Cartes actuellement accessibles à toute personne disposant du lien.",
+        "openQr": "Ouvrir le studio QR",
+        "openCards": "Ouvrir l'éditeur de cartes",
+        "aboutTitle": "Ce que vous pouvez créer",
+        "aboutDescription": "Tout ce module est stocké dans MongoDB et protégé par les permissions granulaires des rôles.",
+        "featureStatic": "QR codes statiques pour URL, texte, réseaux Wi-Fi, e-mail, téléphone et vCard.",
+        "featureDynamic": "Codes dynamiques pointant vers une carte numérique : modifier la carte met à jour chaque scan.",
+        "featureTemplates": "Quatre modèles de carte : moderne minimal, corporate, cyber sombre et glassmorphism.",
+        "featureExport": "Export PNG et SVG haute résolution avec couleurs, styles de points et logo intégré."
+      },
+      "qr": {
+        "nav": "Studio QR",
+        "title": "Studio de QR codes",
+        "description": "Concevez des QR codes personnalisés, prévisualisez-les en direct et exportez des fichiers prêts à imprimer.",
+        "new": "Nouveau QR code",
+        "search": "Rechercher des QR codes...",
+        "listTitle": "QR codes enregistrés",
+        "listDescription": "Chaque code avec sa cible et son statut.",
+        "empty": "Aucun QR code pour le moment. Créez le premier pour commencer.",
+        "createTitle": "Créer un QR code",
+        "editTitle": "Modifier le QR code",
+        "deleteConfirm": "Supprimer ce QR code ? Cette action est irréversible.",
+        "table": {
+          "title": "Titre",
+          "kind": "Type",
+          "type": "Contenu",
+          "target": "Cible",
+          "status": "Statut",
+          "actions": "Actions"
+        },
+        "kinds": {
+          "static": "Statique",
+          "dynamic": "Dynamique"
+        },
+        "types": {
+          "url": "URL de site",
+          "text": "Texte brut",
+          "wifi": "Réseau Wi-Fi",
+          "vcard": "Contact vCard",
+          "email": "E-mail",
+          "phone": "Numéro de téléphone"
+        },
+        "styles": {
+          "square": "Carré",
+          "dots": "Points",
+          "rounded": "Arrondi",
+          "classy": "Élégant",
+          "classy-rounded": "Élégant arrondi",
+          "extra-rounded": "Très arrondi",
+          "dot": "Point"
+        },
+        "status": {
+          "active": "Actif",
+          "draft": "Brouillon"
+        },
+        "actions": {
+          "edit": "Modifier",
+          "delete": "Supprimer",
+          "downloadPng": "Télécharger en PNG",
+          "downloadSvg": "Télécharger en SVG",
+          "save": "Enregistrer le QR code"
+        },
+        "preview": {
+          "title": "Aperçu en direct",
+          "empty": "Ajoutez du contenu pour voir l'aperçu du QR code."
+        },
+        "toast": {
+          "created": "QR code créé",
+          "updated": "QR code mis à jour",
+          "deleted": "QR code supprimé"
+        },
+        "errors": {
+          "titleRequired": "Donnez un titre au QR code.",
+          "cardRequired": "Choisissez une carte numérique pour ce code dynamique.",
+          "contentRequired": "Complétez les champs de contenu pour ce type de QR.",
+          "downloadFailed": "Impossible de télécharger ce QR code. Réessayez."
+        },
+        "form": {
+          "contentSection": "Contenu",
+          "designSection": "Design",
+          "title": "Titre",
+          "titlePlaceholder": "Page de lancement produit",
+          "kind": "Type de code",
+          "kindHint": "Les codes dynamiques pointent vers une carte et peuvent être redirigés plus tard.",
+          "type": "Type de contenu",
+          "card": "Carte numérique",
+          "cardHint": "Le code renvoie vers l'URL publique de cette carte.",
+          "noCards": "Créez d'abord une carte numérique pour utiliser les codes dynamiques.",
+          "url": "URL du site",
+          "urlPlaceholder": "https://example.com",
+          "text": "Texte",
+          "textPlaceholder": "Texte encodé dans le QR code",
+          "email": "Adresse e-mail",
+          "emailSubject": "Objet",
+          "emailBody": "Message",
+          "phone": "Numéro de téléphone",
+          "wifiSsid": "Nom du réseau (SSID)",
+          "wifiPassword": "Mot de passe",
+          "wifiEncryption": "Sécurité",
+          "wifiHidden": "Réseau masqué",
+          "wifiOpen": "Ouvert (sans mot de passe)",
+          "vcard": {
+            "firstName": "Prénom",
+            "lastName": "Nom",
+            "organization": "Organisation",
+            "jobTitle": "Fonction",
+            "phone": "Téléphone",
+            "email": "E-mail",
+            "website": "Site web",
+            "address": "Adresse"
+          },
+          "dotStyle": "Style des points",
+          "cornerStyle": "Style des coins",
+          "foregroundColor": "Couleur de premier plan",
+          "backgroundColor": "Couleur de fond",
+          "useGradient": "Dégradé de premier plan",
+          "gradientColor": "Couleur de fin du dégradé",
+          "logo": "Logo central",
+          "logoHint": "Un petit PNG ou SVG carré fonctionne le mieux.",
+          "removeLogo": "Retirer le logo",
+          "logoSize": "Taille du logo",
+          "margin": "Zone de silence",
+          "errorCorrection": "Correction d'erreur",
+          "size": "Taille d'export",
+          "published": "Actif",
+          "publishedHint": "Les codes inactifs restent enregistrés comme brouillons."
+        }
+      },
+      "cards": {
+        "nav": "Cartes numériques",
+        "title": "Cartes de visite numériques",
+        "description": "Créez des cartes de visite partageables avec une URL publique, puis liez-les à un QR code dynamique.",
+        "new": "Nouvelle carte numérique",
+        "search": "Rechercher des cartes...",
+        "listTitle": "Cartes enregistrées",
+        "listDescription": "Chaque carte avec son slug public et son statut.",
+        "empty": "Aucune carte numérique pour le moment. Créez la première.",
+        "createTitle": "Créer une carte numérique",
+        "editTitle": "Modifier la carte numérique",
+        "deleteConfirm": "Supprimer cette carte ? Son URL publique cessera de fonctionner.",
+        "table": {
+          "card": "Carte",
+          "slug": "URL publique",
+          "template": "Modèle",
+          "status": "Statut",
+          "actions": "Actions"
+        },
+        "templates": {
+          "modern": "Moderne minimal",
+          "corporate": "Corporate",
+          "cyber": "Cyber sombre",
+          "glass": "Glassmorphism"
+        },
+        "templateHints": {
+          "modern": "En-tête dégradé et liste de contacts épurée.",
+          "corporate": "En-tête de marque affirmé et mise en page structurée.",
+          "cyber": "Style néon sombre avec une typographie mono.",
+          "glass": "Panneaux en verre dépoli sur un dégradé éclatant."
+        },
+        "status": {
+          "published": "Publiée",
+          "draft": "Brouillon"
+        },
+        "actions": {
+          "open": "Ouvrir la carte publique",
+          "publish": "Publier",
+          "unpublish": "Dépublier",
+          "edit": "Modifier",
+          "delete": "Supprimer",
+          "save": "Enregistrer la carte"
+        },
+        "preview": {
+          "title": "Aperçu en direct",
+          "phoneLabel": "Aperçu de la carte sur un téléphone"
+        },
+        "toast": {
+          "created": "Carte numérique créée",
+          "updated": "Carte numérique mise à jour",
+          "deleted": "Carte numérique supprimée",
+          "published": "Carte numérique publiée",
+          "unpublished": "Carte numérique dépubliée"
+        },
+        "errors": {
+          "nameRequired": "Saisissez le nom complet de la carte.",
+          "linkUrlRequired": "Chaque lien personnalisé doit avoir une URL, ou supprimez la ligne."
+        },
+        "form": {
+          "identitySection": "Identité",
+          "designSection": "Design",
+          "socialSection": "Liens sociaux",
+          "fullName": "Nom complet",
+          "title": "Titre interne",
+          "titleHint": "Utilisé uniquement dans la liste du tableau de bord.",
+          "jobTitle": "Fonction",
+          "company": "Entreprise",
+          "bio": "Courte biographie",
+          "email": "E-mail",
+          "phone": "Téléphone",
+          "website": "Site web",
+          "address": "Adresse",
+          "slug": "Slug public",
+          "slugHint": "Laissez vide pour le générer à partir du nom.",
+          "avatar": "Avatar",
+          "avatarHint": "Les images carrées sont les plus adaptées.",
+          "removeAvatar": "Retirer l'avatar",
+          "template": "Modèle",
+          "brandColor": "Couleur de marque",
+          "accentColor": "Couleur d'accent",
+          "published": "Publiée",
+          "publishedHint": "Seules les cartes publiées sont accessibles à leur URL.",
+          "addSocial": "Ajouter un lien",
+          "noSocial": "Aucun lien social pour le moment.",
+          "platform": "Plateforme",
+          "socialUrl": "URL",
+          "removeSocial": "Retirer le lien",
+          "linksSection": "Liens personnalisés",
+          "addLink": "Ajouter un lien",
+          "noLinks": "Aucun lien personnalisé. Ajoutez des boutons de type Linktree affichés sur la carte.",
+          "linkLabel": "Libellé du lien",
+          "linkLabelPlaceholder": "Réserver un appel",
+          "linkUrl": "URL du lien",
+          "linksLimit": "Vous pouvez ajouter jusqu’à {count} liens personnalisés.",
+          "moveLinkUp": "Déplacer le lien vers le haut",
+          "moveLinkDown": "Déplacer le lien vers le bas",
+          "removeLink": "Retirer le lien"
+        },
+        "social": {
+          "website": "Site web",
+          "linkedin": "LinkedIn",
+          "x": "X",
+          "facebook": "Facebook",
+          "instagram": "Instagram",
+          "github": "GitHub",
+          "youtube": "YouTube",
+          "tiktok": "TikTok",
+          "whatsapp": "WhatsApp",
+          "telegram": "Telegram"
+        }
+      }
     }
+  },
+  "Card": {
+    "poweredBy": "Carte numérique propulsée par {site}",
+    "saveContact": "Enregistrer le contact",
+    "copyLink": "Copier le lien",
+    "copied": "Lien copié",
+    "copyError": "Impossible de copier le lien"
   }
 }
