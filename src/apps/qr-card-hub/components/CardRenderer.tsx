@@ -1,7 +1,6 @@
 import Image from "next/image"
 import type { CSSProperties, ReactNode } from "react"
 import {
-  ArrowUpRight,
   AtSign,
   Briefcase,
   Camera,
@@ -27,6 +26,7 @@ import {
   type DigitalCardData,
   type SocialPlatform,
 } from "../lib/types"
+import { CardLinkButton } from "./CardLinkButton"
 
 /**
  * The single source of truth for the digital business card.
@@ -316,9 +316,7 @@ function LinkButtons({
   tone: Tone
   className?: string
 }) {
-  const links = (card.links ?? []).filter(
-    (link) => link.url.trim().length > 0
-  )
+  const links = card.links ?? []
 
   if (links.length === 0) return null
 
@@ -330,27 +328,11 @@ function LinkButtons({
       )}
     >
       {links.map((link, index) => (
-        <a
-          key={`${link.url}-${index}`}
-          href={withProtocol(link.url)}
-          target="_blank"
-          rel="noreferrer"
-          title={link.url}
-          className={cn(
-            "group/link flex w-full items-center gap-2 rounded-[var(--card-radius-sm)] border px-[var(--card-link-x)] py-[var(--card-link-y)] text-[length:var(--card-meta)] font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none",
-            tone === "dark"
-              ? "border-white/20 bg-white/10 text-white hover:border-white/45 hover:bg-white/20"
-              : "border-[color:var(--card-brand-line)] bg-[var(--card-brand-soft)] text-slate-900 hover:border-[color:var(--card-brand)] hover:bg-[var(--card-brand-strong)]"
-          )}
-        >
-          <span className="min-w-0 flex-1 truncate">
-            {link.label || link.url}
-          </span>
-          <ArrowUpRight
-            className="size-[var(--card-icon)] shrink-0 opacity-60 transition-transform duration-200 group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5 rtl:-scale-x-100"
-            aria-hidden="true"
-          />
-        </a>
+        <CardLinkButton
+          key={`${link.type}-${link.url}-${index}`}
+          link={link}
+          dark={tone === "dark"}
+        />
       ))}
     </div>
   )

@@ -86,3 +86,20 @@ The following systems are **fully implemented, database-driven (Payload CMS + Mo
 1. **Preserve Existing Integrations:** Extend `src/payload.config.ts` or add new features incrementally without touching existing Auth, RBAC, Globals, or SEO logic.
 2. **Zero UI Redesign:** Never modify, replace, or break existing `src/components/ui/` elements, layout wrappers, or `src/config/dashboard-nav.ts`.
 3. **Strict Localization:** Every newly added label or field must include complete localization keys across `messages/en.json`, `messages/fr.json`, and `messages/ar.json` with full RTL (`dir="rtl"`) support for Arabic.
+
+## 🔒 Protected Baseline & Pre-Expansion Guardrails (BEFORE APPS HUB STORE & DOCS)
+
+Before executing the upcoming Apps Hub Store, multi-type card links, code cleanup/organization, and documentation page tasks, all previously completed systems remain **locked and protected**:
+
+### 1. Preserved Core Systems (Do Not Break or Rewrite)
+
+- **Payload CMS 3 & MongoDB:** Active collections, globals, Local API usage, and `/admin` routes must stay intact and compatible with `npx payload generate:types`.
+- **Dynamic RBAC Engine:** Database-driven roles and granular permissions (`saveToJWT: false`, `depth: 1`) with `superadmin` retaining full authority must remain the single source of truth for access control.
+- **Dynamic Site Settings & SEO:** `site-settings`, `seo-settings`, per-page SEO, `generateMetadata`, `sitemap.ts`, and `robots.ts` must continue operating dynamically without hardcoded fallbacks.
+- **QR & Digital Business Card Base:** Existing QR creation, table preview, download logic, template styles, iPhone live preview, and published card rendering (`CardRenderer`) should be extended cleanly rather than replaced from scratch.
+
+### 2. Extension Boundaries for the New Phase
+
+- **Apps Hub Store Lifecycle:** Installing, uninstalling, enabling, or disabling an app in Apps Hub must toggle its active state and Sidebar visibility/access (combined with RBAC permissions) cleanly without deleting source code or breaking catalog re-installation.
+- **Multi-Type Card Items:** Extending links to support URLs, multiple phone numbers, WhatsApp, emails, and custom/copyable items must remain backward-compatible with saved cards in MongoDB.
+- **UI & Localization Discipline:** Preserve `src/components/ui/`, keep `src/config/dashboard-nav.ts` safe/compatible, organize code cleanly without breaking imports, and localize all new UI/documentation text across `messages/en.json`, `messages/fr.json`, and `messages/ar.json` with RTL support for Arabic.

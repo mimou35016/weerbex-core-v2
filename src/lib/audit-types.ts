@@ -27,6 +27,8 @@ export type AuditAction =
   | "webhookUpdated"
   | "appEnabled"
   | "appDisabled"
+  | "appInstalled"
+  | "appUninstalled"
   | "appConfigured"
   | "sitemapRegenerated"
   | "qrCodeCreated"

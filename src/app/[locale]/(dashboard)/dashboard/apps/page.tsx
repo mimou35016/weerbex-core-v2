@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { ExternalLink, Settings2 } from "lucide-react"
+import { Download, ExternalLink, Settings2, Trash2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { toast } from "sonner"
 
@@ -33,14 +33,15 @@ import {
   appsRegistry,
   type RegisteredApp,
 } from "@/config/dashboard-nav"
-import { Link } from "@/i18n/navigation"
+import { Link, useRouter } from "@/i18n/navigation"
 import { hasAnyPermission, hasPermission } from "@/lib/permissions"
-import { canAccessApp } from "@/lib/rbac"
+import { canAccessApp, canLaunchApp } from "@/lib/rbac"
 import { listRolesAction } from "@/lib/role-actions"
 import type { RoleOption } from "@/lib/roles"
 import {
   getAppConfigsAction,
   saveAppConfigAction,
+  setAppInstalledAction,
   toggleAppAction,
 } from "@/lib/system-settings-actions"
 import type { AppConfigData } from "@/lib/system-settings-types"
@@ -50,6 +51,7 @@ export default function AppsHubPage() {
   const ta = useTranslations("Dashboard.appStatus")
   const tt = useTranslations("Dashboard.toast")
   const locale = useLocale()
+  const router = useRouter()
   const currentUser = useCurrentUser()
   const canConfigure = hasPermission(currentUser, "appsHub", "configure")
   const canRead = hasAnyPermission(currentUser, "appsHub", ["find", "read"])
@@ -112,6 +114,10 @@ export default function AppsHubPage() {
     return configs.find((entry) => entry.appId === appId)
   }
 
+  function isInstalled(app: RegisteredApp): boolean {
+    return configFor(app.id)?.installed ?? app.status !== "coming_soon"
+  }
+
   function isEnabled(app: RegisteredApp): boolean {
     return configFor(app.id)?.enabled ?? app.status !== "coming_soon"
   }
@@ -129,10 +135,28 @@ export default function AppsHubPage() {
     }
 
     setConfigs(result.data)
+    router.refresh()
     toast.success(
       next
         ? tt("appEnabled", { app: t(app.nameKey) })
         : tt("appDisabled", { app: t(app.nameKey) })
+    )
+  }
+
+  async function setInstalled(app: RegisteredApp, next: boolean) {
+    const result = await setAppInstalledAction(app.id, next)
+
+    if (!result.success) {
+      toast.error(result.error)
+      return
+    }
+
+    setConfigs(result.data)
+    router.refresh()
+    toast.success(
+      next
+        ? tt("appInstalled", { app: t(app.nameKey) })
+        : tt("appUninstalled", { app: t(app.nameKey) })
     )
   }
 
@@ -148,6 +172,7 @@ export default function AppsHubPage() {
     setSavingConfig(true)
     const result = await saveAppConfigAction({
       appId: configuring.id,
+      installed: isInstalled(configuring),
       enabled: isEnabled(configuring),
       requiredRole: configRole,
       webhookUrl: webhook.trim(),
@@ -160,6 +185,7 @@ export default function AppsHubPage() {
     }
 
     setConfigs(result.data)
+    router.refresh()
     toast.success(tt("appConfigured", { app: t(configuring.nameKey) }))
     setConfiguring(null)
   }
@@ -221,6 +247,19 @@ export default function AppsHubPage() {
                 </CardHeader>
 
                 <CardContent className="flex flex-col gap-3">
+                  <div className="flex flex-wrap items-center gap-2 text-xs">
+                    <span className="font-medium text-foreground">
+                      {isInstalled(app)
+                        ? t("appsHub.installed")
+                        : t("appsHub.notInstalled")}
+                    </span>
+                    {isInstalled(app) && !isEnabled(app) ? (
+                      <span className="text-muted-foreground">
+                        · {t("appsHub.disabled")}
+                      </span>
+                    ) : null}
+                  </div>
+
                   <div className="flex items-center justify-between gap-3 rounded-lg border p-2.5">
                     <Label
                       htmlFor={`enable-${app.id}`}
@@ -230,30 +269,45 @@ export default function AppsHubPage() {
                     </Label>
                     <Switch
                       id={`enable-${app.id}`}
-                      checked={isEnabled(app)}
+                      checked={isInstalled(app) && isEnabled(app)}
                       onCheckedChange={(checked) => toggleApp(app, checked)}
-                      disabled={isComingSoon || !canConfigure}
-                      aria-label={t(app.nameKey)}
+                      disabled={isComingSoon || !canConfigure || !isInstalled(app)}
+                      aria-label={t("appsHub.enableLabel")}
                     />
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    {canConfigure && (
+                  <div className="flex flex-wrap items-center gap-2">
+                    {canConfigure && isInstalled(app) ? (
                       <Button
                         variant="outline"
                         size="sm"
-                        className="flex-1"
                         onClick={() => openConfigure(app)}
                       >
                         <Settings2 aria-hidden="true" />
                         {t("common.configure")}
                       </Button>
-                    )}
+                    ) : null}
+                    {canConfigure && !isComingSoon ? (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setInstalled(app, !isInstalled(app))}
+                      >
+                        {isInstalled(app) ? (
+                          <Trash2 aria-hidden="true" />
+                        ) : (
+                          <Download aria-hidden="true" />
+                        )}
+                        {isInstalled(app)
+                          ? t("appsHub.uninstall")
+                          : t("appsHub.install")}
+                      </Button>
+                    ) : null}
                     {isComingSoon ? (
                       <Button size="sm" className="flex-1" disabled>
                         {ta("coming_soon")}
                       </Button>
-                    ) : canAccessApp(currentUser, app.id) ? (
+                    ) : canLaunchApp(currentUser, app.id) ? (
                       <Button
                         size="sm"
                         className="flex-1"
@@ -265,7 +319,13 @@ export default function AppsHubPage() {
                       </Button>
                     ) : (
                       <Button size="sm" className="flex-1" disabled>
-                        {t("common.noAccess")}
+                        {t(
+                          !canAccessApp(currentUser, app.id)
+                            ? "common.noAccess"
+                            : !isInstalled(app)
+                              ? "appsHub.notInstalled"
+                              : "appsHub.disabledLabel"
+                        )}
                       </Button>
                     )}
                   </div>

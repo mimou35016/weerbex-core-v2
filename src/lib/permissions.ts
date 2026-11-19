@@ -14,7 +14,7 @@ import { qrCardHubPermissionResources } from "@/apps/qr-card-hub/permissions"
  * actions are introduced so existing roles receive one-time defaults without
  * overriding grants the super admin edited afterwards.
  */
-export const PERMISSIONS_VERSION = 5
+export const PERMISSIONS_VERSION = 6
 
 export type PermissionAction =
   | "find"
@@ -44,6 +44,7 @@ export const permissionResourceIds = [
   "roles",
   "audit",
   "appsHub",
+  "docs",
   "settings",
   "seo",
   "security",
@@ -104,6 +105,12 @@ export const permissionResources: PermissionResource[] = [
     labelKey: "roles.resources.appsHub",
     group: "core",
     actions: ["find", "read", "configure"],
+  },
+  {
+    id: "docs",
+    labelKey: "roles.resources.docs",
+    group: "core",
+    actions: ["find", "read"],
   },
   {
     id: "settings",

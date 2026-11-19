@@ -10,6 +10,7 @@ import {
 } from "lucide-react"
 import { useFormatter, useTranslations } from "next-intl"
 
+import { useCurrentUser } from "@/components/dashboard/current-user-provider"
 import { PageHeader } from "@/components/dashboard/page-header"
 import { StatCard } from "@/components/dashboard/stat-card"
 import { StatusBadge } from "@/components/dashboard/status-badge"
@@ -26,6 +27,7 @@ import { appsRegistry } from "@/config/dashboard-nav"
 import { Link } from "@/i18n/navigation"
 import type { AuditEntry } from "@/lib/audit-types"
 import { getOverviewStatsAction } from "@/lib/overview-actions"
+import { canLaunchApp } from "@/lib/rbac"
 import { cn } from "@/lib/utils"
 
 const statusDot: Record<string, string> = {
@@ -57,6 +59,7 @@ export default function DashboardOverviewPage() {
   const ta = useTranslations("Dashboard.auditStatus")
   const tac = useTranslations("Dashboard.audit.actions")
   const format = useFormatter()
+  const currentUser = useCurrentUser()
   const [stats, setStats] = useState<Stats>(EMPTY_STATS)
 
   useEffect(() => {
@@ -73,10 +76,11 @@ export default function DashboardOverviewPage() {
     }
   }, [])
 
-  const activeApps = appsRegistry.filter((app) => app.status === "active")
-  const launchableApps = appsRegistry.filter(
-    (app) => app.status !== "coming_soon"
-  )
+  const activeApps =
+    currentUser?.appStates.filter((state) => state.available) ?? []
+  const launchableApps = currentUser
+    ? appsRegistry.filter((app) => canLaunchApp(currentUser, app.id))
+    : []
 
   return (
     <>

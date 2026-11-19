@@ -1,6 +1,7 @@
 import { getLocale } from "next-intl/server"
 import { notFound, redirect } from "next/navigation"
 
+import { isAppAvailable } from "./app-state"
 import { getCurrentUser } from "./auth"
 import {
   hasAnyPermission,
@@ -48,6 +49,14 @@ export async function requireAnyPermission(
   }
 
   return user
+}
+
+/**
+ * Blocks a mini-app's routes when the app has been uninstalled or disabled in
+ * the Apps Hub. The catalog entry remains in the database for reinstallation.
+ */
+export async function requireAppAvailable(appId: string): Promise<void> {
+  if (!(await isAppAvailable(appId))) notFound()
 }
 
 export async function requireSuperAdmin(): Promise<DashboardUser> {

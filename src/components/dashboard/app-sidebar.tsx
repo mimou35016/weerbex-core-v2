@@ -21,7 +21,7 @@ import {
 import { appsRegistry, coreNavItems } from "@/config/dashboard-nav"
 import { Link, usePathname } from "@/i18n/navigation"
 import { getInitials } from "@/lib/initials"
-import { canAccessApp, canAccessRoute } from "@/lib/rbac"
+import { canAccessRoute, canLaunchApp } from "@/lib/rbac"
 
 export function AppSidebar({
   side = "left",
@@ -41,7 +41,7 @@ export function AppSidebar({
       : pathname === href || pathname.startsWith(`${href}/`)
 
   const visibleApps = currentUser
-    ? appsRegistry.filter((app) => canAccessApp(currentUser, app.id))
+    ? appsRegistry.filter((app) => canLaunchApp(currentUser, app.id))
     : []
   const visibleCoreNavItems = currentUser
     ? coreNavItems.filter((item) => canAccessRoute(currentUser, item.href))

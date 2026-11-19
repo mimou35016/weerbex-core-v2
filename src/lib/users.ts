@@ -1,4 +1,5 @@
 import type { Role, User } from "@/payload-types"
+import type { AppAvailability } from "./app-definitions"
 import type { RolePermission } from "./permissions"
 import { normalizeRolePermissions } from "./roles"
 
@@ -15,6 +16,8 @@ export type DashboardUser = {
   rolePriority: number
   isSuperAdmin: boolean
   permissions: RolePermission[]
+  /** Effective installed/enabled state of each registered mini-app. */
+  appStates: AppAvailability[]
   status: UserStatus
   joined: string
 }
@@ -23,7 +26,10 @@ export type ActionResult<T> =
   | { success: true; data: T }
   | { success: false; error: string }
 
-export function toDashboardUser(user: User): DashboardUser {
+export function toDashboardUser(
+  user: User,
+  appStates: AppAvailability[] = []
+): DashboardUser {
   const roleRef = user.role
   const role =
     roleRef && typeof roleRef === "object" ? (roleRef as Role) : null
@@ -43,6 +49,7 @@ export function toDashboardUser(user: User): DashboardUser {
     rolePriority: role?.priority ?? 0,
     isSuperAdmin: Boolean(role?.isSuperAdmin),
     permissions: normalizeRolePermissions(role),
+    appStates,
     status: (user.status as UserStatus | null | undefined) ?? "active",
     joined: user.createdAt,
   }

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache"
 
 import type { DigitalCard, Media, QrCode } from "@/payload-types"
+import { isAppAvailable } from "@/lib/app-state"
 import { recordAuditEvent } from "@/lib/audit"
 import { getCurrentUser } from "@/lib/auth"
 import {
@@ -66,6 +67,10 @@ async function requirePermission(
     throw new Error("Unauthorized")
   }
 
+  if (!(await isAppAvailable("qrCardHub"))) {
+    throw new Error("This app is currently unavailable.")
+  }
+
   if (!hasPermission(user, resource, action)) {
     throw new Error(
       "Forbidden: you do not have permission to perform this action."
@@ -83,6 +88,10 @@ async function requireAnyPermission(
 
   if (!user || user.status !== "active") {
     throw new Error("Unauthorized")
+  }
+
+  if (!(await isAppAvailable("qrCardHub"))) {
+    throw new Error("This app is currently unavailable.")
   }
 
   if (!hasAnyPermission(user, resource, actions)) {

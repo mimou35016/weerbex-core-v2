@@ -48,10 +48,32 @@ export type SocialLinkInput = {
   label: string
 }
 
-/** Linktree-style button rendered on the card, ordered by array position. */
+/** The action a Linktree-style card item performs when tapped. */
+export const cardLinkTypes = [
+  "url",
+  "phone",
+  "whatsapp",
+  "email",
+  "location",
+  "copy",
+  "payment",
+] as const
+
+export type CardLinkType = (typeof cardLinkTypes)[number]
+
+/**
+ * Linktree-style button rendered on the card, ordered by array position.
+ *
+ * `url` is intentionally kept as the raw value field for every type (it used
+ * to hold a website URL only). This keeps every card already saved in MongoDB
+ * valid: a missing `type` is normalized to `"url"` by `normalizeCustomLinks`.
+ */
 export type CustomLinkInput = {
   label: string
   url: string
+  type: CardLinkType
+  /** Optional pre-filled message for WhatsApp items. */
+  message: string
 }
 
 export type QrFormData = {
@@ -258,58 +280,174 @@ export function text(value: unknown): string {
   return typeof value === "string" ? value : ""
 }
 
-/** Upper bound for Linktree-style links, mirrored by the builder UI. */
-export const MAX_CARD_LINKS = 20
-
 const anyScheme = /^[a-z][a-z0-9+.-]*:/i
-const safeScheme = /^(https?:|mailto:|tel:)/i
+const safeScheme = /^https?:\/\//i
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+export function normalizeCardLinkType(value: unknown): CardLinkType {
+  return pick(value, cardLinkTypes, "url")
+}
 
 /** Rejects `javascript:` and other non-navigational schemes. */
-function safeLinkUrl(value: string): string {
+function safeWebUrl(value: string): string {
   const url = value.trim()
 
   if (!url) return ""
   if (anyScheme.test(url)) return safeScheme.test(url) ? url : ""
 
-  return url
+  return `https://${url}`
 }
 
-/** Builds a readable fallback label such as `example.com/pricing`. */
-export function linkLabelFromUrl(value: string): string {
-  const cleaned = value
-    .trim()
-    .replace(/^[a-z][a-z0-9+.-]*:\/\//i, "")
-    .replace(/^www\./i, "")
-    .replace(/[?#].*$/, "")
-    .replace(/\/+$/, "")
+export function phoneDigits(value: string): string {
+  const hasPlus = value.trimStart().startsWith("+")
+  const digits = value.replace(/\D/g, "")
 
-  if (!cleaned) return value.trim()
+  return hasPlus && digits ? `+${digits}` : digits
+}
 
-  return cleaned
+/** True when the raw value can perform the selected action. */
+export function isCardLinkValueValid(
+  type: CardLinkType,
+  rawValue: string
+): boolean {
+  const value = rawValue.trim()
+
+  if (!value) return false
+
+  switch (type) {
+    case "phone":
+      return phoneDigits(value).replace(/\D/g, "").length >= 5
+    case "whatsapp":
+      return phoneDigits(value).replace(/\D/g, "").length >= 6
+    case "email":
+      return emailPattern.test(value) && !anyScheme.test(value)
+    case "copy":
+      return true
+    case "location":
+      return value.length > 1
+    case "url":
+    case "payment":
+      return /^https?:\/\/[^\s/?#]+/i.test(safeWebUrl(value))
+  }
+}
+
+/** Localization key suffix for the first invalid part of an item, if any. */
+export function cardLinkError(
+  link: Pick<CustomLinkInput, "type" | "url">
+): string | null {
+  const type = normalizeCardLinkType(link.type)
+  const value = link.url.trim()
+
+  if (!value) return "linkValueRequired"
+  if (!isCardLinkValueValid(type, value)) {
+    return type === "email"
+      ? "linkEmailInvalid"
+      : type === "phone" || type === "whatsapp"
+        ? "linkPhoneInvalid"
+        : "linkValueInvalid"
+  }
+
+  return null
+}
+
+/** Builds the action URL for an item. Copyable items return an empty string. */
+export function cardLinkHref(link: Pick<CustomLinkInput, "type" | "url" | "message">): string {
+  const value = link.url.trim()
+
+  switch (normalizeCardLinkType(link.type)) {
+    case "phone":
+      return `tel:${phoneDigits(value)}`
+    case "whatsapp": {
+      const number = phoneDigits(value).replace(/\D/g, "")
+      const message = text(link.message).trim()
+      const query = message ? `?text=${encodeURIComponent(message)}` : ""
+
+      return `https://wa.me/${number}${query}`
+    }
+    case "email":
+      return `mailto:${value}`
+    case "location":
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(value)}`
+    case "copy":
+      return ""
+    case "url":
+    case "payment":
+      return safeWebUrl(value)
+  }
+}
+
+/** Builds a readable fallback label for a value of any supported type. */
+export function linkLabelFromValue(link: Pick<CustomLinkInput, "type" | "url">): string {
+  const value = link.url.trim()
+
+  if (normalizeCardLinkType(link.type) === "url") {
+    return value
+      .replace(/^[a-z][a-z0-9+.-]*:\/\//i, "")
+      .replace(/^www\./i, "")
+      .replace(/[?#].*$/, "")
+      .replace(/\/+$/, "")
+  }
+
+  return value.length > 42 ? `${value.slice(0, 41)}…` : value
+}
+
+/** Backwards-compatible alias used by older importers/tests. */
+export const linkLabelFromUrl = (value: string): string =>
+  linkLabelFromValue({ type: "url", url: value })
+
+/**
+ * Older cards stored action URLs in the generic `url` field (`tel:`,
+ * `mailto:`, `wa.me`). Recognising them keeps those rows usable instead of
+ * silently dropping them after the multi-type upgrade.
+ */
+function migrateLegacyLinkValue(value: string): {
+  type?: CardLinkType
+  url: string
+} {
+  const raw = value.trim()
+
+  if (/^tel:/i.test(raw)) {
+    return { type: "phone", url: raw.slice(4).trim() }
+  }
+  if (/^mailto:/i.test(raw)) {
+    return { type: "email", url: raw.slice(7).trim() }
+  }
+
+  const whatsapp = raw.match(/^https?:\/\/(?:www\.)?wa\.me\/(\d+)/i)
+  if (whatsapp) return { type: "whatsapp", url: `+${whatsapp[1]}` }
+
+  return { url: raw }
 }
 
 /**
- * Single source of truth for Linktree-style links. It trims values, keeps the
- * stored order, drops blank or unsafe rows and derives a label when the user
- * only supplied a URL. Both the Payload write path and the read mappers use
- * it, so the UI and MongoDB always agree.
+ * Single source of truth for Linktree-style card items. It trims values,
+ * keeps the stored order, defaults legacy rows to the `url` type, migrates
+ * legacy action URLs, drops blank or invalid rows and derives a label when the
+ * user did not supply one. Both the Payload write path and the read mappers
+ * use it, so the UI and MongoDB always agree.
  */
 export function normalizeCustomLinks(value: unknown): CustomLinkInput[] {
   if (!Array.isArray(value)) return []
 
   return value
-    .slice(0, MAX_CARD_LINKS)
     .map((entry) => {
       const link = (entry ?? {}) as Record<string, unknown>
-      const url = safeLinkUrl(text(link.url))
-      const label = text(link.label).trim()
+      const rawValue = text(link.url)
+      const hasExplicitType = typeof link.type === "string" && link.type !== ""
+      const legacy = hasExplicitType ? null : migrateLegacyLinkValue(rawValue)
 
       return {
-        label: label || linkLabelFromUrl(url),
-        url,
+        type: legacy?.type ?? normalizeCardLinkType(link.type),
+        url: (legacy?.url ?? rawValue).trim(),
+        message: text(link.message).trim(),
+        label: text(link.label).trim(),
       }
     })
-    .filter((link) => link.url.length > 0)
+    .filter((link) => cardLinkError(link) === null)
+    .map((link) => ({
+      ...link,
+      label: link.label || linkLabelFromValue(link),
+    }))
 }
 
 export function bool(value: unknown, fallback = false): boolean {

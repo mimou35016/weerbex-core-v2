@@ -1,6 +1,7 @@
 import { headers } from "next/headers"
 
 import type { User } from "@/payload-types"
+import { getAppStates } from "./app-state"
 import { getPayloadClient } from "./payload"
 import { toDashboardUser, type DashboardUser } from "./users"
 
@@ -23,7 +24,7 @@ export async function getCurrentUser(): Promise<DashboardUser | null> {
       overrideAccess: true,
     })) as User
 
-    return toDashboardUser(fresh)
+    return toDashboardUser(fresh, await getAppStates())
   } catch {
     return null
   }

@@ -86,7 +86,8 @@
     },
     "header": {
       "toggleSidebar": "Afficher/masquer la barre latérale",
-      "breadcrumbLabel": "Fil d'Ariane"
+      "breadcrumbLabel": "Fil d'Ariane",
+      "docs": "Documentation"
     },
     "userNav": {
       "label": "Ouvrir le menu utilisateur",
@@ -114,7 +115,8 @@
         "media": "Médiathèque",
         "qrCardHub": "Hub QR & Cartes numériques",
         "qrCodes": "QR codes",
-        "digitalCards": "Cartes de visite numériques"
+        "digitalCards": "Cartes de visite numériques",
+        "docs": "Documentation"
       }
     },
     "status": {
@@ -197,7 +199,13 @@
       "requiredRoleLabel": "Rôle requis",
       "statusLabel": "Statut",
       "saveConfig": "Enregistrer la configuration",
-      "none": "Aucune application n'est encore enregistrée."
+      "none": "Aucune application n'est encore enregistrée.",
+      "installed": "Installée",
+      "notInstalled": "Non installée",
+      "disabled": "désactivée",
+      "disabledLabel": "Désactivée",
+      "install": "Installer",
+      "uninstall": "Désinstaller"
     },
     "users": {
       "title": "Utilisateurs",
@@ -292,7 +300,9 @@
         "cardUpdated": "Carte numérique mise à jour",
         "cardDeleted": "Carte numérique supprimée",
         "cardPublished": "Carte numérique publiée",
-        "cardUnpublished": "Carte numérique dépubliée"
+        "cardUnpublished": "Carte numérique dépubliée",
+        "appInstalled": "Application installée",
+        "appUninstalled": "Application désinstallée"
       },
       "results": "{count} événements",
       "empty": "Aucune entrée de journal ne correspond à vos filtres.",
@@ -723,7 +733,9 @@
       "tokenRevoked": "Jeton API révoqué",
       "webhookSaved": "Webhook enregistré",
       "loggedOut": "Vous avez été déconnecté",
-      "permissionsSaved": "Permissions enregistrées"
+      "permissionsSaved": "Permissions enregistrées",
+      "appInstalled": "{app} installée",
+      "appUninstalled": "{app} désinstallée"
     },
     "apps": {
       "qrCardHub": {
@@ -927,7 +939,11 @@
         },
         "errors": {
           "nameRequired": "Saisissez le nom complet de la carte.",
-          "linkUrlRequired": "Chaque lien personnalisé doit avoir une URL, ou supprimez la ligne."
+          "linkUrlRequired": "Chaque lien personnalisé doit avoir une URL, ou supprimez la ligne.",
+          "linkValueRequired": "Saisissez une valeur pour cet élément ou supprimez-le.",
+          "linkValueInvalid": "Saisissez une URL ou un lieu valide.",
+          "linkEmailInvalid": "Saisissez une adresse e-mail valide.",
+          "linkPhoneInvalid": "Saisissez un numéro de téléphone valide."
         },
         "form": {
           "identitySection": "Identité",
@@ -967,7 +983,12 @@
           "linksLimit": "Vous pouvez ajouter jusqu’à {count} liens personnalisés.",
           "moveLinkUp": "Déplacer le lien vers le haut",
           "moveLinkDown": "Déplacer le lien vers le bas",
-          "removeLink": "Retirer le lien"
+          "removeLink": "Retirer le lien",
+          "linksHint": "Ajoutez un nombre illimité d'éléments. Chacun peut ouvrir un lien, appeler, envoyer un e-mail, afficher un lieu, payer ou copier du texte.",
+          "linkType": "Type d'élément",
+          "linkValue": "Valeur",
+          "linkMessage": "Message prérempli (facultatif)",
+          "linkMessagePlaceholder": "Bonjour ! Je souhaite échanger."
         },
         "social": {
           "website": "Site web",
@@ -980,7 +1001,147 @@
           "tiktok": "TikTok",
           "whatsapp": "WhatsApp",
           "telegram": "Telegram"
+        },
+        "linkTypes": {
+          "url": "Site Web / URL",
+          "phone": "Numéro de téléphone",
+          "whatsapp": "WhatsApp",
+          "email": "E-mail",
+          "location": "Lieu",
+          "copy": "Texte à copier",
+          "payment": "Lien de paiement"
+        },
+        "linkPlaceholders": {
+          "url": "https://exemple.com",
+          "phone": "+33 6 12 34 56 78",
+          "whatsapp": "+33 6 12 34 56 78",
+          "email": "nom@exemple.com",
+          "location": "12 rue de Rivoli, Paris",
+          "copy": "Copiez ce code dans le presse-papiers",
+          "payment": "https://paypal.me/utilisateur"
         }
+      }
+    },
+    "docs": {
+      "title": "Documentation",
+      "description": "Tout ce qu'il faut pour utiliser et étendre votre espace Weerbex.",
+      "badge": "Guides",
+      "hint": "Choisissez un parcours pour commencer.",
+      "userTab": "Guide utilisateur",
+      "developerTab": "Guide développeur",
+      "user": {
+        "intro": "Suivez ces étapes pour gérer votre espace au quotidien.",
+        "gettingStarted": {
+          "title": "Premiers pas",
+          "description": "Connectez-vous et découvrez le tableau de bord.",
+          "items": [
+            "Connectez-vous avec votre compte Payload ; votre rôle est relu dans la base à chaque page.",
+            "Utilisez la barre latérale pour naviguer entre vos applications et la gestion principale.",
+            "Changez de langue et de thème depuis la barre supérieure ; l'arabe passe automatiquement en RTL.",
+            "Ouvrez l'icône d'aide dans la barre supérieure chaque fois que vous avez besoin de ce guide."
+          ]
+        },
+        "appsStore": {
+          "title": "Boutique d'applications",
+          "description": "Installez, activez et configurez les mini-applications au même endroit.",
+          "items": [
+            "Ouvrez la boutique depuis la barre latérale pour parcourir le catalogue.",
+            "Utilisez Installer pour ajouter une application, ou Désinstaller pour la retirer de la navigation et des routes sans supprimer ses données.",
+            "Le interrupteur Activée permet de suspendre temporairement une application installée ; l'entrée du catalogue est conservée.",
+            "Utilisez Configurer pour définir l'URL du webhook et le rôle requis.",
+            "Le lancement n'est possible que si l'application est installée, activée et autorisée pour votre rôle."
+          ]
+        },
+        "digitalCards": {
+          "title": "Cartes de visite numériques",
+          "description": "Créez et publiez une carte partageable.",
+          "items": [
+            "Ouvrez QR Card Hub → Cartes et créez une carte avec votre identité, vos couleurs et votre modèle.",
+            "Ajoutez des éléments : lien, téléphone, WhatsApp, e-mail, lieu, paiement ou texte à copier.",
+            "Renseignez la valeur de chaque élément ; l'aperçu se met à jour instantanément dans le cadre iPhone.",
+            "Publiez la carte pour la rendre disponible sur son slug public et générez ses codes QR."
+          ]
+        },
+        "qrStudio": {
+          "title": "Studio QR",
+          "description": "Créez des codes QR statiques et dynamiques.",
+          "items": [
+            "Ouvrez QR Card Hub → QR et choisissez un code statique (URL/texte) ou un code dynamique lié à une carte.",
+            "Personnalisez les points, les coins, les couleurs et téléversez éventuellement un logo.",
+            "Téléchargez le résultat en PNG ou en SVG.",
+            "Les codes dynamiques suivent l'URL de la carte : vous pouvez modifier la carte plus tard sans réimprimer."
+          ]
+        },
+        "account": {
+          "title": "Compte et sécurité",
+          "description": "Comprenez ce que votre rôle autorise.",
+          "items": [
+            "Vos permissions proviennent du rôle enregistré dans la base, et non du jeton de connexion.",
+            "Les super administrateurs peuvent gérer les rôles et les permissions de tous.",
+            "Administrateurs, responsables et utilisateurs disposent des accès définis par leur rôle.",
+            "Déconnectez-vous depuis le menu utilisateur en haut à droite."
+          ]
+        }
+      },
+      "developer": {
+        "intro": "Ces notes décrivent les points d'extension qui préservent le cœur du tableau de bord.",
+        "architecture": {
+          "title": "Architecture",
+          "description": "Où se trouve chaque responsabilité.",
+          "items": [
+            "Payload CMS 3 avec MongoDB est la source unique de vérité pour les utilisateurs, rôles, paramètres et état des applications.",
+            "Le tableau de bord utilise l'App Router sous src/app/[locale]/(dashboard).",
+            "Les mini-applications résident dans src/apps/<app> et exportent métadonnées, permissions et règles de route depuis registration.ts.",
+            "appsRegistry et les composants d'interface partagés sont des fichiers centraux protégés ; étendez autour d'eux."
+          ]
+        },
+        "newApp": {
+          "title": "Ajouter une mini-application",
+          "description": "Branchez un nouveau module sur le même cycle de vie.",
+          "items": [
+            "Créez src/apps/<app> avec un registration.ts exportant les métadonnées, les règles de route et les ressources de permission.",
+            "Déclarez l'application dans src/lib/app-definitions.ts avec sa ressource de permission et son préfixe de route.",
+            "Ajoutez la ressource de permission au catalogue et ses libellés dans les trois fichiers de messages.",
+            "Ajoutez un dossier de route sous dashboard/apps avec une layout appellant requireAppAvailable et requireAnyPermission.",
+            "Installation, activation, visibilité dans la barre latérale et accès aux routes fonctionnent alors automatiquement."
+          ]
+        },
+        "permissions": {
+          "title": "Permissions et état des applications",
+          "description": "Deux contrôles indépendants sont combinés.",
+          "items": [
+            "L'accès aux routes et à la navigation exige que l'application soit installée, activée et autorisée pour le rôle de l'utilisateur.",
+            "requireAppAvailable bloque les routes et pages publiques côté serveur ; canLaunchApp filtre l'interface client.",
+            "Les server actions d'une application revérifient également la disponibilité avant de toucher aux données.",
+            "Incrémentez PERMISSIONS_VERSION lors de l'ajout d'une ressource afin que les rôles existants reçoivent des valeurs par défaut uniques."
+          ]
+        },
+        "cardItems": {
+          "title": "Types d'éléments de carte",
+          "description": "Comment les actions intelligentes restent rétrocompatibles.",
+          "items": [
+            "normalizeCustomLinks dans lib/types.ts est la couche de compatibilité unique pour l'écriture et la lecture.",
+            "Les anciennes entrées sans type prennent par défaut url : les cartes MongoDB enregistrées continuent de fonctionner.",
+            "cardLinkHref construit les URL tel, wa.me, mailto, maps et de paiement ; les éléments à copier utilisent le presse-papiers.",
+            "CardRenderer et CardLinkButton affichent l'aperçu et la carte publiée de manière identique."
+          ]
+        },
+        "localization": {
+          "title": "Localisation",
+          "description": "Gardez l'anglais, le français et l'arabe synchronisés.",
+          "items": [
+            "Chaque chaîne d'interface se trouve dans messages/en.json, fr.json et ar.json.",
+            "Utilisez useTranslations pour les libellés et t.raw pour les tableaux d'éléments du guide.",
+            "L'arabe définit dir=rtl sur le document et la barre latérale passe à droite.",
+            "Ajoutez nouvelles clés aux trois fichiers avant de livrer une fonctionnalité."
+          ]
+        }
+      },
+      "footer": {
+        "title": "Besoin d'un raccourci ?",
+        "description": "Retrouvez rapidement les zones que vous gérez le plus.",
+        "apps": "Ouvrir la boutique",
+        "settings": "Ouvrir les paramètres"
       }
     }
   },
@@ -989,6 +1150,9 @@
     "saveContact": "Enregistrer le contact",
     "copyLink": "Copier le lien",
     "copied": "Lien copié",
-    "copyError": "Impossible de copier le lien"
+    "copyError": "Impossible de copier le lien",
+    "copiedValue": "Copié dans le presse-papiers",
+    "copyErrorValue": "Impossible de copier la valeur",
+    "copyValueHint": "Appuyez pour copier"
   }
 }

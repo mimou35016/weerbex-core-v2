@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache"
 
 import { getAppById } from "@/config/dashboard-nav"
+import { defaultAppAvailability } from "./app-definitions"
 import { recordAuditEvent } from "./audit"
 import { getCurrentUser } from "./auth"
 import { getPayloadClient } from "./payload"
@@ -340,6 +341,7 @@ async function writeAppConfigs(
     data: {
       apps: apps.map((app) => ({
         appId: app.appId,
+        installed: app.installed,
         enabled: app.enabled,
         requiredRole: app.requiredRole,
         webhookUrl: app.webhookUrl,
@@ -414,6 +416,7 @@ export async function toggleAppAction(
     const previous = existing.find((entry) => entry.appId === appId)
     const config: AppConfigData = {
       appId,
+      installed: previous?.installed ?? defaultAppAvailability(app).installed,
       enabled,
       requiredRole: previous?.requiredRole ?? app.requiredRole,
       webhookUrl: previous?.webhookUrl ?? "",
@@ -426,6 +429,56 @@ export async function toggleAppAction(
 
     await recordAuditEvent({
       action: enabled ? "appEnabled" : "appDisabled",
+      actorId: current.id,
+      actorName: current.name,
+      target: appId,
+    })
+
+    revalidateSettings()
+
+    return { success: true, data: apps }
+  } catch (error) {
+    return { success: false, error: getErrorMessage(error) }
+  }
+}
+
+/**
+ * Installs or uninstalls a catalog app. Uninstalling only changes the stored
+ * lifecycle flag: source code, permissions and saved user data stay intact so
+ * the app can be reinstalled without a migration.
+ */
+export async function setAppInstalledAction(
+  appId: string,
+  installed: boolean
+): Promise<ActionResult<AppConfigData[]>> {
+  try {
+    const current = await requirePermission("appsHub", "configure")
+    const app = getAppById(appId)
+
+    if (!app || app.status === "coming_soon") {
+      throw new Error("Unknown or unavailable app.")
+    }
+
+    const existing = await getAppConfigs()
+    const previous = existing.find((entry) => entry.appId === appId)
+    const defaults = defaultAppAvailability(app)
+    const config: AppConfigData = {
+      appId,
+      installed,
+      // Uninstalling always disables the app; reinstalling restores the
+      // default enabled state so the catalog entry works again immediately.
+      enabled: installed ? defaults.enabled : false,
+      requiredRole: previous?.requiredRole ?? app.requiredRole,
+      webhookUrl: previous?.webhookUrl ?? "",
+    }
+    const next = existing.some((entry) => entry.appId === appId)
+      ? existing.map((entry) => (entry.appId === appId ? config : entry))
+      : [...existing, config]
+
+    const apps = await writeAppConfigs(next)
+
+    await recordAuditEvent({
+      action: installed ? "appInstalled" : "appUninstalled",
       actorId: current.id,
       actorName: current.name,
       target: appId,

@@ -62,12 +62,15 @@ import {
   uploadCardAvatarAction,
 } from "../lib/actions"
 import {
+  cardLinkError,
+  cardLinkTypes,
   cardTemplates,
   DEFAULT_CARD_FORM,
-  MAX_CARD_LINKS,
+  normalizeCardLinkType,
   normalizeSocialPlatform,
   safeColor,
   socialPlatforms,
+  type CardLinkType,
   type CustomLinkInput,
   type DigitalCardData,
   type DigitalCardFormData,
@@ -253,15 +256,11 @@ export function CardBuilderPage() {
     }))
   }
 
-  function addLink() {
-    setForm((current) => {
-      if (current.links.length >= MAX_CARD_LINKS) return current
-
-      return {
-        ...current,
-        links: [...current.links, { label: "", url: "" }],
-      }
-    })
+  function addLink(type: CardLinkType = "url") {
+    setForm((current) => ({
+      ...current,
+      links: [...current.links, { label: "", url: "", type, message: "" }],
+    }))
   }
 
   function removeLink(index: number) {
@@ -288,13 +287,31 @@ export function CardBuilderPage() {
   async function save() {
     if (saving) return
 
-    // Empty rows are dropped, and every remaining row must be a usable link.
+    // Blank rows are dropped; every remaining item must perform its action.
     const links = form.links
-      .map((link) => ({ label: link.label.trim(), url: link.url.trim() }))
-      .filter((link) => link.label.length > 0 || link.url.length > 0)
+      .map((link) => ({
+        label: link.label.trim(),
+        url: link.url.trim(),
+        type: normalizeCardLinkType(link.type),
+        message: link.message.trim(),
+      }))
+      .filter(
+        (link) =>
+          link.label.length > 0 ||
+          link.url.length > 0 ||
+          link.message.length > 0
+      )
 
-    if (links.some((link) => link.url.length === 0)) {
-      toast.error(tc("cards.errors.linkUrlRequired"))
+    const invalid = links.find((link) => cardLinkError(link) !== null)
+
+    if (invalid) {
+      const error = cardLinkError(invalid)
+
+      toast.error(
+        error && tc.has(`cards.errors.${error}`)
+          ? tc(`cards.errors.${error}`)
+          : tc("cards.errors.linkValueRequired")
+      )
       return
     }
 
@@ -808,82 +825,163 @@ export function CardBuilderPage() {
                     type="button"
                     variant="outline"
                     size="sm"
-                    onClick={addLink}
-                    disabled={form.links.length >= MAX_CARD_LINKS}
-                    title={
-                      form.links.length >= MAX_CARD_LINKS
-                        ? tc("cards.form.linksLimit", { count: MAX_CARD_LINKS })
-                        : undefined
-                    }
+                    onClick={() => addLink()}
                   >
                     <Plus aria-hidden="true" />
                     {tc("cards.form.addLink")}
                   </Button>
                 </div>
+                <p className="text-xs text-muted-foreground">
+                  {tc("cards.form.linksHint")}
+                </p>
 
                 {form.links.length === 0 ? (
                   <p className="text-xs text-muted-foreground">
                     {tc("cards.form.noLinks")}
                   </p>
                 ) : (
-                  form.links.map((link, index) => (
-                    <div
-                      key={index}
-                      className="grid gap-2 rounded-lg border p-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)_auto]"
-                    >
-                      <Input
-                        value={link.label}
-                        onChange={(event) =>
-                          updateLink(index, { label: event.target.value })
-                        }
-                        placeholder={tc("cards.form.linkLabelPlaceholder")}
-                        aria-label={tc("cards.form.linkLabel")}
-                      />
-                      <Input
-                        value={link.url}
-                        onChange={(event) =>
-                          updateLink(index, { url: event.target.value })
-                        }
-                        placeholder="https://example.com"
-                        aria-label={tc("cards.form.linkUrl")}
-                        dir="ltr"
-                      />
-                      <div className="flex items-center justify-end gap-1 sm:justify-start">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon-sm"
-                          onClick={() => moveLink(index, -1)}
-                          disabled={index === 0}
-                          aria-label={tc("cards.form.moveLinkUp")}
-                          title={tc("cards.form.moveLinkUp")}
-                        >
-                          <ArrowUp aria-hidden="true" />
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon-sm"
-                          onClick={() => moveLink(index, 1)}
-                          disabled={index === form.links.length - 1}
-                          aria-label={tc("cards.form.moveLinkDown")}
-                          title={tc("cards.form.moveLinkDown")}
-                        >
-                          <ArrowDown aria-hidden="true" />
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon-sm"
-                          onClick={() => removeLink(index)}
-                          aria-label={tc("cards.form.removeLink")}
-                          title={tc("cards.form.removeLink")}
-                        >
-                          <Trash2 aria-hidden="true" />
-                        </Button>
+                  form.links.map((link, index) => {
+                    const linkType = normalizeCardLinkType(link.type)
+                    const hasContent = Boolean(
+                      link.label.trim() ||
+                        link.url.trim() ||
+                        link.message.trim()
+                    )
+                    const error = hasContent ? cardLinkError(link) : null
+
+                    return (
+                      <div
+                        key={index}
+                        className="flex flex-col gap-2 rounded-lg border p-3"
+                      >
+                        <div className="grid gap-2 sm:grid-cols-2">
+                          <div className="flex flex-col gap-1">
+                            <label
+                              className="text-xs text-muted-foreground"
+                              htmlFor={`card-link-type-${index}`}
+                            >
+                              {tc("cards.form.linkType")}
+                            </label>
+                            <select
+                              id={`card-link-type-${index}`}
+                              value={linkType}
+                              onChange={(event) =>
+                                updateLink(index, {
+                                  type: normalizeCardLinkType(
+                                    event.target.value
+                                  ),
+                                })
+                              }
+                              className="h-9 rounded-md border bg-transparent px-2 text-sm"
+                            >
+                              {cardLinkTypes.map((type) => (
+                                <option key={type} value={type}>
+                                  {tc(`cards.linkTypes.${type}`)}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <label
+                              className="text-xs text-muted-foreground"
+                              htmlFor={`card-link-label-${index}`}
+                            >
+                              {tc("cards.form.linkLabel")}
+                            </label>
+                            <Input
+                              id={`card-link-label-${index}`}
+                              value={link.label}
+                              onChange={(event) =>
+                                updateLink(index, {
+                                  label: event.target.value,
+                                })
+                              }
+                              placeholder={tc("cards.form.linkLabelPlaceholder")}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col gap-1">
+                          <label
+                            className="text-xs text-muted-foreground"
+                            htmlFor={`card-link-value-${index}`}
+                          >
+                            {tc("cards.form.linkValue")}
+                          </label>
+                          <Input
+                            id={`card-link-value-${index}`}
+                            value={link.url}
+                            onChange={(event) =>
+                              updateLink(index, { url: event.target.value })
+                            }
+                            placeholder={tc(`cards.linkPlaceholders.${linkType}`)}
+                            dir={linkType === "copy" ? undefined : "ltr"}
+                          />
+                          {error ? (
+                            <p className="text-xs text-destructive">
+                              {tc(`cards.errors.${error}`)}
+                            </p>
+                          ) : null}
+                        </div>
+
+                        {linkType === "whatsapp" ? (
+                          <div className="flex flex-col gap-1">
+                            <label
+                              className="text-xs text-muted-foreground"
+                              htmlFor={`card-link-message-${index}`}
+                            >
+                              {tc("cards.form.linkMessage")}
+                            </label>
+                            <Input
+                              id={`card-link-message-${index}`}
+                              value={link.message}
+                              onChange={(event) =>
+                                updateLink(index, {
+                                  message: event.target.value,
+                                })
+                              }
+                              placeholder={tc("cards.form.linkMessagePlaceholder")}
+                            />
+                          </div>
+                        ) : null}
+
+                        <div className="flex items-center justify-end gap-1">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon-sm"
+                            onClick={() => moveLink(index, -1)}
+                            disabled={index === 0}
+                            aria-label={tc("cards.form.moveLinkUp")}
+                            title={tc("cards.form.moveLinkUp")}
+                          >
+                            <ArrowUp aria-hidden="true" />
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon-sm"
+                            onClick={() => moveLink(index, 1)}
+                            disabled={index === form.links.length - 1}
+                            aria-label={tc("cards.form.moveLinkDown")}
+                            title={tc("cards.form.moveLinkDown")}
+                          >
+                            <ArrowDown aria-hidden="true" />
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon-sm"
+                            onClick={() => removeLink(index)}
+                            aria-label={tc("cards.form.removeLink")}
+                            title={tc("cards.form.removeLink")}
+                          >
+                            <Trash2 aria-hidden="true" />
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  ))
+                    )
+                  })
                 )}
               </div>
 

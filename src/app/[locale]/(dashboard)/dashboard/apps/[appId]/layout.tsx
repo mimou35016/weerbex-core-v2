@@ -2,8 +2,8 @@ import type { Metadata } from "next"
 import type { ReactNode } from "react"
 import { notFound } from "next/navigation"
 
-import { getAppById } from "@/config/dashboard-nav"
-import { requireAnyPermission } from "@/lib/require-role"
+import { getAppDefinition } from "@/lib/app-definitions"
+import { requireAnyPermission, requireAppAvailable } from "@/lib/require-role"
 import { buildMetadata } from "@/lib/seo"
 
 export async function generateMetadata({
@@ -24,11 +24,12 @@ export default async function AppDetailLayout({
   params: Promise<{ appId: string }>
 }) {
   const { appId } = await params
-  const app = getAppById(appId)
+  const app = getAppDefinition(appId)
 
   if (!app) notFound()
 
-  await requireAnyPermission(app.id, ["find", "read"])
+  await requireAppAvailable(app.id)
+  await requireAnyPermission(app.permissionResource, ["find", "read"])
 
   return children
 }

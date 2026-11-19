@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload"
 
 import {
+  cardLinkTypes,
   fallbackSlug,
   isValidSlug,
   slugify,
@@ -130,23 +131,43 @@ export const DigitalCards: CollectionConfig = {
         singular: "Link",
         plural: "Custom links",
       },
-      maxRows: 20,
       admin: {
         description:
-          "Linktree-style buttons shown on the card, in this order. A blank label falls back to the URL.",
+          "Linktree-style items shown on the card in this order. Each item can be a URL, phone, WhatsApp, email, location, payment link or copyable text.",
       },
       fields: [
+        {
+          name: "type",
+          type: "select",
+          defaultValue: "url",
+          required: true,
+          options: cardLinkTypes.map((type) => ({
+            label: type,
+            value: type,
+          })),
+        },
         {
           name: "label",
           type: "text",
           admin: {
-            description: "Optional. Defaults to the URL when left empty.",
+            description: "Optional. Defaults to the value when left empty.",
           },
         },
         {
           name: "url",
           type: "text",
           required: true,
+          admin: {
+            description:
+              "Raw value for the selected type (URL, phone number, email address, place or text).",
+          },
+        },
+        {
+          name: "message",
+          type: "text",
+          admin: {
+            description: "Optional pre-filled message for WhatsApp items.",
+          },
         },
       ],
     },

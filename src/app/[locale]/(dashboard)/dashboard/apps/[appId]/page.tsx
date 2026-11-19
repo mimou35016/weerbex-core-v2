@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { getAppById } from "@/config/dashboard-nav"
+import { getAppDefinition } from "@/lib/app-definitions"
 import { Link } from "@/i18n/navigation"
 
 export default async function AppDetailPage({
@@ -21,7 +21,7 @@ export default async function AppDetailPage({
   params: Promise<{ locale: string; appId: string }>
 }) {
   const { locale, appId } = await params
-  const app = getAppById(appId)
+  const app = getAppDefinition(appId)
 
   if (!app) notFound()
 

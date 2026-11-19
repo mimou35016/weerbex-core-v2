@@ -1,6 +1,9 @@
-import { appsRegistry } from "@/config/dashboard-nav"
 import { routing } from "@/i18n/routing"
-import { qrCardHubRouteRules } from "@/apps/qr-card-hub/registration"
+import {
+  appDefinitions,
+  definitionForPath,
+  getAppDefinition,
+} from "./app-definitions"
 import {
   hasAnyPermission,
   type PermissionAction,
@@ -72,7 +75,11 @@ export const routeAccessRules: RouteAccessRule[] = [
     prefix: "/dashboard/apps",
     requirement: permission("appsHub", "find", "read"),
   },
-  ...qrCardHubRouteRules,
+  {
+    prefix: "/dashboard/docs",
+    requirement: permission("docs", "find", "read"),
+  },
+  ...appDefinitions.flatMap((app) => app.routeRules),
 ]
 
 /**
@@ -104,11 +111,11 @@ export function getRouteRequirement(
 
   const appMatch = normalized.match(/^\/dashboard\/apps\/([^/]+)$/)
   if (appMatch) {
-    const app = appsRegistry.find((entry) => entry.id === appMatch[1])
+    const app = getAppDefinition(appMatch[1])
 
     // Static app routes (such as the QR Card Hub) fall through to the
     // explicit route rules below instead of being treated as dynamic apps.
-    if (app) return permission(app.id, "find", "read")
+    if (app) return permission(app.permissionResource, "find", "read")
   }
 
   const rule = routeAccessRules
@@ -122,12 +129,26 @@ export function getRouteRequirement(
   return rule?.requirement ?? null
 }
 
+/** Whether the app is installed and enabled for the current session. */
+export function isAppAvailableToUser(
+  user: DashboardUser | null | undefined,
+  appId: string
+): boolean {
+  if (!user) return false
+
+  const state = user.appStates?.find((entry) => entry.appId === appId)
+  return Boolean(state?.available)
+}
+
 /** Whether the given user may open the path. */
 export function canAccessRoute(
   user: DashboardUser | null | undefined,
   pathname: string
 ): boolean {
   if (!user) return false
+
+  const app = definitionForPath(pathname)
+  if (app && !isAppAvailableToUser(user, app.id)) return false
 
   const requirement = getRouteRequirement(pathname)
 
@@ -137,16 +158,28 @@ export function canAccessRoute(
   return hasAnyPermission(user, requirement.resource, requirement.actions)
 }
 
-/** Whether the given user may launch a registered mini-app. */
+/**
+ * Whether the user has the permission grants for an app, regardless of its
+ * installed/enabled state. Used by the Apps Hub to distinguish "no access"
+ * from "not installed".
+ */
 export function canAccessApp(
   user: DashboardUser | null | undefined,
   appId: string
 ): boolean {
   if (!user) return false
 
-  const app = appsRegistry.find((entry) => entry.id === appId)
+  const app = getAppDefinition(appId)
 
   if (!app) return false
 
-  return hasAnyPermission(user, app.id, ["find", "read"])
+  return hasAnyPermission(user, app.permissionResource, ["find", "read"])
+}
+
+/** Whether the user can actually launch an app (state + permissions). */
+export function canLaunchApp(
+  user: DashboardUser | null | undefined,
+  appId: string
+): boolean {
+  return canAccessApp(user, appId) && isAppAvailableToUser(user, appId)
 }

@@ -113,6 +113,7 @@ const DEFAULT_ROLES: SeedRole[] = [
       merge(
         grant(["settings"], view),
         grant(["appsHub"], view),
+        grant(["docs"], view),
         grant(["qrCardHub"], view),
         grant(
           ["qrCodes", "digitalCards"],
@@ -130,7 +131,7 @@ const DEFAULT_ROLES: SeedRole[] = [
     priority: 10,
     permissions: buildPermissions(
       merge(
-        grant(["settings", "appsHub"], view),
+        grant(["settings", "appsHub", "docs"], view),
         grant(["qrCardHub", "qrCodes", "digitalCards"], view)
       )
     ),
@@ -214,6 +215,7 @@ type RawPermission = {
  * existing `settings`/`users` grants, and can then be edited freely.
  */
 const lateResourceIds: PermissionResourceId[] = [
+  "docs",
   "seo",
   "security",
   "localization",

@@ -183,6 +183,7 @@ export function toAppConfigs(value: AppSetting | null): AppConfigData[] {
   return apps
     .map((app) => ({
       appId: text(app.appId),
+      installed: app.installed !== false,
       enabled: app.enabled !== false,
       requiredRole: text(app.requiredRole),
       webhookUrl: text(app.webhookUrl),

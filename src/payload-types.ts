@@ -208,6 +208,7 @@ export interface Role {
           | 'roles'
           | 'audit'
           | 'appsHub'
+          | 'docs'
           | 'settings'
           | 'seo'
           | 'security'
@@ -357,15 +358,23 @@ export interface DigitalCard {
   website?: string | null;
   address?: string | null;
   /**
-   * Linktree-style buttons shown on the card, in this order. A blank label falls back to the URL.
+   * Linktree-style items shown on the card in this order. Each item can be a URL, phone, WhatsApp, email, location, payment link or copyable text.
    */
   links?:
     | {
+        type: 'url' | 'phone' | 'whatsapp' | 'email' | 'location' | 'copy' | 'payment';
         /**
-         * Optional. Defaults to the URL when left empty.
+         * Optional. Defaults to the value when left empty.
          */
         label?: string | null;
+        /**
+         * Raw value for the selected type (URL, phone number, email address, place or text).
+         */
         url: string;
+        /**
+         * Optional pre-filled message for WhatsApp items.
+         */
+        message?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -684,8 +693,10 @@ export interface DigitalCardsSelect<T extends boolean = true> {
   links?:
     | T
     | {
+        type?: T;
         label?: T;
         url?: T;
+        message?: T;
         id?: T;
       };
   avatar?: T;
@@ -1042,6 +1053,10 @@ export interface AppSetting {
   apps?:
     | {
         appId: string;
+        /**
+         * Uninstalling hides the app from navigation and blocks its routes; the catalog entry is kept for reinstallation.
+         */
+        installed?: boolean | null;
         enabled?: boolean | null;
         /**
          * Role slug hint shown in the Apps Hub.
@@ -1204,6 +1219,7 @@ export interface AppSettingsSelect<T extends boolean = true> {
     | T
     | {
         appId?: T;
+        installed?: T;
         enabled?: T;
         requiredRole?: T;
         webhookUrl?: T;

@@ -63,6 +63,9 @@ export type StorageSettingsData = {
 
 export type AppConfigData = {
   appId: string
+  /** Whether the catalog entry is installed. Uninstalling keeps the source. */
+  installed: boolean
+  /** Whether an installed app is currently available. */
   enabled: boolean
   requiredRole: string
   webhookUrl: string

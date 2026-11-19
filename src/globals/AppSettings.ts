@@ -31,6 +31,15 @@ export const AppSettings: GlobalConfig = {
           index: true,
         },
         {
+          name: "installed",
+          type: "checkbox",
+          defaultValue: true,
+          admin: {
+            description:
+              "Uninstalling hides the app from navigation and blocks its routes; the catalog entry is kept for reinstallation.",
+          },
+        },
+        {
           name: "enabled",
           type: "checkbox",
           defaultValue: true,

@@ -8,6 +8,7 @@ import {
   findPublishedCardBySlug,
   toDigitalCardData,
 } from "@/apps/qr-card-hub/lib/data"
+import { isAppAvailable } from "@/lib/app-state"
 import { getPayloadClient } from "@/lib/payload"
 import { buildMetadata } from "@/lib/seo"
 import {
@@ -20,6 +21,8 @@ import {
 type CardRouteParams = { locale: string; slug: string }
 
 async function loadCard(slug: string) {
+  if (!(await isAppAvailable("qrCardHub"))) return null
+
   const payload = await getPayloadClient()
   return findPublishedCardBySlug(payload, slug)
 }

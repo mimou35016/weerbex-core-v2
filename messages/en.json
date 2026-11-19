@@ -86,7 +86,8 @@
     },
     "header": {
       "toggleSidebar": "Toggle sidebar",
-      "breadcrumbLabel": "Breadcrumb"
+      "breadcrumbLabel": "Breadcrumb",
+      "docs": "Documentation"
     },
     "userNav": {
       "label": "Open user menu",
@@ -114,7 +115,8 @@
         "media": "Media library",
         "qrCardHub": "QR & Digital Card Hub",
         "qrCodes": "QR codes",
-        "digitalCards": "Digital business cards"
+        "digitalCards": "Digital business cards",
+        "docs": "Documentation"
       }
     },
     "status": {
@@ -197,7 +199,13 @@
       "requiredRoleLabel": "Required role",
       "statusLabel": "Status",
       "saveConfig": "Save configuration",
-      "none": "No apps are registered yet."
+      "none": "No apps are registered yet.",
+      "installed": "Installed",
+      "notInstalled": "Not installed",
+      "disabled": "disabled",
+      "disabledLabel": "Disabled",
+      "install": "Install",
+      "uninstall": "Uninstall"
     },
     "users": {
       "title": "Users",
@@ -292,7 +300,9 @@
         "cardUpdated": "Updated digital card",
         "cardDeleted": "Deleted digital card",
         "cardPublished": "Published digital card",
-        "cardUnpublished": "Unpublished digital card"
+        "cardUnpublished": "Unpublished digital card",
+        "appInstalled": "App installed",
+        "appUninstalled": "App uninstalled"
       },
       "results": "{count} events",
       "empty": "No log entries match your filters.",
@@ -723,7 +733,9 @@
       "tokenRevoked": "API token revoked",
       "webhookSaved": "Webhook saved",
       "loggedOut": "You have been signed out",
-      "permissionsSaved": "Permissions saved"
+      "permissionsSaved": "Permissions saved",
+      "appInstalled": "{app} installed",
+      "appUninstalled": "{app} uninstalled"
     },
     "apps": {
       "qrCardHub": {
@@ -927,7 +939,11 @@
         },
         "errors": {
           "nameRequired": "Enter a full name for the card.",
-          "linkUrlRequired": "Every custom link needs a URL, or remove that row."
+          "linkUrlRequired": "Every custom link needs a URL, or remove that row.",
+          "linkValueRequired": "Enter a value for this item, or remove it.",
+          "linkValueInvalid": "Enter a valid URL or place for this item.",
+          "linkEmailInvalid": "Enter a valid email address.",
+          "linkPhoneInvalid": "Enter a valid phone number."
         },
         "form": {
           "identitySection": "Identity",
@@ -967,7 +983,12 @@
           "linksLimit": "You can add up to {count} custom links.",
           "moveLinkUp": "Move link up",
           "moveLinkDown": "Move link down",
-          "removeLink": "Remove link"
+          "removeLink": "Remove link",
+          "linksHint": "Add unlimited items. Each one can open a link, call, email, map, pay or copy text.",
+          "linkType": "Item type",
+          "linkValue": "Value",
+          "linkMessage": "Prefilled message (optional)",
+          "linkMessagePlaceholder": "Hi! I'd like to connect."
         },
         "social": {
           "website": "Website",
@@ -980,7 +1001,147 @@
           "tiktok": "TikTok",
           "whatsapp": "WhatsApp",
           "telegram": "Telegram"
+        },
+        "linkTypes": {
+          "url": "Website / URL",
+          "phone": "Phone number",
+          "whatsapp": "WhatsApp",
+          "email": "Email",
+          "location": "Location",
+          "copy": "Copyable text",
+          "payment": "Payment link"
+        },
+        "linkPlaceholders": {
+          "url": "https://example.com",
+          "phone": "+1 555 123 4567",
+          "whatsapp": "+1 555 123 4567",
+          "email": "name@example.com",
+          "location": "12 Rue de Rivoli, Paris",
+          "copy": "Copy this code to your clipboard",
+          "payment": "https://paypal.me/username"
         }
+      }
+    },
+    "docs": {
+      "title": "Documentation",
+      "description": "Everything you need to run and extend your Weerbex workspace.",
+      "badge": "Guides",
+      "hint": "Choose a track to get started.",
+      "userTab": "User guide",
+      "developerTab": "Developer guide",
+      "user": {
+        "intro": "Follow these steps to manage your workspace day to day.",
+        "gettingStarted": {
+          "title": "Getting started",
+          "description": "Sign in and learn your way around the dashboard.",
+          "items": [
+            "Sign in with your Payload account; your role is read live from the database on every page.",
+            "Use the sidebar to move between your registered apps and core management pages.",
+            "Switch language and theme from the top bar; Arabic automatically switches the layout to RTL.",
+            "Open the help icon in the top bar whenever you need this guide."
+          ]
+        },
+        "appsStore": {
+          "title": "Apps Hub store",
+          "description": "Install, enable and configure mini-apps from one place.",
+          "items": [
+            "Open Apps Hub from the sidebar to browse the catalog.",
+            "Use Install to add an app, or Uninstall to remove it from navigation and routes without deleting its data.",
+            "Toggle Enabled to pause an installed app temporarily; the catalog entry is kept.",
+            "Use Configure to set the webhook URL and the required role hint.",
+            "Launch is available only when the app is installed, enabled and your role has access."
+          ]
+        },
+        "digitalCards": {
+          "title": "Digital business cards",
+          "description": "Build and publish a shareable card.",
+          "items": [
+            "Open QR Card Hub → Cards and create a card with your identity, colors and template.",
+            "Add items such as links, phone, WhatsApp, email, location, payment or copyable text.",
+            "Fill the value for each item; the preview updates instantly inside the iPhone frame.",
+            "Publish the card to make it available at its public slug and generate QR codes for it."
+          ]
+        },
+        "qrStudio": {
+          "title": "QR Studio",
+          "description": "Create static and dynamic QR codes.",
+          "items": [
+            "Open QR Card Hub → QR and choose a static URL/text code or a dynamic code linked to a card.",
+            "Customize dots, corners, colors and optionally upload a logo.",
+            "Download the result as PNG or SVG.",
+            "Dynamic codes follow the card URL, so you can edit the card later without reprinting."
+          ]
+        },
+        "account": {
+          "title": "Account and security",
+          "description": "Understand what your role allows.",
+          "items": [
+            "Your permissions come from the role stored in the database, not from the login token.",
+            "Super admins can manage roles and permissions for everyone.",
+            "Admins, managers and users receive the access defined by their role grants.",
+            "Sign out from the user menu at the top right."
+          ]
+        }
+      },
+      "developer": {
+        "intro": "These notes describe the extension points that keep the core dashboard untouched.",
+        "architecture": {
+          "title": "Architecture",
+          "description": "Where each responsibility lives.",
+          "items": [
+            "Payload CMS 3 with MongoDB is the single source of truth for users, roles, settings and app state.",
+            "The dashboard uses the App Router under src/app/[locale]/(dashboard).",
+            "Mini-apps live in src/apps/<app> and export metadata, permissions and route rules from registration.ts.",
+            "appsRegistry and the shared UI components are protected core files; extend around them."
+          ]
+        },
+        "newApp": {
+          "title": "Adding a mini-app",
+          "description": "Plug a new module into the same lifecycle.",
+          "items": [
+            "Create src/apps/<app> with a registration.ts exporting your app metadata, route rules and permission resources.",
+            "Declare the app in src/lib/app-definitions.ts with its permission resource and route prefix.",
+            "Add the permission resource to the catalog and its labels to all three message files.",
+            "Add a route folder under dashboard/apps with a layout that calls requireAppAvailable and requireAnyPermission.",
+            "Install, enable, sidebar visibility and route access then work automatically."
+          ]
+        },
+        "permissions": {
+          "title": "Permissions and app state",
+          "description": "Two independent gates are combined.",
+          "items": [
+            "Route and sidebar access require the app to be installed, enabled and permitted for the user's role.",
+            "requireAppAvailable blocks app routes and public pages from the server; canLaunchApp filters the client UI.",
+            "Server actions inside an app also re-check availability before touching data.",
+            "Bump PERMISSIONS_VERSION when adding a resource so existing roles receive one-time defaults."
+          ]
+        },
+        "cardItems": {
+          "title": "Card item types",
+          "description": "How smart actions stay backward compatible.",
+          "items": [
+            "normalizeCustomLinks in lib/types.ts is the single write/read compatibility layer.",
+            "Legacy rows without a type default to url, so saved MongoDB cards keep working.",
+            "cardLinkHref builds tel, wa.me, mailto, maps and payment URLs; copy items use the clipboard.",
+            "CardRenderer + CardLinkButton render the preview and the published card identically."
+          ]
+        },
+        "localization": {
+          "title": "Localization",
+          "description": "Keep English, French and Arabic in sync.",
+          "items": [
+            "Every UI string lives in messages/en.json, fr.json and ar.json.",
+            "Use useTranslations for labels and t.raw for the guide item arrays.",
+            "Arabic sets dir=rtl on the document and the sidebar moves to the right.",
+            "Add new keys to all three files before shipping a feature."
+          ]
+        }
+      },
+      "footer": {
+        "title": "Need a shortcut?",
+        "description": "Jump back to the places you manage most.",
+        "apps": "Open Apps Hub",
+        "settings": "Open settings"
       }
     }
   },
@@ -989,6 +1150,9 @@
     "saveContact": "Save contact",
     "copyLink": "Copy link",
     "copied": "Link copied",
-    "copyError": "Could not copy the link"
+    "copyError": "Could not copy the link",
+    "copiedValue": "Copied to clipboard",
+    "copyErrorValue": "Could not copy the value",
+    "copyValueHint": "Tap to copy"
   }
 }
