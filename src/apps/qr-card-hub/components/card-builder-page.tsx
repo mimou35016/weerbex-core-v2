@@ -73,7 +73,7 @@ import {
   type DigitalCardFormData,
   type SocialLinkInput,
 } from "../lib/types"
-import { DigitalCardPreview } from "./digital-card-preview"
+import { CardRenderer } from "./CardRenderer"
 import { ColorField, ImageUploadField } from "./form-fields"
 import { IphoneFrame } from "./iphone-frame"
 import { TemplateMock } from "./template-mock"
@@ -959,7 +959,10 @@ export function CardBuilderPage() {
                   label={tc("cards.preview.phoneLabel")}
                   className="max-w-[210px] sm:max-w-[240px] md:max-w-[min(286px,calc((94dvh_-_17rem)/2.166))]"
                 >
-                  <DigitalCardPreview card={preview} variant="phone" />
+                  <CardRenderer
+                    card={preview}
+                    className="min-h-full rounded-none border-0 shadow-none"
+                  />
                 </IphoneFrame>
               </div>
               {form.slug && (

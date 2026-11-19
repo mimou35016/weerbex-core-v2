@@ -57,7 +57,7 @@ export function CardActions({
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-2">
+    <div className="grid w-full grid-cols-1 gap-2 sm:flex sm:w-auto sm:flex-wrap sm:items-center sm:justify-center">
       <Button onClick={() => downloadVCard(card)}>
         <Download aria-hidden="true" />
         {t("saveContact")}

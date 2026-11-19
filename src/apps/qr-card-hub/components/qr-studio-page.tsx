@@ -135,9 +135,15 @@ export function QrStudioPage() {
     }
   }, [locale])
 
+  // The picker falls back to the first available card for display, so keep
+  // the preview, the generated URL and the saved record in sync with it.
+  const cardValue = cards.some((card) => card.id === form.cardId)
+    ? form.cardId
+    : (cards[0]?.id ?? "")
+
   const cardSlug = useMemo(
-    () => cards.find((card) => card.id === form.cardId)?.slug ?? null,
-    [cards, form.cardId]
+    () => cards.find((card) => card.id === cardValue)?.slug ?? null,
+    [cards, cardValue]
   )
 
   const content = useMemo(
@@ -188,6 +194,7 @@ export function QrStudioPage() {
     setSaving(true)
     const result = await saveQrCodeAction(locale, {
       ...form,
+      cardId: cardValue,
       id: editingId || undefined,
     })
     setSaving(false)
@@ -286,10 +293,6 @@ export function QrStudioPage() {
     value: card.id,
     label: `${card.name}${card.published ? "" : " •"}`,
   }))
-
-  const cardValue = cards.some((card) => card.id === form.cardId)
-    ? form.cardId
-    : (cards[0]?.id ?? "")
 
   return (
     <>
